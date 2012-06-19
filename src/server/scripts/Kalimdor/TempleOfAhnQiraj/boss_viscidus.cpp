@@ -18,15 +18,97 @@
 
 /* ScriptData
 SDName: Boss_Viscidus
-SD%Complete: 0
-SDComment: place holder
+SD%Complete: 50
+SDComment: Fase y babosas?
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "ScriptPCH.h"
+enum Spells
+{
+SPELL_POISON_SHOCK      =    25993,
+SPELL_POISONBOLT_VOLLEY   =  25991,
 
-#define SPELL_POISON_SHOCK          25993
-#define SPELL_POISONBOLT_VOLLEY     25991
+SPELL_TOXIN_CLOUD      =     25989,
+};
 
-#define SPELL_TOXIN_CLOUD           25989
+class boss_viscidus : public CreatureScript
+{
+    public:
+		boss_viscidus() : CreatureScript("boss_viscidus"){}
+		
+		CreatureAI* GetAI(Creature* pCreature) const
+		{
+			return new boss_viscidusAI(pCreature);
+		}
 
+		struct boss_viscidusAI : public ScriptedAI
+		{
+			boss_viscidusAI(Creature *c) : ScriptedAI(c) {}
+				uint32 POISON_SHOCK_Timer;
+		        uint32 POISONBOLT_VOLLEY_Timer;
+		        uint32 TOXIN_CLOUD_Timer;
+			
+			void Reset()
+			{
+				POISON_SHOCK_Timer = 10000;
+				POISONBOLT_VOLLEY_Timer = 5000;
+				TOXIN_CLOUD_Timer = 12000;
+
+			}
+
+			void KilledUnit(Unit * /*victim*/)
+			{
+			}
+			
+			void JustDied(Unit * /*victim*/)
+			{
+			}
+
+			void EnterCombat(Unit * /*who*/)
+			{
+			}
+
+			void UpdateAI(const uint32 uiDiff)
+			{
+				if (!me->getVictim())
+				{					
+				}
+				
+				if (!UpdateVictim())
+					return;
+
+				if(POISON_SHOCK_Timer <= uiDiff)
+					{
+						DoCast(me->getVictim(), SPELL_POISON_SHOCK);
+						POISON_SHOCK_Timer = 30000;
+					}
+					else
+						POISON_SHOCK_Timer -= uiDiff;
+
+					if(POISONBOLT_VOLLEY_Timer <= uiDiff)
+					{
+						if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+						DoCast(pTarget, SPELL_POISONBOLT_VOLLEY);
+						POISONBOLT_VOLLEY_Timer = 10000;
+					}
+					else
+						POISONBOLT_VOLLEY_Timer -= uiDiff;
+
+					if(TOXIN_CLOUD_Timer <= uiDiff)
+					{
+						DoCast(me, TOXIN_CLOUD_Timer);
+						TOXIN_CLOUD_Timer = 12000;
+					}
+					else
+						TOXIN_CLOUD_Timer -= uiDiff;
+
+			DoMeleeAttackIfReady();
+			}
+		};
+};
+
+void AddSC_boss_viscidus()
+{
+    new boss_viscidus();
+}

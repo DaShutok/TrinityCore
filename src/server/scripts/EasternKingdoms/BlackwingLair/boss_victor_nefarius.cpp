@@ -55,9 +55,9 @@ enum Creatures
 #define ADD_Z1    476.800476f
 #define ADD_Z2    476.796570f
 
-#define NEF_X     -7445
-#define NEF_Y     -1332
-#define NEF_Z     536
+#define NEF_X     -7511
+#define NEF_Y     -1232
+#define NEF_Z     476
 
 #define HIDE_X   -7592
 #define HIDE_Y   -1264
