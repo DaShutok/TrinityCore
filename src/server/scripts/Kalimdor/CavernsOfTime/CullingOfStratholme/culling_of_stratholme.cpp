@@ -357,6 +357,7 @@ public:
 
         void Reset()
         {
+			me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_IMMUNE_TO_NPC );
             uiUtherGUID = 0;
             uiJainaGUID = 0;
 
@@ -394,8 +395,10 @@ public:
         }
 
         void EnterCombat(Unit* /*who*/)
-        {
-            DoCast(me, SPELL_ARTHAS_AURA);
+        {   
+			me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
+			me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC );
+			DoCast(me, SPELL_ARTHAS_AURA);
         }
 
         void JustDied(Unit* /*killer*/)
@@ -1190,7 +1193,7 @@ public:
             }
 
             //Battling skills
-            if (!me->getVictim())
+            if (!me->getVictim())			
                 return;
 
             if (uiExorcismTimer < diff)
