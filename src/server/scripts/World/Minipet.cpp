@@ -35,9 +35,9 @@ class monje_pandaren : public CreatureScript
         {
         }
 
-		struct gplp_monje_pandarenAI : public ScriptedAI
+		struct monje_pandarenAI : public ScriptedAI
         {
-            gplp_monje_pandarenAI(Creature* creature) : ScriptedAI(creature) {}
+            monje_pandarenAI(Creature* creature) : ScriptedAI(creature) {}
 
 			void ReceiveEmote(Player* player, uint32 emote)
             {
