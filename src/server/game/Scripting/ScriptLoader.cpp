@@ -1228,7 +1228,7 @@ void AddBattlegroundScripts()
 #ifdef SCRIPTS
 /* This is where custom scripts' loading functions should be declared. */
 // Custom By Regi
-void AddSC_npc_testasd();
+void //AddSC_npc_testasd();
 void AddSC_boss_viscidus();
 
 #endif
@@ -1238,7 +1238,7 @@ void AddCustomScripts()
 #ifdef SCRIPTS
  /* This is where custom scripts should be added. */
 // Custom by Regi
-	AddSC_npc_testasd();
+	//AddSC_npc_testasd();
 	AddSC_boss_viscidus();
 #endif
 }
