@@ -24,7 +24,6 @@ SDCategory: Script Examples
 EndScriptData */
 
 #include "ScriptPCH.h"
-#include "PetAI.h"
 
 class monje_pandaren : public CreatureScript
 {
@@ -57,10 +56,46 @@ class monje_pandaren : public CreatureScript
 	      CreatureAI* GetAI(Creature* creature) const
          {
             return new monje_pandarenAI(creature);
-         }		
+         }
 };
 
 void AddSC_monje_pandaren()
 {
     new monje_pandaren();
+}
+
+class tyrael_pet : public CreatureScript
+{
+    public:
+
+        tyrael_pet()
+            : CreatureScript("tyrael_pet")
+        {
+        }
+
+		struct tyrael_petAI : public ScriptedAI
+        {
+            tyrael_petAI(Creature* creature) : ScriptedAI(creature) {}
+
+			void ReceiveEmote(Player* player, uint32 emote)
+            {
+                switch (emote)
+                {
+                    case TEXT_EMOTE_DANCE:
+                        me->HandleEmoteCommand(EMOTE_ONESHOT_DANCE);
+                        break;
+				}
+		    }
+
+		};
+
+	      CreatureAI* GetAI(Creature* creature) const
+         {
+            return new tyrael_petAI(creature);
+         }
+};
+
+void AddSC_tyrael_pet()
+{
+    new tyrael_pet();
 }

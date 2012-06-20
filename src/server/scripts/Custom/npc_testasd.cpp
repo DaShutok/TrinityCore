@@ -103,9 +103,7 @@ class npc_testasd : public CreatureScript
 			
 			if (action == GOSSIP_ACTION_INFO_DEF+4)
 			{
-				player->SetLevel(1);
-				creature->MonsterSay("JAJAJAJA", LANG_UNIVERSAL, NULL);
-				player->Yell("WTF", LANG_UNIVERSAL);
+				creature->MonsterWhisper("Todavia no implementado", player->GetGUID());
 				player->CLOSE_GOSSIP_MENU();
 			} 
 
