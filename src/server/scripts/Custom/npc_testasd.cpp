@@ -28,9 +28,9 @@ EndScriptData */
 enum eEnums
 {
 };
-#define  GOSSIP_ITEM_1          "¿Hola deseas ser transformado?"
+#define  GOSSIP_ITEM_1          "ï¿½Hola deseas ser transformado?"
 #define  GOSSIP_ITEM_2          "Adios"
-#define  GOSSIP_ITEM_3          "¿Que tal un combate?"
+#define  GOSSIP_ITEM_3          "ï¿½Que tal un combate?"
 #define  GOSSIP_ITEM_4          "Me aburro"
 
 class npc_testasd : public CreatureScript
@@ -54,12 +54,12 @@ class npc_testasd : public CreatureScript
                         me->HandleEmoteCommand(EMOTE_ONESHOT_DANCE);
                         break;
                     case TEXT_EMOTE_SALUTE:
-						me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+			me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
                         break;
-				}
-		    }
+		}
+	     }
 
-		};
+	};
 
 	      CreatureAI* GetAI(Creature* creature) const
          {
@@ -70,19 +70,19 @@ class npc_testasd : public CreatureScript
           {
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-			player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-			player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
+	    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+	    player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
             return true;
-		  }
+           }
 		  
         bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
         {
             player->PlayerTalkClass->ClearMenus();
             if (action == GOSSIP_ACTION_INFO_DEF+2)
             {
-				creature->MonsterSay("Adios", LANG_UNIVERSAL, NULL);
-				player->Say("Adios", LANG_UNIVERSAL);
+		creature->MonsterSay("Adios", LANG_UNIVERSAL, NULL);
+		player->Say("Adios", LANG_UNIVERSAL);
                 player->CLOSE_GOSSIP_MENU();
             }
 
