@@ -46,12 +46,12 @@ class monje_pandaren : public CreatureScript
                         me->HandleEmoteCommand(EMOTE_ONESHOT_EAT);
                         break;
                     case TEXT_EMOTE_BOW:
-						me->HandleEmoteCommand(EMOTE_ONESHOT_BOW);
+			me->HandleEmoteCommand(EMOTE_ONESHOT_BOW);
                         break;
-				}
-		    }
+		}
+	    }
 
-		};
+	};
 
 	      CreatureAI* GetAI(Creature* creature) const
          {
@@ -84,10 +84,10 @@ class tyrael_pet : public CreatureScript
                     case TEXT_EMOTE_DANCE:
                         me->HandleEmoteCommand(EMOTE_ONESHOT_DANCE);
                         break;
-				}
-		    }
+	        }
+	    }
 
-		};
+	};
 
 	      CreatureAI* GetAI(Creature* creature) const
          {
