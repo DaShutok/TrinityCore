@@ -39,7 +39,7 @@ class npc_transmogrify : public CreatureScript
         bool OnGossipHello(Player* pPlayer, Creature* pCreature)
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "Hacer el cambio.", GOSSIP_SENDER_MAIN, ACTION_TRANSMOGRIFY_ADD_DISPLAY);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "Limpiar el objecto..", GOSSIP_SENDER_MAIN, ACTION_TRANSMOGRIFY_REMOVE_DISPLAY);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "Limpiar el objeto.", GOSSIP_SENDER_MAIN, ACTION_TRANSMOGRIFY_REMOVE_DISPLAY);
             pPlayer->SEND_GOSSIP_MENU(51000, pCreature->GetGUID());
             return true;
         }
