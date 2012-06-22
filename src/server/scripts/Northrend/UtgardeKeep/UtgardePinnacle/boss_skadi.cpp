@@ -213,6 +213,8 @@ public:
         eSide BreathSide;
         eCombatPhase Phase;
 
+		uint8 m_uiDeadPlayer;
+
         void Reset()
         {
             triggersGUID.clear();
@@ -554,6 +556,11 @@ public:
         void KilledUnit(Unit* /*victim*/)
         {
             DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
+			m_uiDeadPlayer++;
+			if (m_uiDeadPlayer >= 3)
+			{
+				me->GetAI()->SetData(DATA_SKADI_ACHIEV_FAIL, DONE);
+			}
         }
 
         void SpawnMobs()
@@ -610,8 +617,23 @@ class go_harpoon_launcher : public GameObjectScript
     }
 };
 
+class achievement_skadi : public AchievementCriteriaScript
+{
+    public:
+        achievement_skadi() : AchievementCriteriaScript("achievement_skadi") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+			if (target->GetAI()->GetData(DATA_SKADI_ACHIEV_FAIL))
+				return false;
+			else if (target->GetAI()->GetData(DATA_SKADI_THE_RUTHLESS_EVENT));
+			return true;
+        }
+};
+
 void AddSC_boss_skadi()
 {
     new boss_skadi();
     new go_harpoon_launcher();
+	new achievement_skadi();
 }
