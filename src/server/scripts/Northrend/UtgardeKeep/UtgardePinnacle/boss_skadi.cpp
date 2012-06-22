@@ -173,6 +173,11 @@ enum eAchievments
     MAX_HIT_COUNT                  = 3
 };
 
+enum eData
+{
+	DATA_SKADI_ACHIEV_FAIL
+};
+
 class boss_skadi : public CreatureScript
 {
 public:
@@ -626,7 +631,7 @@ class achievement_skadi : public AchievementCriteriaScript
         {
 			if (target->GetAI()->GetData(DATA_SKADI_ACHIEV_FAIL))
 				return false;
-			else if (target->GetAI()->GetData(DATA_SKADI_THE_RUTHLESS_EVENT));
+			else if (target->GetAI()->GetData(DATA_SKADI_THE_RUTHLESS_EVENT))
 			return true;
         }
 };
