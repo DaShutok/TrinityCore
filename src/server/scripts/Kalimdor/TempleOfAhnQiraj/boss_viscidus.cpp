@@ -28,7 +28,6 @@ enum Spells
 {
 SPELL_POISON_SHOCK      =    25993,
 SPELL_POISONBOLT_VOLLEY   =  25991,
-
 SPELL_TOXIN_CLOUD      =     25989,
 };
 
@@ -51,22 +50,10 @@ class boss_viscidus : public CreatureScript
 			
 			void Reset()
 			{
-				POISON_SHOCK_Timer = 10000;
-				POISONBOLT_VOLLEY_Timer = 5000;
-				TOXIN_CLOUD_Timer = 12000;
+				POISON_SHOCK_Timer = (urand(12000, 10000));
+				POISONBOLT_VOLLEY_Timer = (urand(7000, 5000));
+				TOXIN_CLOUD_Timer = (urand(12000, 14000));
 
-			}
-
-			void KilledUnit(Unit * /*victim*/)
-			{
-			}
-			
-			void JustDied(Unit * /*victim*/)
-			{
-			}
-
-			void EnterCombat(Unit * /*who*/)
-			{
 			}
 
 			void UpdateAI(const uint32 uiDiff)
@@ -97,7 +84,7 @@ class boss_viscidus : public CreatureScript
 
 					if(TOXIN_CLOUD_Timer <= uiDiff)
 					{
-						DoCast(me, TOXIN_CLOUD_Timer);
+						DoCast(me->getVictim(), TOXIN_CLOUD_Timer);
 						TOXIN_CLOUD_Timer = 12000;
 					}
 					else
