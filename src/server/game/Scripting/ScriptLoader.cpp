@@ -1232,6 +1232,7 @@ void AddSC_npc_testasd();
 void AddSC_boss_viscidus();
 void AddSC_monje_pandaren();
 void AddSC_tyrael_pet();
+void AddSC_transmogrify_script();
 #endif
 
 void AddCustomScripts()
@@ -1243,5 +1244,6 @@ void AddCustomScripts()
 	AddSC_boss_viscidus();
 	AddSC_monje_pandaren();
 	AddSC_tyrael_pet();
+	AddSC_transmogrify_script();
 #endif
 }
