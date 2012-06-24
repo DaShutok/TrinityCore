@@ -107,7 +107,7 @@ public:
             eruptSection = 3;
             if (phase == PHASE_FIGHT)
             {
-				me->SetReactState(REACT_AGGRESSIVE);
+		me->SetReactState(REACT_AGGRESSIVE);
                 events.ScheduleEvent(EVENT_DISRUPT, urand(10000, 25000));
                 events.ScheduleEvent(EVENT_FEVER, urand(15000, 20000));
                 events.ScheduleEvent(EVENT_PHASE, 90000);
@@ -117,7 +117,7 @@ public:
             {
                 float x, y, z, o;
                 me->GetHomePosition(x, y, z, o);
-				me->SetReactState(REACT_PASSIVE);
+		me->SetReactState(REACT_PASSIVE);
                 me->NearTeleportTo(x, y, z, o);
                 DoCastAOE(SPELL_PLAGUE_CLOUD);
                 events.ScheduleEvent(EVENT_PHASE, 45000);
@@ -131,6 +131,7 @@ public:
                 return;
 
             events.Update(diff);
+            
             while (uint32 eventId = events.ExecuteEvent())
             {
                 switch (eventId)
