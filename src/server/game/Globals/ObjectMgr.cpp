@@ -4863,11 +4863,11 @@ void ObjectMgr::LoadSpellScriptNames()
 
         Field* fields = result->Fetch();
 
-        int32 spellId         = fields[0].GetInt32();
+        int32 spellId          = fields[0].GetInt32();
         const char *scriptName = fields[1].GetCString();
 
         bool allRanks = false;
-        if (spellId <=0)
+        if (spellId <= 0)
         {
             allRanks = true;
             spellId = -spellId;
@@ -6600,7 +6600,7 @@ uint32 ObjectMgr::GetBaseXP(uint8 level)
     return _baseXPTable[level] ? _baseXPTable[level] : 0;
 }
 
-uint32 ObjectMgr::GetXPForLevel(uint8 level)
+uint32 ObjectMgr::GetXPForLevel(uint8 level) const
 {
     if (level < _playerXPperLevel.size())
         return _playerXPperLevel[level];
