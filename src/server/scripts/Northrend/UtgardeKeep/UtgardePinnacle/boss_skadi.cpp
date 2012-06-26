@@ -317,19 +317,19 @@ public:
         {
             if (spell->Id == SPELL_HARPOON_DAMAGE)
             {
-				m_uiSpellHitCount++;
-				if (m_uiSpellHitCount < MAX_HIT_COUNT)
-				{
-				    DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
-				}
+		m_uiSpellHitCount++;
+		if (m_uiSpellHitCount < MAX_HIT_COUNT)
+		{
+		   DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
+		}
                 if (m_uiSpellHitCount >= MAX_HIT_COUNT)
                 {
                     Phase = SKADI;
-					if (me->GetMap()->IsHeroic())
-					{
-						me->DealHeal(me, 300000);
-					} else me->DealHeal(me, 180000);
-					DoScriptText(SAY_DRAKE_DEATH, me);
+	  	    if (me->GetMap()->IsHeroic())
+		    {
+	              me->DealHeal(me, 300000);
+		    } else me->DealHeal(me, 180000);
+		    DoScriptText(SAY_DRAKE_DEATH, me);
                     me->Dismount();
                     me->SetCanFly(false);
                     me->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
