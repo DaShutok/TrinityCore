@@ -104,6 +104,8 @@ public:
 		uint32 PoisonShock;
 		uint32 PoisonVolley;
 		uint32 ToxinCloud;
+		uint32 hpborder;
+		uint32 GlobCD;
 
 
         void Reset()
@@ -112,6 +114,8 @@ public:
 			PoisonVolley = (urand(7000, 5000));
 			ToxinCloud = (urand(12000, 14000));
             state = NORMAL_STATE_1;
+			hpborder = 5;
+			GlobCD = 1000;
         }
 
         void Aggro(Unit *who)
@@ -228,20 +232,6 @@ public:
 
         void DoSummonGlobs()
         {
-            //if((me->GetHealth()*100) / me->GetMaxHealth() >= 5)
-            //    me->CastSpell(
-
-            uint32 hpborder = 5;
-            for(int i = 0; i < 20; i++)
-            {
-                if((me->GetHealth()*100) / me->GetMaxHealth() >= hpborder)
-                {
-                    me->CastSpell(me,Spell_Summon_glob[i],true);
-                    hpborder += 5;
-                }else
-                    break;
-            }
-
         }
 
 			void UpdateAI(const uint32 uiDiff)
@@ -272,11 +262,24 @@ public:
 
 					if(ToxinCloud <= uiDiff)
 					{
-						DoCast(me->getVictim(), SPELL_TOXIN_CLOUD);
+						DoCast(me, SPELL_TOXIN_CLOUD);
 						ToxinCloud = 12000;
 					}
 					else
 						ToxinCloud -= uiDiff;
+
+					if (GlobCD <= uiDiff)
+					  {
+				        //for(int i = 0; i < 20; i++)
+                        //{
+						  //if((me->GetHealth()*100) / me->GetMaxHealth() >= hpborder)
+                          //{
+                            me->CastSpell(me,Spell_Summon_glob[0],true);
+                            hpborder += 5;
+						    GlobCD = 10000;
+                          //}else break;
+					    //} 
+                      } else GlobCD -= uiDiff;
 
 			DoMeleeAttackIfReady();
 			}
