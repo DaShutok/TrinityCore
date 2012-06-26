@@ -320,12 +320,15 @@ public:
 				m_uiSpellHitCount++;
 				if (m_uiSpellHitCount < MAX_HIT_COUNT)
 				{
-				DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
+				    DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
 				}
                 if (m_uiSpellHitCount >= MAX_HIT_COUNT)
                 {
                     Phase = SKADI;
-					me->DealHeal(me, 180000);
+					if (me->GetMap()->IsHeroic())
+					{
+						me->DealHeal(me, 300000);
+					} else me->DealHeal(me, 180000);
 					DoScriptText(SAY_DRAKE_DEATH, me);
                     me->Dismount();
                     me->SetCanFly(false);
