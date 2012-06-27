@@ -260,10 +260,22 @@ public:
                 me->SummonCreature(CREATURE_GRAUF,Location[0].GetPositionX(),Location[0].GetPositionY(),Location[0].GetPositionZ(),3.0f);
         }
 
+		void DamageTaken(Unit* /*doneBy*/, uint32& damage)
+        {
+            if (Phase == FLYING)
+			{
+				if (damage > me->GetHealth())
+				{
+					damage = 0;
+				}
+			}
+		}
+
         void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
 
+			me->SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
             me->SetReactState(REACT_PASSIVE);
 
@@ -319,22 +331,14 @@ public:
             {
 		      m_uiSpellHitCount++;
 
-			  if (me->GetHealthPct() < 20)
-			  {
-				  me->DealHeal(me, 40000);
-			  }
-
 		      if (m_uiSpellHitCount < MAX_HIT_COUNT)
 		      {
 				DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
 		      }
                 if (m_uiSpellHitCount >= MAX_HIT_COUNT)
                 {
+					me->SetFullHealth();
                     Phase = SKADI;
-	  	            if (me->GetMap()->IsHeroic())
-		            {
-	                  me->DealHeal(me, 300000);
-		            } else me->DealHeal(me, 180000);
 		            DoScriptText(SAY_DRAKE_DEATH, me);
                     me->Dismount();
                     me->SetCanFly(false);

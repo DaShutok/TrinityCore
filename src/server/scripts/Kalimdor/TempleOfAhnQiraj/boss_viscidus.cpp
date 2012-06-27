@@ -232,6 +232,15 @@ public:
 
         void DoSummonGlobs()
         {
+			for(int i = 0; i < 20; i++)
+                        {
+						  if((me->GetHealth()*100) / me->GetMaxHealth() >= hpborder)
+                          {
+                            me->CastSpell(me,Spell_Summon_glob[0],true);
+                            hpborder += 5;
+						    GlobCD = 10000;
+                          }else break;
+					    } 
         }
 
 			void UpdateAI(const uint32 uiDiff)
@@ -248,8 +257,7 @@ public:
 						DoCast(me->getVictim(), SPELL_POISON_SHOCK);
 						PoisonShock = 30000;
 					}
-					else
-						PoisonShock -= uiDiff;
+					else PoisonShock -= uiDiff;
 
 					if(PoisonVolley <= uiDiff)
 					{
@@ -257,28 +265,18 @@ public:
 						DoCast(pTarget, SPELL_POISONBOLT_VOLLEY);
 						PoisonVolley = 10000;
 					}
-					else
-						PoisonVolley -= uiDiff;
+					else PoisonVolley -= uiDiff;
 
 					if(ToxinCloud <= uiDiff)
 					{
 						DoCast(me, SPELL_TOXIN_CLOUD);
 						ToxinCloud = 12000;
 					}
-					else
-						ToxinCloud -= uiDiff;
+					else ToxinCloud -= uiDiff;
 
 					if (GlobCD <= uiDiff)
 					  {
-				        //for(int i = 0; i < 20; i++)
-                        //{
-						  //if((me->GetHealth()*100) / me->GetMaxHealth() >= hpborder)
-                          //{
-                            me->CastSpell(me,Spell_Summon_glob[0],true);
-                            hpborder += 5;
-						    GlobCD = 10000;
-                          //}else break;
-					    //} 
+				        DoSummonGlobs();
                       } else GlobCD -= uiDiff;
 
 			DoMeleeAttackIfReady();
