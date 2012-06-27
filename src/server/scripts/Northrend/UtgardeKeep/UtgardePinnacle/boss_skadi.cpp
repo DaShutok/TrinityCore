@@ -646,6 +646,7 @@ class achievement_skadi : public AchievementCriteriaScript
 				return false;
 			else if (target->GetAI()->GetData(DATA_SKADI_THE_RUTHLESS_EVENT))
 			return true;
+			return false;
         }
 };
 

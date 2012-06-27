@@ -59,11 +59,6 @@ class monje_pandaren : public CreatureScript
          }
 };
 
-void AddSC_monje_pandaren()
-{
-    new monje_pandaren();
-}
-
 class tyrael_pet : public CreatureScript
 {
     public:
@@ -95,7 +90,8 @@ class tyrael_pet : public CreatureScript
          }
 };
 
-void AddSC_tyrael_pet()
+void AddSC_Minipet()
 {
+	new monje_pandaren();
     new tyrael_pet();
 }
