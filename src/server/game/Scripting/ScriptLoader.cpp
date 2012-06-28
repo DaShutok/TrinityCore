@@ -1249,9 +1249,9 @@ void AddCustomScripts()
 #ifdef SCRIPTS
  /* This is where custom scripts should be added. */
 // Custom by Regi
-	AddSC_npc_testasd();
-	AddSC_boss_viscidus();
-	AddSC_Minipet();
-	AddSC_transmogrify_script();
+     AddSC_npc_testasd();
+     AddSC_boss_viscidus();
+     AddSC_Minipet();
+     AddSC_transmogrify_script();
 #endif
 }
