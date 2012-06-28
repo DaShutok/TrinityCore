@@ -253,29 +253,29 @@ public:
 
         void JustReachedHome()
         {
-			me->SetCanFly(false);
+	    me->SetCanFly(false);
             me->Dismount();
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
             if (Unit::GetCreature((*me), m_uiGraufGUID) == NULL)
                 me->SummonCreature(CREATURE_GRAUF,Location[0].GetPositionX(),Location[0].GetPositionY(),Location[0].GetPositionZ(),3.0f);
         }
 
-		void DamageTaken(Unit* /*doneBy*/, uint32& damage)
+	void DamageTaken(Unit* /*doneBy*/, uint32& damage)
         {
             if (Phase == FLYING)
-			{
-				if (damage > me->GetHealth())
-				{
-					damage = 0;
-				}
-			}
-		}
+	    {
+	       if (damage > me->GetHealth())
+	       {
+		  damage = 0;
+	       }
+	    }
+	 }
 
         void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
 
-			me->SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
+	    me->SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
             me->SetReactState(REACT_PASSIVE);
 
@@ -329,17 +329,17 @@ public:
         {
             if (spell->Id == SPELL_HARPOON_DAMAGE)
             {
-		      m_uiSpellHitCount++;
+	        m_uiSpellHitCount++;
 
-		      if (m_uiSpellHitCount < MAX_HIT_COUNT)
-		      {
-				DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
-		      }
+		if (m_uiSpellHitCount < MAX_HIT_COUNT)
+		{
+		   DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
+		}
                 if (m_uiSpellHitCount >= MAX_HIT_COUNT)
                 {
-					me->SetFullHealth();
+		    me->SetFullHealth();
                     Phase = SKADI;
-		            DoScriptText(SAY_DRAKE_DEATH, me);
+		    DoScriptText(SAY_DRAKE_DEATH, me);
                     me->Dismount();
                     me->SetCanFly(false);
                     me->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
@@ -574,11 +574,11 @@ public:
         void KilledUnit(Unit* /*victim*/)
         {
             DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
-			m_uiDeadPlayer++;
-			if (m_uiDeadPlayer >= 3)
-			{
-				me->GetAI()->SetData(DATA_SKADI_ACHIEV_FAIL, DONE);
-			}
+	    m_uiDeadPlayer++;
+	    if (m_uiDeadPlayer >= 3)
+	    {
+	       me->GetAI()->SetData(DATA_SKADI_ACHIEV_FAIL, DONE);
+	    }
         }
 
         void SpawnMobs()
@@ -642,11 +642,11 @@ class achievement_skadi : public AchievementCriteriaScript
 
         bool OnCheck(Player* /*source*/, Unit* target)
         {
-			if (target->GetAI()->GetData(DATA_SKADI_ACHIEV_FAIL))
-				return false;
-			else if (target->GetAI()->GetData(DATA_SKADI_THE_RUTHLESS_EVENT))
-			return true;
-			return false;
+	   if (target->GetAI()->GetData(DATA_SKADI_ACHIEV_FAIL))
+	       return false;
+	   else if (target->GetAI()->GetData(DATA_SKADI_THE_RUTHLESS_EVENT))
+	        return true;
+	        return false;
         }
 };
 
@@ -654,5 +654,5 @@ void AddSC_boss_skadi()
 {
     new boss_skadi();
     new go_harpoon_launcher();
-	new achievement_skadi();
+    new achievement_skadi();
 }
