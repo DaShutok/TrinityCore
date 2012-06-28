@@ -86,19 +86,19 @@ class boss_viscidus : public CreatureScript
 public:
     boss_viscidus() : CreatureScript("boss_viscidus") {}
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_viscidusAI (pCreature);
+        return new boss_viscidusAI (creature);
     }
 
     struct boss_viscidusAI : public ScriptedAI
     {
-        boss_viscidusAI(Creature *c) : ScriptedAI(c)
+        boss_viscidusAI(Creature *creature) : ScriptedAI(creature)
         {
-            pInstance = c->GetInstanceScript();
+            instance = creature->GetInstanceScript();
         }
 
-        InstanceScript* pInstance;
+        InstanceScript* instance;
         ViscidusState state;
         uint32 HitCounter;
 		uint32 PoisonShock;
