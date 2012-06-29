@@ -157,7 +157,7 @@ enum UlduarGameObjects
     GO_HODIR_DOOR                           = 194634,
     GO_HODIR_ICE_DOOR                       = 194441,
     GO_ARCHIVUM_DOOR                        = 194556,
-	GO_MIMIRON_TRAIN                        = 194675,
+    GO_MIMIRON_TRAIN                        = 194675,
 
     // Algalon the Observer
     GO_CELESTIAL_PLANETARIUM_ACCESS_10      = 194628,
@@ -211,8 +211,8 @@ enum UlduarData
     // Hodir
     DATA_HODIR_RARE_CACHE,
 
-	// Mimiron
-	DATA_CALL_TRAM,
+    // Mimiron
+    DATA_CALL_TRAM,
 
     // Algalon the Observer
     DATA_ALGALON_SUMMON_STATE,
