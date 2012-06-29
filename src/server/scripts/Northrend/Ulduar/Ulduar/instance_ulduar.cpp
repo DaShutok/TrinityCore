@@ -67,6 +67,7 @@ class instance_ulduar : public InstanceMapScript
             uint64 VezaxDoorGUID;
 
             // GameObjects
+			uint64 MimironTrainGUID;
             uint64 KologarnChestGUID;
             uint64 KologarnBridgeGUID;
             uint64 KologarnDoorGUID;
@@ -357,6 +358,10 @@ class instance_ulduar : public InstanceMapScript
                     case GO_XT_002_DOOR:
                         AddDoor(gameObject, true);
                         break;
+					case GO_MIMIRON_TRAIN:
+                        gameObject->setActive(true);
+                        MimironTrainGUID = gameObject->GetGUID();
+                        break;
                     case GO_VEZAX_DOOR:
                         VezaxDoorGUID = gameObject->GetGUID();
                         HandleGameObject(0, false, gameObject);
@@ -622,6 +627,10 @@ class instance_ulduar : public InstanceMapScript
                             SaveToDB();
                         }
                         break;
+						case DATA_CALL_TRAM:
+                        if (GameObject* go = instance->GetGameObject(MimironTrainGUID))
+                            go->UseDoorOrButton();
+                        break;
                     case DATA_HODIR_RARE_CACHE:
                         HodirRareCacheData = data;
                         if (!HodirRareCacheData)
@@ -872,7 +881,35 @@ class instance_ulduar : public InstanceMapScript
         }
 };
 
+class go_call_tram : public GameObjectScript
+{
+public:
+    go_call_tram() : GameObjectScript("go_call_tram") { }
+
+    bool OnGossipHello(Player* /*pPlayer*/, GameObject* pGo)
+    {
+        InstanceScript* pInstance = pGo->GetInstanceScript();
+
+        if (!pInstance)
+            return false;
+
+        switch (pGo->GetEntry())
+        {
+            case 194914:
+            case 194438:
+                pInstance->SetData(DATA_CALL_TRAM, 0);
+                break;
+            case 194912:
+            case 194437:
+                pInstance->SetData(DATA_CALL_TRAM, 1);
+                break;
+        }
+        return true;
+    }
+};
+
 void AddSC_instance_ulduar()
 {
     new instance_ulduar();
+	new go_call_tram();
 }
