@@ -67,7 +67,7 @@ class instance_ulduar : public InstanceMapScript
             uint64 VezaxDoorGUID;
 
             // GameObjects
-			uint64 MimironTrainGUID;
+	    uint64 MimironTrainGUID;
             uint64 KologarnChestGUID;
             uint64 KologarnBridgeGUID;
             uint64 KologarnDoorGUID;
@@ -358,7 +358,7 @@ class instance_ulduar : public InstanceMapScript
                     case GO_XT_002_DOOR:
                         AddDoor(gameObject, true);
                         break;
-					case GO_MIMIRON_TRAIN:
+		    case GO_MIMIRON_TRAIN:
                         gameObject->setActive(true);
                         MimironTrainGUID = gameObject->GetGUID();
                         break;
@@ -627,7 +627,7 @@ class instance_ulduar : public InstanceMapScript
                             SaveToDB();
                         }
                         break;
-						case DATA_CALL_TRAM:
+		    case DATA_CALL_TRAM:
                         if (GameObject* go = instance->GetGameObject(MimironTrainGUID))
                             go->UseDoorOrButton();
                         break;
