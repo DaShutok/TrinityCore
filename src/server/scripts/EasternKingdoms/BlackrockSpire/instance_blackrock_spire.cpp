@@ -55,6 +55,7 @@ public:
         uint64 go_roomrunes[MAX_DRAGONSPIRE_HALL_RUNES];
         uint8 Runemaxprotectors[MAX_DRAGONSPIRE_HALL_RUNES];
         uint8 Runeprotectorsdead[MAX_DRAGONSPIRE_HALL_RUNES];
+		uint32 RuneDoor;
 
         void Initialize()
         {
@@ -76,6 +77,7 @@ public:
             go_emberseerin          = 0;
             go_doors                = 0;
             go_emberseerout         = 0;
+			RuneDoor                = 0;
         }
 
         bool IsEncounterInProgress() const
@@ -318,11 +320,46 @@ public:
 
             OUT_LOAD_INST_DATA_COMPLETE;
         }
+
+		void SetData(uint32 type, uint32 data)
+        {
+			switch (type)
+			{
+			case DATA_RUNE_DOOR:
+				RuneDoor++;
+				if (RuneDoor == 7)
+				{
+				if (GameObject* go = instance->GetGameObject(go_emberseerin))
+                    go->UseDoorOrButton();
+				if (GameObject* go = instance->GetGameObject(go_doors))
+                    go->UseDoorOrButton();
+                    break;
+				}
+			}
+		}
     };
 
+};
+
+class go_door_room : public GameObjectScript
+{
+public:
+    go_door_room() : GameObjectScript("go_door_room") {}
+
+    bool OnGossipHello(Player* /*pPlayer*/, GameObject* go)
+    {
+        InstanceScript* instance = go->GetInstanceScript();
+
+        if (!instance)
+            return false;
+		go->Delete();
+		instance->SetData(DATA_RUNE_DOOR, DONE);
+        return true;
+    }
 };
 
 void AddSC_instance_blackrock_spire()
 {
     new instance_blackrock_spire();
+	new go_door_room();
 }
