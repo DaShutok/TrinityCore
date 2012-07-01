@@ -566,19 +566,15 @@ public:
             {
                 m_pInstance->SetData(DATA_SKADI_THE_RUTHLESS_EVENT, DONE);
 
-                //if (IsHeroic() && m_bAchiev)
-					//m_pInstance->(ACHIEV_MY_GIRL_LOVES_TO_SKADI);
+                if (IsHeroic() && m_uiDeadPlayer < 3)
+					m_pInstance->DoCompleteAchievement(ACHIEV_MY_GIRL_LOVES_TO_SKADI);
             }
         }
 
         void KilledUnit(Unit* /*victim*/)
         {
             DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
-	    m_uiDeadPlayer++;
-	    if (m_uiDeadPlayer >= 3)
-	    {
-	       me->GetAI()->SetData(DATA_SKADI_ACHIEV_FAIL, DONE);
-	    }
+	        m_uiDeadPlayer++;
         }
 
         void SpawnMobs()
@@ -635,24 +631,8 @@ class go_harpoon_launcher : public GameObjectScript
     }
 };
 
-class achievement_skadi : public AchievementCriteriaScript
-{
-    public:
-        achievement_skadi() : AchievementCriteriaScript("achievement_skadi") { }
-
-        bool OnCheck(Player* /*source*/, Unit* target)
-        {
-	   if (target->GetAI()->GetData(DATA_SKADI_ACHIEV_FAIL))
-	       return false;
-	   else if (target->GetAI()->GetData(DATA_SKADI_THE_RUTHLESS_EVENT))
-	        return true;
-	        return false;
-        }
-};
-
 void AddSC_boss_skadi()
 {
     new boss_skadi();
     new go_harpoon_launcher();
-    new achievement_skadi();
 }
