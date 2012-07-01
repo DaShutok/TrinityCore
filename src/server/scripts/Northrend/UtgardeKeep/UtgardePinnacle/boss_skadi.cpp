@@ -173,11 +173,6 @@ enum eAchievments
     MAX_HIT_COUNT                  = 3
 };
 
-enum eData
-{
-	DATA_SKADI_ACHIEV_FAIL
-};
-
 class boss_skadi : public CreatureScript
 {
 public:
