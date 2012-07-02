@@ -56,6 +56,8 @@ public:
         uint8 Runemaxprotectors[MAX_DRAGONSPIRE_HALL_RUNES];
         uint8 Runeprotectorsdead[MAX_DRAGONSPIRE_HALL_RUNES];
 		uint32 RuneDoor;
+		uint64 GythEntry;
+		uint64 GythExit;
 
         void Initialize()
         {
@@ -78,6 +80,8 @@ public:
             go_doors                = 0;
             go_emberseerout         = 0;
 			RuneDoor                = 0;
+			GythEntry               = 0;
+			GythExit                = 0;
         }
 
         bool IsEncounterInProgress() const
@@ -180,6 +184,12 @@ public:
                 case GO_ROOM_7_RUNE:
                     go_roomrunes[6] = go->GetGUID();
                     break;
+				case GO_GYTH_ENTRY_DOOR:
+					GythEntry = go->GetGUID();
+					break;
+				case GO_GYTH_EXIT_DOOR:
+					GythExit = go->GetGUID();
+					break;
             }
         }
 
@@ -276,6 +286,10 @@ public:
                     return go_roomrunes[5];
                 case GO_ROOM_7_RUNE:
                     return go_roomrunes[6];
+				case GO_GYTH_ENTRY_DOOR:
+					return GythEntry;
+				case GO_GYTH_EXIT_DOOR:
+					return GythExit;
             }
 
             return 0;

@@ -82,8 +82,18 @@ public:
 
         void JustDied(Unit* /*killer*/)
         {
+			OpenDoors(true);
             _JustDied();
+			instance->SetData(DATA_GYTH, DONE);
         }
+
+		void OpenDoors(bool Boss_Killed)
+        {
+           if (GameObject* door1 = me->GetMap()->GetGameObject(instance->GetData64(GO_GYTH_ENTRY_DOOR)))
+               door1->SetGoState(GO_STATE_ACTIVE);
+           if (GameObject* door2 = me->GetMap()->GetGameObject(instance->GetData64(GO_GYTH_EXIT_DOOR)))
+               door2->SetGoState(GO_STATE_ACTIVE);
+	    }
 
         void SummonCreatureWithRandomTarget(uint32 creatureId, uint8 count)
         {
