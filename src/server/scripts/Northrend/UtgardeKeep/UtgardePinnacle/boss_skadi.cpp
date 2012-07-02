@@ -613,14 +613,17 @@ class go_harpoon_launcher : public GameObjectScript
     public:
         go_harpoon_launcher() : GameObjectScript("go_harpoon_launcher") { }
 
-        bool OnGossipHello(Player* player, GameObject* go)
+    bool OnGossipHello(Player* player, GameObject* go)
     {
         InstanceScript* instance = go->GetInstanceScript();
         if (!instance)
             return false;
 
         if (Creature* pSkadi = Unit::GetCreature(*go, instance->GetData64(DATA_SKADI_THE_RUTHLESS)))
-            player->CastSpell(pSkadi, SPELL_RAPID_FIRE, true);
+            if (pSkadi->GetPositionX() >= 515)
+            {
+			   player->CastSpell(pSkadi, SPELL_RAPID_FIRE, true);
+			}
 
         return false;
     }
