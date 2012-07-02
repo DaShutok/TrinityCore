@@ -248,7 +248,7 @@ public:
 
         void JustReachedHome()
         {
-	    me->SetCanFly(false);
+	        me->SetCanFly(false);
             me->Dismount();
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
             if (Unit::GetCreature((*me), m_uiGraufGUID) == NULL)
@@ -261,7 +261,7 @@ public:
 	    {
 	       if (damage > me->GetHealth())
 	       {
-		  damage = 0;
+		     damage = 0;
 	       }
 	    }
 	 }
@@ -270,7 +270,7 @@ public:
         {
             DoScriptText(SAY_AGGRO, me);
 
-	    me->SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
+	        me->SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
             me->SetReactState(REACT_PASSIVE);
 
@@ -332,9 +332,9 @@ public:
 		}
                 if (m_uiSpellHitCount >= MAX_HIT_COUNT)
                 {
-		    me->SetFullHealth();
+		            me->SetFullHealth();
                     Phase = SKADI;
-		    DoScriptText(SAY_DRAKE_DEATH, me);
+		            DoScriptText(SAY_DRAKE_DEATH, me);
                     me->Dismount();
                     me->SetCanFly(false);
                     me->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
