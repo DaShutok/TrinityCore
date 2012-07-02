@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -148,7 +148,7 @@ class boss_ignis : public CreatureScript
                 instance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEVEMENT_IGNIS_START_EVENT);
             }
 
-            void JustDied(Unit* /*killer*/)
+            void JustDied(Unit* /*victim*/)
             {
                 _JustDied();
                 DoScriptText(SAY_DEATH, me);
@@ -371,15 +371,15 @@ class npc_scorch_ground : public CreatureScript
                 creature->SetDisplayId(16925); //model 2 in db cannot overwrite wdb fields
             }
 
-            void MoveInLineOfSight(Unit* who)
+            void MoveInLineOfSight(Unit* unit)
             {
                 if (!_heat)
                 {
-                    if (who->GetEntry() == NPC_IRON_CONSTRUCT)
+                    if (unit->GetEntry() == NPC_IRON_CONSTRUCT)
                     {
-                        if (!who->HasAura(SPELL_HEAT) || !who->HasAura(SPELL_MOLTEN))
+                        if (!unit->HasAura(SPELL_HEAT) || !unit->HasAura(SPELL_MOLTEN))
                         {
-                            _constructGUID = who->GetGUID();
+                            _constructGUID = unit->GetGUID();
                             _heat = true;
                         }
                     }
