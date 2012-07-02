@@ -57,7 +57,6 @@ public:
     {
         boss_gythAI(Creature* creature) : BossAI(creature, DATA_GYTH)
         {
-            DoCast(me, SPELL_SELF_ROOT_FOREVER);
         }
 
         bool SummonedRend;
@@ -73,6 +72,8 @@ public:
 
         void EnterCombat(Unit* /*who*/)
         {
+			me->SetVisible(true);
+			me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             _EnterCombat();
             events.ScheduleEvent(EVENT_SUMMON_DRAGON_PACK, 3 * IN_MILLISECONDS);
             events.ScheduleEvent(EVENT_SUMMON_ORC_PACK, 60 * IN_MILLISECONDS);
@@ -117,6 +118,7 @@ public:
                         // Interrupt any spell casting
                         me->InterruptNonMeleeSpells(false);
                         // Gyth model
+						me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         me->SetDisplayId(me->GetCreatureTemplate()->Modelid1);
                         me->SummonCreature(NPC_WARCHIEF_REND_BLACKHAND, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 900 * IN_MILLISECONDS);
                         events.ScheduleEvent(EVENT_CORROSIVE_ACID, 8 * IN_MILLISECONDS);
