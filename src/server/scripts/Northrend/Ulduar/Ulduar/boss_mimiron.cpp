@@ -339,7 +339,7 @@ class boss_mimiron : public CreatureScript
                 else
                     _checkTargetTimer -= diff;
 
-                //_DoAggroPulse(diff);
+                DoZoneInCombat();
 
                 if (_enrageTimer <= diff && !_enraged)
                 {
@@ -900,7 +900,7 @@ public:
             if (!UpdateVictim())
                 return;
 
-            //_DoAggroPulse(diff);
+            DoZoneInCombat();
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING) || me->HasUnitState(UNIT_STATE_STUNNED))
@@ -1251,7 +1251,7 @@ public:
                 else spinTimer -= diff;
             }
 
-            //_DoAggroPulse(diff);
+            DoZoneInCombat();
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -1516,7 +1516,7 @@ public:
             if (!UpdateVictim())
                 return;
 
-            //_DoAggroPulse(diff);
+            DoZoneInCombat();
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
