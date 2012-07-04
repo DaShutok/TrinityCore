@@ -1242,6 +1242,7 @@ void AddSC_npc_testasd();
 void AddSC_boss_viscidus();
 void AddSC_Minipet();
 void AddSC_transmogrify_script();
+void AddSC_ulduar();
 #endif
 
 void AddCustomScripts()
@@ -1253,5 +1254,6 @@ void AddCustomScripts()
      AddSC_boss_viscidus();
      AddSC_Minipet();
      AddSC_transmogrify_script();
+	 AddSC_ulduar();
 #endif
 }

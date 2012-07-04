@@ -3542,6 +3542,13 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->manaCost = 0;
                 spellInfo->manaPerSecond = 0;
                 break;
+				// Leviathan auras
+            case 65076:
+            case 65075:
+            case 64482:
+                spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_100_YARDS;
+                spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_100_YARDS;
+                break;
             default:
                 break;
         }

@@ -99,10 +99,6 @@ enum Creatures
     NPC_FREYA_RETICLE              = 33366,
     NPC_WRITHING_LASHER            = 33387,
     NPC_WARD_OF_LIFE               = 34275,
-    NPC_LOREKEEPER                 = 33686, // Hard mode starter
-    NPC_BRANN_BRONZBEARD           = 33579,
-    NPC_DELORAH                    = 33701,
-    NPC_ULDUAR_GAUNTLET_GENERATOR  = 33571  // Trigger tied to towers
 };
 
 enum Events
@@ -169,7 +165,6 @@ enum Actions
 {
     ACTION_START_ENCOUNTER           = 10,
     ACTION_OVERLOAD_CIRCUIT          = 11,
-    ACTION_ACTIVATE_HARD_MODE        = 12
 };
 
 Position const Misc[]=
@@ -230,6 +225,7 @@ class boss_flame_leviathan : public CreatureScript
             Vehicle* vehicle;
             uint8 ActiveTowersCount;
             uint8 Shutdown;
+			uint32 TowerCount;
             bool ActiveTowers;
             bool towerOfStorms;
             bool towerOfLife;
@@ -247,6 +243,8 @@ class boss_flame_leviathan : public CreatureScript
                 _pursueTarget = 0;
                 me->SetReactState(REACT_DEFENSIVE);
                 me->setActive(true);
+				me->ResetLootMode();
+				TowerCount = 0;
             }
 
             void JustReachedHome()
@@ -304,24 +302,28 @@ class boss_flame_leviathan : public CreatureScript
                 {
                     if (towerOfFrost)
                     {
+						TowerCount++;
                         me->AddAura(SPELL_BUFF_TOWER_OF_FR0ST, me);
                         events.ScheduleEvent(EVENT_HODIRS_FURY, 20*IN_MILLISECONDS);
                     }
 
                     if (towerOfLife)
                     {
+						TowerCount++;
                         me->AddAura(SPELL_BUFF_TOWER_OF_LIFE, me);
                         events.ScheduleEvent(EVENT_FREYAS_WARD, 30*IN_MILLISECONDS);
                     }
 
                     if (towerOfFlames)
                     {
+						TowerCount++;
                         me->AddAura(SPELL_BUFF_TOWER_OF_FLAMES, me);
                         events.ScheduleEvent(EVENT_MIMIRONS_INFERNO, 40*IN_MILLISECONDS);
                     }
 
                     if (towerOfStorms)
                     {
+						TowerCount++;
                         me->AddAura(SPELL_BUFF_TOWER_OF_STORMS, me);
                         events.ScheduleEvent(EVENT_THORIMS_HAMMER, 50*IN_MILLISECONDS);
                     }
@@ -333,6 +335,23 @@ class boss_flame_leviathan : public CreatureScript
                 }
                 else
                     DoScriptText(SAY_AGGRO, me);
+
+				switch (TowerCount)
+                {
+                case 4:
+                    me->AddLootMode(LOOT_MODE_HARD_MODE_4);
+                case 3:
+                    me->AddLootMode(LOOT_MODE_HARD_MODE_3);
+                case 2:
+                    me->AddLootMode(LOOT_MODE_HARD_MODE_2);
+                case 1:
+                    DoScriptText(SAY_HARDMODE, me);
+                    me->AddLootMode(LOOT_MODE_HARD_MODE_1);
+                    break;
+                default:
+					me->SetLootMode(LOOT_MODE_DEFAULT);
+					break;
+				}
             }
 
             void JustDied(Unit* /*victim*/)
