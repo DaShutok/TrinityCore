@@ -339,7 +339,7 @@ class boss_mimiron : public CreatureScript
                 else
                     _checkTargetTimer -= diff;
 
-                DoZoneInCombat();
+                _DoAggroPulse(diff);
 
                 if (_enrageTimer <= diff && !_enraged)
                 {
@@ -505,6 +505,7 @@ class boss_mimiron : public CreatureScript
                                         }
                                     }
                                 }
+								me->ExitVehicle();
                                 JumpToNextStep(8000);
                                 break;
                             case 5:
@@ -577,15 +578,15 @@ class boss_mimiron : public CreatureScript
                                 break;
                             case 4:
                                 me->ExitVehicle();
-                                //me->GetMotionMaster()->MoveJump(2745.06f, 2569.36f, 379.90f, 10, 15);
+                                me->GetMotionMaster()->MoveJump(2745.06f, 2569.36f, 379.90f, 10, 15);
                                 if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
-                                     me->EnterVehicle(AerialUnit, 0);
+                                     me->EnterVehicle(AerialUnit, 1);
                                 JumpToNextStep(2000);
                                 break;
                             case 5:
                                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
                                 DoScriptText(SAY_AERIAL_ACTIVATE, me);
-                                JumpToNextStep(8000);
+                                JumpToNextStep(4000);
                                 break;
                             case 6:
                                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
@@ -691,20 +692,20 @@ class boss_mimiron : public CreatureScript
                     case DO_ACTIVATE_VX001:
                         _phase = PHASE_VX001_ACTIVATION;
                         _step = 0;
-                        _phaseTimer = -1;
+                        _phaseTimer = 0;
                         JumpToNextStep(100);
                         break;
                     case DO_ACTIVATE_AERIAL:
                         _phase = PHASE_AERIAL_ACTIVATION;
                         _step = 0;
-                        _phaseTimer = -1;
+                        _phaseTimer = 0;
                         JumpToNextStep(5000);
                         break;
                     case DO_ACTIVATE_V0L7R0N:
                         me->SetVisible(true);
                         _phase = PHASE_V0L7R0N_ACTIVATION;
                         _step = 0;
-                        _phaseTimer = -1;
+                        _phaseTimer = 0;
                         JumpToNextStep(1000);
                         break;
                     case DO_ACTIVATE_DEATH_TIMER:
@@ -900,7 +901,7 @@ public:
             if (!UpdateVictim())
                 return;
 
-            DoZoneInCombat();
+            _DoAggroPulse(diff);
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING) || me->HasUnitState(UNIT_STATE_STUNNED))
@@ -1225,6 +1226,7 @@ public:
         {
             if (!UpdateVictim())
                 return;
+			me->HandleEmoteCommand(EMOTE_ONESHOT_EMERGE);
 
             if (spinning)
             {
@@ -1251,7 +1253,7 @@ public:
                 else spinTimer -= diff;
             }
 
-            DoZoneInCombat();
+            _DoAggroPulse(diff);
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -1421,6 +1423,9 @@ public:
         {
             me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_ROCKET_STRIKE_DMG, true);
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+			me->SetCanFly(true);
+			me->GetMotionMaster()->MoveJump(2745.06f, 2569.36f, 379.90f, 10, 15);
+			me->SetReactState(REACT_AGGRESSIVE);
         }
 
         Phases phase;
@@ -1474,6 +1479,7 @@ public:
             switch (action)
             {
                 case DO_START_AERIAL:
+					me->GetMotionMaster()->MoveJump(2737.74f, 2556.51f, 379.47f, 10, 15);
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC);
                     me->SetReactState(REACT_AGGRESSIVE);
                     phase = PHASE_AERIAL_SOLO;
@@ -1516,7 +1522,7 @@ public:
             if (!UpdateVictim())
                 return;
 
-            DoZoneInCombat();
+            _DoAggroPulse(diff);
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))

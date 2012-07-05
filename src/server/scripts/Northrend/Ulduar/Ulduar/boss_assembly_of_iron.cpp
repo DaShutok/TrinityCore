@@ -375,7 +375,7 @@ class boss_steelbreaker : public CreatureScript
 
 				instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_SUPERCHARGE);
                 events.Update(diff);
-                //_DoAggroPulse(diff);
+                _DoAggroPulse(diff);
 
                 if (me->HasUnitState(UNIT_STATE_CASTING))
                     return;
@@ -618,7 +618,7 @@ class boss_runemaster_molgeim : public CreatureScript
 
 				instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_SUPERCHARGE);
                 events.Update(diff);
-                //_DoAggroPulse(diff);
+                _DoAggroPulse(diff);
 
                 if (me->HasUnitState(UNIT_STATE_CASTING))
                     return;
@@ -971,7 +971,7 @@ class boss_stormcaller_brundir : public CreatureScript
 
 				instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_SUPERCHARGE);
                 events.Update(diff);
-                //_DoAggroPulse(diff);
+                _DoAggroPulse(diff);
 
                 if (me->HasUnitState(UNIT_STATE_CASTING))
                     return;

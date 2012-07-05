@@ -3549,6 +3549,21 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_100_YARDS;
                 spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_100_YARDS;
                 break;
+				//Freya Auras
+			case 65585:
+			case 62385:
+			case 62713:
+			case 62968:
+				spellInfo->EffectRadiusIndex[EFFECT_0] = EFFECT_RADIUS_100_YARDS;
+				spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_100_YARDS;
+				spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_100_YARDS;
+				break;
+			case 64436:
+				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_CASTER;
+				break;
             default:
                 break;
         }

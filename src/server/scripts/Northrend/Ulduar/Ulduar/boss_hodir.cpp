@@ -331,6 +331,7 @@ class boss_hodir : public CreatureScript
                 _EnterCombat();
                 DoScriptText(SAY_AGGRO, me);
                 DoCast(me, SPELL_BITING_COLD, true);
+				me->SetReactState(REACT_AGGRESSIVE);
 
                 gettingColdInHereTimer = 1000;
                 gettingColdInHere = true;

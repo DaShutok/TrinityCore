@@ -422,7 +422,7 @@ class boss_flame_leviathan : public CreatureScript
                     return;
 
                 events.Update(diff);
-                //_DoAggroPulse(diff);
+                _DoAggroPulse(diff);
 
                 if (me->HasUnitState(UNIT_STATE_CASTING))
                     return;
