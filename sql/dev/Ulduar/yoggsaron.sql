@@ -1,3 +1,5 @@
+SET NAMES `latin1`;
+
 UPDATE creature_template SET scriptname = 'boss_sara' WHERE entry = 33134;
 UPDATE script_texts SET npc_entry = 33134 WHERE npc_entry = 33288 AND entry IN (-1603330,-1603331,-1603332,-1603333);
 UPDATE script_texts SET content_default = "Help me! Please get them off me!" WHERE npc_entry = 33134 AND entry = -1603310;
@@ -129,6 +131,24 @@ INSERT INTO conditions
  ErrorTextId,ScriptName,COMMENT)
 VALUES
 (13,1,64184,0,18,1,33288,0,0,'','Effekt on YoggSaron');*/
+
+delete FROM script_texts WHERE npc_entry = 33134;
+insert into `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc1`, `content_loc2`, `content_loc3`, `content_loc4`, `content_loc5`, `content_loc6`, `content_loc7`, `content_loc8`, `sound`, `type`, `language`, `emote`, `comment`) values
+('33134','-1603333','Cower before my true form.',NULL,NULL,NULL,NULL,NULL,'¡Temed mi verdadera forma!',NULL,NULL,'0','1','0','0','YoggSaron SAY_PHASE2_4'),
+('33134','-1603332','The fiend of a thousand faces.',NULL,NULL,NULL,NULL,NULL,'El demonio de mil caras.',NULL,NULL,'0','1','0','0','YoggSaron SAY_PHASE2_3'),
+('33134','-1603331','The monster in your nightmares.',NULL,NULL,NULL,NULL,NULL,'El monstruo de tus pesadillas.',NULL,NULL,'0','1','0','0','YoggSaron SAY_PHASE2_2'),
+('33134','-1603330','I am the lucid dream.',NULL,NULL,NULL,NULL,NULL,'Soy un sueño lúcido.',NULL,NULL,'15754','1','0','0','YoggSaron SAY_PHASE2_1'),
+('33134','-1603319','Tremble, mortals, before the coming of the end!',NULL,NULL,NULL,NULL,NULL,'¡Temblad, mortales, ante la llegada del fin!',NULL,NULL,'15777','1','0','0','Sara SAY_PHASE2_2'),
+('33134','-1603318','Suffocate upon your own hate!',NULL,NULL,NULL,NULL,NULL,'¡Asfixiaos con vuestro odio!',NULL,NULL,'15776','1','0','0','Sara SAY_PHASE2_1'),
+('33134','-1603317','Weak-minded fools!',NULL,NULL,NULL,NULL,NULL,'¡Loco descerebrado!',NULL,NULL,'15780','5','0','0','Sara WHISP_INSANITY'),
+('33134','-1603316','Could they have been saved?',NULL,NULL,NULL,NULL,NULL,'¿Se podrían haber salvado?',NULL,NULL,'15779','1','0','0','Sara SAY_SLAY_2'),
+('33134','-1603315','Powerless to act...',NULL,NULL,NULL,NULL,NULL,'No puedes actuar...',NULL,NULL,'15778','1','0','0','Sara SAY_SLAY_1'),
+('33134','-1603314','Let hatred and rage guide your blows!',NULL,NULL,NULL,NULL,NULL,'¡Dejad que el odio y la ira guien vuestros golpes!',NULL,NULL,'15774','1','0','0','Sara SAY_AGGRO_3'),
+('33134','-1603313','Yes! YES! Show them no mercy! Give no pause to your attacks!',NULL,NULL,NULL,NULL,NULL,'¡Si! ¡SI! ¡No mostréis piedad! ¡No ceséis vuestros ataques!',NULL,NULL,'15773','1','0','0','Sara SAY_AGGRO_2'),
+('33134','-1603312','The time to strike at the head of the beast will soon be upon us! Focus your anger and hatred on his minions!',NULL,NULL,NULL,NULL,NULL,'¡Pronto llegará la hora de golpear la cabeza del monstruo! ¡Centrad vuestra ira y odio en sus esbirros!',NULL,NULL,'15775','1','0','0','Sara SAY_AGGRO_1'),
+('33134','-1603311','What do you want from me? Leave me alone!',NULL,NULL,NULL,NULL,NULL,'¿Qué quereis de mi? ¡Dejarme sola!',NULL,NULL,'15772','1','0','0','Sara SAY_PREFIGHT_2'),
+('33134','-1603310','Help me! Please get them off me!',NULL,NULL,NULL,NULL,NULL,'¡Ayudarme! ¡Porfavor sacarmelo!',NULL,NULL,'15771','1','0','0','Sara SAY_PREFIGHT_1');
+
 
 -- Missing Says Vision
 DELETE FROM script_texts WHERE entry BETWEEN -1603360 AND -1603342;

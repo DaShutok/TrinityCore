@@ -1243,6 +1243,8 @@ void AddSC_boss_viscidus();
 void AddSC_Minipet();
 void AddSC_transmogrify_script();
 void AddSC_ulduar();
+void AddSC_boss_thorim();
+void AddSC_boss_yoggsaron();
 #endif
 
 void AddCustomScripts()
@@ -1255,5 +1257,7 @@ void AddCustomScripts()
      AddSC_Minipet();
      AddSC_transmogrify_script();
 	 AddSC_ulduar();
+	 AddSC_boss_thorim();
+	 AddSC_boss_yoggsaron();
 #endif
 }
