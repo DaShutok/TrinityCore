@@ -181,6 +181,7 @@ enum UlduarGameObjects
     GO_YOGGBRAIN_DOOR_2                   = 194636,
     GO_YOGGBRAIN_DOOR_3                   = 194637,
     GO_ALGALON_DOOR                       = 194767,
+	GO_ALGALON_DOOR_2                     = 194911,
     GO_ALGALON_FLOOR_COM                  = 194715,
     GO_ALGALON_FLOOR_OOC                  = 194716,
     GO_ALGALON_GLOBE                      = 194148,

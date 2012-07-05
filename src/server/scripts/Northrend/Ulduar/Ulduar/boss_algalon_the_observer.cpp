@@ -1369,6 +1369,8 @@ class go_celestial_console : public GameObjectScript
                     Brann->AI()->DoAction(ACTION_BRANN_INTRO);
                     if (GameObject* Door = ObjectAccessor::GetGameObject(*go, go->GetInstanceScript()->GetData64((GO_ALGALON_DOOR))))
                         Door->SetGoState(GO_STATE_ACTIVE);
+					if (GameObject* Door = ObjectAccessor::GetGameObject(*go, go->GetInstanceScript()->GetData64((GO_ALGALON_DOOR_2))))
+                        Door->SetGoState(GO_STATE_ACTIVE);
                 }
             }
             return true;

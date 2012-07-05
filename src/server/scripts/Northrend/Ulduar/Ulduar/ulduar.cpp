@@ -79,6 +79,22 @@ enum NPCs
     NPC_TOR_MAGE                 = 33672,
 };
 
+struct SummonLocation
+{
+    float x,y,z,o;
+    uint32 entry;
+};
+
+SummonLocation VehiclesSpawn[]=
+{
+    {-711.28f, -111.661f, 430.818f, 3.120f, 33062},
+    {-714.00f, -125.495f, 430.615f, 2.188f, 33062},
+    {-728.37f, -183.423f, 430.005f, 5.917f, 33109},
+    {-760.14f, -222.815f, 431.024f, 6.170f, 33109},
+    {-821.10f, -58.4098f, 429.842f, 6.250f, 33060},
+    {-784.49f, -25.4125f, 499.842f, 1.222f, 33060}
+};
+
 class npc_ulduar_lorekeeper : public CreatureScript
 {
     public:
@@ -730,6 +746,9 @@ public:
                     break;
                 case 6:
                     me->MonsterYell(SAY_BRANN_3, LANG_UNIVERSAL, 0);
+					for (uint8 i = 0; i < 6; ++i)
+					me->SummonCreature(VehiclesSpawn[i].entry,VehiclesSpawn[i].x, VehiclesSpawn[i].y, VehiclesSpawn[i].z, VehiclesSpawn[i].o,
+                    TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
                     JumpSteppingBrann(4000);
                     break;
                 case 7:

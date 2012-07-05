@@ -25,6 +25,8 @@
 
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
+#include "SpellAuraEffects.h"
 #include "ulduar.h"
 #include "Vehicle.h"
 
@@ -33,6 +35,9 @@ enum Spells
     SPELL_TYMPANIC_TANTRUM                      = 62776,
     SPELL_SEARING_LIGHT_10                      = 63018,
     SPELL_SEARING_LIGHT_25                      = 65121,
+
+	SPELL_SUMMON_LIFE_SPARK                     = 64210,
+    SPELL_SUMMON_VOID_ZONE                      = 64203,
 
     SPELL_GRAVITY_BOMB_10                       = 63024,
     SPELL_GRAVITY_BOMB_25                       = 64234,
@@ -393,7 +398,7 @@ class boss_xt002 : public CreatureScript
                 me->RemoveAurasDueToSpell(SPELL_TYMPANIC_TANTRUM);
 
                 // Make untargetable
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_NOT_SELECTABLE);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_NOT_SELECTABLE| UNIT_FLAG_DISABLE_MOVE);
 
                 // Summon the heart npc
                 if (Creature* heart = me->SummonCreature(NPC_XT002_HEART, *me, TEMPSUMMON_TIMED_DESPAWN, 30*IN_MILLISECONDS))
@@ -833,59 +838,28 @@ class BombTargetSelector : public std::unary_function<Unit *, bool>
         Unit const* _victim;
 };
 
-class spell_xt002_searing_light : public SpellScriptLoader
+class spell_xt002_searing_light_spawn_life_spark : public SpellScriptLoader
 {
     public:
-        spell_xt002_searing_light() : SpellScriptLoader("spell_xt002_searing_light") { }
-
-        class spell_xt002_searing_light_targeting_SpellScript : public SpellScript
-        {
-            PrepareSpellScript(spell_xt002_searing_light_targeting_SpellScript);
-
-            bool Load()
-            {
-                _target = NULL;
-                return GetCaster()->GetTypeId() == TYPEID_UNIT;
-            }
-
-            void FilterTargets(std::list<Unit*>& unitList)
-            {
-                unitList.remove_if(BombTargetSelector(GetCaster()->ToCreature(), GetCaster()->getVictim()));
-
-                if (unitList.empty())
-                    return;
-
-                //_target = SelectRandomContainerElement(unitList);
-                unitList.clear();
-                unitList.push_back(_target);
-            }
-
-            void SetTarget(std::list<Unit*>& unitList)
-            {
-                unitList.clear();
-                if (_target)
-                    unitList.push_back(_target);
-            }
-
-            void Register()
-            {
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_searing_light_targeting_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_searing_light_targeting_SpellScript::SetTarget, EFFECT_1, TARGET_UNIT_DEST_AREA_ENEMY);
-            }
-
-            Unit* _target;
-        };
+        spell_xt002_searing_light_spawn_life_spark() : SpellScriptLoader("spell_xt002_searing_light_spawn_life_spark") { }
 
         class spell_xt002_searing_light_spawn_life_spark_AuraScript : public AuraScript
         {
             PrepareAuraScript(spell_xt002_searing_light_spawn_life_spark_AuraScript);
 
+            bool Validate(SpellInfo const* /*spell*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_SUMMON_LIFE_SPARK))
+                    return false;
+                return true;
+            }
+
             void OnRemove(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
             {
                 if (Player* player = GetOwner()->ToPlayer())
                     if (Unit* xt002 = GetCaster())
-                        if (xt002->HasAura(aurEff->GetAmount())) // Heartbreak aura indicating hard mode
-                            xt002->SummonCreature(NPC_LIFE_SPARK, *player, TEMPSUMMON_TIMED_DESPAWN, 3*MINUTE*IN_MILLISECONDS);
+                        if (xt002->HasAura(aurEff->GetAmount()))   // Heartbreak aura indicating hard mode
+                            player->CastSpell(player, SPELL_SUMMON_LIFE_SPARK, true);
             }
 
             void Register()
@@ -894,70 +868,34 @@ class spell_xt002_searing_light : public SpellScriptLoader
             }
         };
 
-        SpellScript* GetSpellScript() const
-        {
-            return new spell_xt002_searing_light_targeting_SpellScript();
-        }
-
         AuraScript* GetAuraScript() const
         {
             return new spell_xt002_searing_light_spawn_life_spark_AuraScript();
         }
 };
 
-class spell_xt002_gravity_bomb : public SpellScriptLoader
+class spell_xt002_gravity_bomb_aura : public SpellScriptLoader
 {
     public:
-        spell_xt002_gravity_bomb() : SpellScriptLoader("spell_xt002_gravity_bomb") { }
-
-        class spell_xt002_gravity_bomb_targeting_SpellScript : public SpellScript
-        {
-            PrepareSpellScript(spell_xt002_gravity_bomb_targeting_SpellScript);
-
-            bool Load()
-            {
-                _target = NULL;
-                return GetCaster()->GetTypeId() == TYPEID_UNIT;
-            }
-
-            void FilterTargets(std::list<Unit*>& unitList)
-            {
-                unitList.remove_if(BombTargetSelector(GetCaster()->ToCreature(), GetCaster()->getVictim()));
-
-                if (unitList.empty())
-                    return;
-
-                //_target = SelectRandomContainerElement(unitList);
-                unitList.clear();
-                unitList.push_back(_target);
-            }
-
-            void SetTarget(std::list<Unit*>& unitList)
-            {
-                unitList.clear();
-                if (_target)
-                    unitList.push_back(_target);
-            }
-
-            void Register()
-            {
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_gravity_bomb_targeting_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_gravity_bomb_targeting_SpellScript::SetTarget, EFFECT_2, TARGET_UNIT_DEST_AREA_ENEMY);
-            }
-
-            Unit* _target;
-        };
+        spell_xt002_gravity_bomb_aura() : SpellScriptLoader("spell_xt002_gravity_bomb_aura") { }
 
         class spell_xt002_gravity_bomb_aura_AuraScript : public AuraScript
         {
             PrepareAuraScript(spell_xt002_gravity_bomb_aura_AuraScript);
 
+            bool Validate(SpellInfo const* /*spell*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_SUMMON_VOID_ZONE))
+                    return false;
+                return true;
+            }
+
             void OnRemove(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
             {
                 if (Player* player = GetOwner()->ToPlayer())
                     if (Unit* xt002 = GetCaster())
-                        if (xt002->HasAura(aurEff->GetAmount())) // Heartbreak aura indicating hard mode
-                            xt002->SummonCreature(NPC_VOID_ZONE, *player, TEMPSUMMON_TIMED_DESPAWN, 3*MINUTE*IN_MILLISECONDS);
+                        if (xt002->HasAura(aurEff->GetAmount()))   // Heartbreak aura indicating hard mode
+                            player->CastSpell(player, SPELL_SUMMON_VOID_ZONE, true);
             }
 
             void OnPeriodic(AuraEffect const* aurEff)
@@ -981,11 +919,6 @@ class spell_xt002_gravity_bomb : public SpellScriptLoader
                 AfterEffectRemove += AuraEffectRemoveFn(spell_xt002_gravity_bomb_aura_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
             }
         };
-
-        SpellScript* GetSpellScript() const
-        {
-            return new spell_xt002_gravity_bomb_targeting_SpellScript();
-        }
 
         AuraScript* GetAuraScript() const
         {
@@ -1103,8 +1036,8 @@ void AddSC_boss_xt002()
     new mob_boombot();
     new mob_void_zone();
     new mob_life_spark();
-    new spell_xt002_searing_light();
-    new spell_xt002_gravity_bomb();
+    new spell_xt002_searing_light_spawn_life_spark();
+    new spell_xt002_gravity_bomb_aura();
     new spell_xt002_gravity_bomb_damage();
     new spell_xt002_tympanic_tantrum();
     new achievement_nerf_engineering();
