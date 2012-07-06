@@ -103,6 +103,7 @@ class instance_ulduar : public InstanceMapScript
             uint64 ArchivumDoorGUID;
             uint64 XT002DoorGUID;
             uint64 IronCouncilEntranceGUID;
+			uint64 AlgalonDoor2GUID;
 
             // Miscellaneous
             uint64 WayToYoggGUID;
@@ -169,6 +170,7 @@ class instance_ulduar : public InstanceMapScript
                 WayToYoggGUID                    = 0;
                 ColossusData                     = 0;
                 elderCount                       = 0;
+				AlgalonDoor2GUID                 = 0;
                 conSpeedAtory                    = false;
                 Unbroken                         = true;
 
@@ -593,7 +595,7 @@ class instance_ulduar : public InstanceMapScript
                         RunicDoorGUID = gameObject->GetGUID();
                     break;
                     case GO_ALGALON_DOOR:
-                        AlgalonDoorGUID       = gameObject->GetGUID();
+                        AlgalonDoorGUID = gameObject->GetGUID();
                         gameObject->SetGoState(GO_STATE_READY);
                         if (AlgalonIntroDone)
                             gameObject->SetGoState(GO_STATE_ACTIVE);
@@ -646,6 +648,12 @@ class instance_ulduar : public InstanceMapScript
                         YoggSaronBrainDoor3GUID = gameObject->GetGUID();
                         HandleGameObject(NULL, false, gameObject);
                     break;
+					case GO_ALGALON_DOOR_2:
+						AlgalonDoor2GUID = gameObject->GetGUID();
+						gameObject->SetGoState(GO_STATE_READY);
+                        if (AlgalonIntroDone)
+                            gameObject->SetGoState(GO_STATE_ACTIVE);
+					break;
                 }
             }
 
@@ -779,6 +787,7 @@ class instance_ulduar : public InstanceMapScript
                         if (state == IN_PROGRESS)
                         {
                             HandleGameObject(AlgalonDoorGUID, false);     // Close Door
+							HandleGameObject(AlgalonDoor2GUID, false);
                             HandleGameObject(AlgalonFloorOOCGUID, true);  // Makes bridge disappear
                             HandleGameObject(AlgalonFloorCOMGUID, false); // Makes round combat floor appear 
                             HandleGameObject(AlgalonBridgeGUID, true);    // Removes collision from bridge
@@ -788,6 +797,7 @@ class instance_ulduar : public InstanceMapScript
                         else
                         {
                             HandleGameObject(AlgalonDoorGUID, true);
+							HandleGameObject(AlgalonDoor2GUID, true);
                             HandleGameObject(AlgalonFloorOOCGUID, false);
                             HandleGameObject(AlgalonFloorCOMGUID, true);
                             HandleGameObject(AlgalonBridgeGUID, false);
@@ -960,6 +970,8 @@ class instance_ulduar : public InstanceMapScript
                         return AlgalonGUID;
                     case GO_ALGALON_DOOR:
                         return AlgalonDoorGUID;
+					case GO_ALGALON_DOOR_2:
+						return AlgalonDoor2GUID;
                     case NPC_BRANN_ALGALON:
                         return AlgalonBrannGUID;
 

@@ -570,9 +570,9 @@ class boss_algalon : public CreatureScript
                         JumpToNextStep(12000);
                         break;
                     case 5:
+						me->RemoveFlag(UNIT_FIELD_FLAGS,  UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_PACIFIED | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_NPC | UNIT_FLAG_IMMUNE_TO_PC);
                         if (Creature* Brann = ObjectAccessor::GetCreature(*me, instance->GetData64(NPC_BRANN_ALGALON)))
                             Brann->AI()->DoAction(ACTION_BRANN_LEAVE);
-                        me->RemoveFlag(UNIT_FIELD_FLAGS,  UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_PACIFIED);
                         intro = false;
                         break;
                     }
@@ -633,7 +633,7 @@ class boss_algalon : public CreatureScript
                         JumpToNextStep(6000);
                         break;
                     case 13:
-                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_PACIFIED);
+                        me->RemoveFlag(UNIT_FIELD_FLAGS,  UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_PACIFIED | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_NPC | UNIT_FLAG_IMMUNE_TO_PC);
                         Phase = PHASE_1;
                         fightintro = false;
                         me->setFaction(FACTION_HOSTILE);
@@ -1369,8 +1369,8 @@ class go_celestial_console : public GameObjectScript
                     Brann->AI()->DoAction(ACTION_BRANN_INTRO);
                     if (GameObject* Door = ObjectAccessor::GetGameObject(*go, go->GetInstanceScript()->GetData64((GO_ALGALON_DOOR))))
                         Door->SetGoState(GO_STATE_ACTIVE);
-					if (GameObject* Door = ObjectAccessor::GetGameObject(*go, go->GetInstanceScript()->GetData64((GO_ALGALON_DOOR_2))))
-                        Door->SetGoState(GO_STATE_ACTIVE);
+					if (GameObject* Door1 = ObjectAccessor::GetGameObject(*go, go->GetInstanceScript()->GetData64((GO_ALGALON_DOOR_2))))
+                        Door1->SetGoState(GO_STATE_ACTIVE);
                 }
             }
             return true;
