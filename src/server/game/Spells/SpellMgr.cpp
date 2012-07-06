@@ -3549,17 +3549,17 @@ void SpellMgr::LoadDbcDataCorrections()
             case 65076:
             case 65075:
             case 64482:
-                spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_100_YARDS;
-                spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_100_YARDS;
+                spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_50_YARDS;
+                spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_50_YARDS;
                 break;
 				//Freya Auras
 			case 65585:
 			case 62385:
 			case 62713:
 			case 62968:
-				spellInfo->EffectRadiusIndex[EFFECT_0] = EFFECT_RADIUS_100_YARDS;
-				spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_100_YARDS;
-				spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_100_YARDS;
+				spellInfo->EffectRadiusIndex[EFFECT_0] = EFFECT_RADIUS_50_YARDS;
+				spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_50_YARDS;
+				spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_50_YARDS;
 				break;
 			case 64436:
 				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
@@ -3575,6 +3575,13 @@ void SpellMgr::LoadDbcDataCorrections()
 				spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_CASTER;
 				spellInfo->EffectImplicitTargetB[2] = TARGET_UNIT_CASTER;
 				break;
+			case 64206: // XT-002 - Consumption
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_5_YARDS;
+                break;
+			case 61920:
+				spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_10_YARDS;
+				spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_10_YARDS;
+				spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_10_YARDS;
             default:
                 break;
         }

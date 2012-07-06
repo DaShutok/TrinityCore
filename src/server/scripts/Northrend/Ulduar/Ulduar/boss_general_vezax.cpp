@@ -183,6 +183,7 @@ class boss_general_vezax : public CreatureScript
             {
                 DoScriptText(SAY_DEATH, me);
                 _JustDied();
+				me->AddLootMode(LOOT_MODE_DEFAULT);
             }
 
             uint32 GetData(uint32 type)
