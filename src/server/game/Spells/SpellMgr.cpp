@@ -3564,6 +3564,14 @@ void SpellMgr::LoadDbcDataCorrections()
 				spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
 				spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_CASTER;
 				break;
+			case 61632:
+				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[2] = TARGET_UNIT_CASTER;
+				break;
             default:
                 break;
         }

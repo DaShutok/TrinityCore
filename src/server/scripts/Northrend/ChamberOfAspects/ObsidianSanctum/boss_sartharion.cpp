@@ -1947,6 +1947,7 @@ public:
         void Reset()
         {
             me->RemoveAllAuras();
+			me->SetPhaseMask(1, true);
             me->SetInCombatWithZone();
             m_uiFadeArmorTimer = 1000;
         }
