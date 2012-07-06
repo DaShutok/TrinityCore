@@ -24,6 +24,7 @@ static DoorData const doorData[] =
 {
     {   GO_LEVIATHAN_DOOR, BOSS_LEVIATHAN,    DOOR_TYPE_ROOM, BOUNDARY_S      },
     {   GO_ALGALON_INVISDOOR,  BOSS_ALGALON,  DOOR_TYPE_ROOM, BOUNDARY_W      },
+	{   GO_LEVIATHAN_DOOR2, BOSS_LEVIATHAN,   DOOR_TYPE_ROOM, BOUNDARY_S      },
     {   0,                 0,                 DOOR_TYPE_ROOM, BOUNDARY_NONE   },
 };
 
@@ -518,6 +519,9 @@ class instance_ulduar : public InstanceMapScript
                     case GO_LEVIATHAN_DOOR:
                         AddDoor(gameObject, true);
                         break;
+					case GO_LEVIATHAN_DOOR2:
+                        AddDoor(gameObject, true);
+                        break;
                     case GO_LEVIATHAN_GATE:
                         LeviathanGateGUID = gameObject->GetGUID();
                         if (GetBossState(BOSS_LEVIATHAN) == DONE)
@@ -662,6 +666,9 @@ class instance_ulduar : public InstanceMapScript
                 switch (gameObject->GetEntry())
                 {
                     case GO_LEVIATHAN_DOOR:
+                        AddDoor(gameObject, false);
+                        break;
+					case GO_LEVIATHAN_DOOR2:
                         AddDoor(gameObject, false);
                         break;
                     case GO_XT_002_DOOR:

@@ -191,6 +191,7 @@ enum UlduarGameObjects
     GO_GIFT_OF_THE_OBSERVER               = 194821,
     GO_IRON_COUNCIL_ENTRANCE              = 194554,
     GO_XT002_DOOR                         = 194631,
+	GO_LEVIATHAN_DOOR2			          = 194416,
 };
 
 enum UlduarSharedActions

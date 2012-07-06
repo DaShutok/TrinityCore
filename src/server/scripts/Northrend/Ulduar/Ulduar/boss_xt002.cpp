@@ -260,6 +260,7 @@ class boss_xt002 : public CreatureScript
                 _JustDied();
 
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_NOT_SELECTABLE);
+				me->AddLootMode(LOOT_MODE_DEFAULT);
             }
 
             void UpdateAI(uint32 const diff)
@@ -490,6 +491,7 @@ class mob_xt002_heart : public CreatureScript
 
                 //removes the aura
                 me->RemoveAurasDueToSpell(SPELL_EXPOSED_HEART);
+				me->DespawnOrUnsummon(1000);
             }
 
             void DamageTaken(Unit* /*attacker*/, uint32 &damage)
