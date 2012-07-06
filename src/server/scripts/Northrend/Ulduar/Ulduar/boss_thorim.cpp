@@ -1179,12 +1179,12 @@ public:
         PrepareSpellScript(spell_charge_orb_SpellScript);
 
 
-        void SelectTarget(std::list<Unit*>& targets)
+        void SelectTarget(std::list<WorldObject*>& targets)
         {
             if (!GetCaster()->GetInstanceScript() || GetCaster()->GetMapId() != 603)
                 return;
 
-            std::list<Unit*>::iterator itr;
+			std::list<WorldObject*>::iterator itr;
             for (itr = targets.begin(); itr != targets.end();)
             {
                 if (!(*itr)->ToCreature() || ((*itr)->ToCreature() && (*itr)->ToCreature()->GetEntry() != 33378))
@@ -1196,7 +1196,7 @@ public:
 
         void Register()
         {
-            OnUnitTargetSelect += SpellUnitTargetFn(spell_charge_orb_SpellScript::SelectTarget, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
+            OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_charge_orb_SpellScript::SelectTarget, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
         }
     };
 
@@ -1209,9 +1209,9 @@ public:
 class NotInArenaCheck
 {
     public:
-        bool operator() (Unit* unit)
+        bool operator() (WorldObject* unit)
         {
-            return !IN_ARENA(unit);
+            return !IN_ARENA(unit->ToUnit());
         }
 };
 
@@ -1225,7 +1225,7 @@ class spell_stormhammer_targeting : public SpellScriptLoader
         {
             PrepareSpellScript(spell_stormhammer_targeting_SpellScript);
 
-            void FilterTargets(std::list<Unit*>& unitList)
+            void FilterTargets(std::list<WorldObject*>& unitList)
             {
                 _target = NULL;
                 unitList.remove_if(NotInArenaCheck());
@@ -1233,14 +1233,14 @@ class spell_stormhammer_targeting : public SpellScriptLoader
                 if (unitList.empty())
                     return;
 
-                std::list<Unit*>::iterator itr = unitList.begin();
+                std::list<WorldObject*>::iterator itr = unitList.begin();
                 std::advance(itr, urand(0, unitList.size() - 1));
                 _target = *itr;
                 unitList.clear();
                 unitList.push_back(_target);
             }
 
-            void SetTarget(std::list<Unit*>& unitList)
+            void SetTarget(std::list<WorldObject*>& unitList)
             {
                 unitList.clear();
 
@@ -1250,12 +1250,12 @@ class spell_stormhammer_targeting : public SpellScriptLoader
 
             void Register()
             {
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_stormhammer_targeting_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_stormhammer_targeting_SpellScript::SetTarget, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_stormhammer_targeting_SpellScript::SetTarget, EFFECT_2, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_stormhammer_targeting_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_stormhammer_targeting_SpellScript::SetTarget, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_stormhammer_targeting_SpellScript::SetTarget, EFFECT_2, TARGET_UNIT_SRC_AREA_ENEMY);
             }
 
-            Unit* _target;
+            WorldObject* _target;
         };
 
         SpellScript* GetSpellScript() const

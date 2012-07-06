@@ -1734,19 +1734,19 @@ class spell_pursued : public SpellScriptLoader
                 return GetCaster()->GetTypeId() == TYPEID_UNIT;
             }
 
-            void SelectTarget(std::list<Unit*>& unitList)
+            void SelectTarget(std::list<WorldObject*>& unitList)
             {
                 if (unitList.empty())
                     return;
 
-                std::list<Unit*> tempList;
+                std::list<WorldObject*> tempList;
 
                 // try to find demolisher or siege engine first (not the current target)
-                for (std::list<Unit*>::iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
+                for (std::list<WorldObject*>::iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
                 {
-                    _target = *itr;
+                    _target = (*itr)->ToUnit();
 
-                    if (!_target->ToCreature() || _target->HasAura(SPELL_PURSUED))
+					if (!_target->ToCreature() || _target->ToCreature()->HasAura(SPELL_PURSUED))
                         continue;
 
                     if (_target->ToCreature()->GetEntry() == VEHICLE_SIEGE || _target->ToCreature()->GetEntry() == VEHICLE_DEMOLISHER)
@@ -1756,11 +1756,11 @@ class spell_pursued : public SpellScriptLoader
                 if (tempList.empty())
                 {
                     // no demolisher or siege engine, find a chopper (not the current target)
-                    for (std::list<Unit*>::iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
+                    for (std::list<WorldObject*>::iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
                     {
                         _target = *itr;
 
-                        if (!_target->ToCreature() || _target->HasAura(SPELL_PURSUED))
+                        if (!_target->ToCreature() || _target->ToCreature()->HasAura(SPELL_PURSUED))
                             continue;
 
                         if (_target->ToCreature()->GetEntry() == VEHICLE_CHOPPER)
@@ -1784,7 +1784,7 @@ class spell_pursued : public SpellScriptLoader
                 }
             }
 
-            void SetTarget(std::list<Unit*>& unitList)
+            void SetTarget(std::list<WorldObject*>& unitList)
             {
                 unitList.clear();
 
@@ -1794,11 +1794,11 @@ class spell_pursued : public SpellScriptLoader
 
             void Register()
             {
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_pursued_SpellScript::SelectTarget, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_pursued_SpellScript::SetTarget, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_pursued_SpellScript::SelectTarget, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_pursued_SpellScript::SetTarget, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
             }
 
-            Unit* _target;
+            WorldObject* _target;
         };
 
         SpellScript* GetSpellScript() const
@@ -2011,9 +2011,9 @@ class spell_freyas_ward_summon : public SpellScriptLoader
 class FlameVentsTargetSelector
 {
     public:
-        bool operator() (Unit* unit)
+        bool operator() (WorldObject* unit)
         {
-            if (unit->GetTypeId() != TYPEID_PLAYER)
+			if (unit->ToUnit()->GetTypeId() != TYPEID_PLAYER)
             {
                 if (unit->ToCreature()->GetEntry() == VEHICLE_SIEGE ||
                     unit->ToCreature()->GetEntry() == VEHICLE_CHOPPER ||
@@ -2025,7 +2025,7 @@ class FlameVentsTargetSelector
             }
 
             // TODO: more check?
-            return unit->GetVehicle();
+            return unit->ToUnit()->GetVehicle();
         }
 };
 
@@ -2038,14 +2038,14 @@ class spell_flame_leviathan_flame_vents : public SpellScriptLoader
         {
             PrepareSpellScript(spell_flame_leviathan_flame_vents_SpellScript);
 
-            void FilterTargets(std::list<Unit*>& unitList)
+            void FilterTargets(std::list<WorldObject*>& unitList)
             {
                 unitList.remove_if(FlameVentsTargetSelector());
             }
 
             void Register()
             {
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_flame_leviathan_flame_vents_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
+                OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_flame_leviathan_flame_vents_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
             }
         };
 

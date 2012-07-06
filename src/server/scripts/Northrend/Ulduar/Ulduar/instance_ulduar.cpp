@@ -595,7 +595,7 @@ class instance_ulduar : public InstanceMapScript
                         RunicDoorGUID = gameObject->GetGUID();
                     break;
                     case GO_ALGALON_DOOR:
-                        AlgalonDoorGUID = gameObject->GetGUID();
+                        AlgalonDoorGUID       = gameObject->GetGUID();
                         gameObject->SetGoState(GO_STATE_READY);
                         if (AlgalonIntroDone)
                             gameObject->SetGoState(GO_STATE_ACTIVE);
@@ -651,9 +651,9 @@ class instance_ulduar : public InstanceMapScript
 					case GO_ALGALON_DOOR_2:
 						AlgalonDoor2GUID = gameObject->GetGUID();
 						gameObject->SetGoState(GO_STATE_READY);
-                        if (AlgalonIntroDone)
-                            gameObject->SetGoState(GO_STATE_ACTIVE);
-					break;
+						if (AlgalonIntroDone)
+							 gameObject->SetGoState(GO_STATE_ACTIVE);
+						 break;
                 }
             }
 
@@ -787,7 +787,7 @@ class instance_ulduar : public InstanceMapScript
                         if (state == IN_PROGRESS)
                         {
                             HandleGameObject(AlgalonDoorGUID, false);     // Close Door
-							HandleGameObject(AlgalonDoor2GUID, false);
+							HandleGameObject(AlgalonDoor2GUID, true);
                             HandleGameObject(AlgalonFloorOOCGUID, true);  // Makes bridge disappear
                             HandleGameObject(AlgalonFloorCOMGUID, false); // Makes round combat floor appear 
                             HandleGameObject(AlgalonBridgeGUID, true);    // Removes collision from bridge
@@ -797,7 +797,6 @@ class instance_ulduar : public InstanceMapScript
                         else
                         {
                             HandleGameObject(AlgalonDoorGUID, true);
-							HandleGameObject(AlgalonDoor2GUID, true);
                             HandleGameObject(AlgalonFloorOOCGUID, false);
                             HandleGameObject(AlgalonFloorCOMGUID, true);
                             HandleGameObject(AlgalonBridgeGUID, false);

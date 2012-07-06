@@ -371,9 +371,9 @@ CreatureAI* GetUlduarAI(Creature* creature)
 class PlayerOrPetCheck
 {
     public:
-        bool operator() (Unit* unit)
+        bool operator() (WorldObject* unit)
         {
-            if (unit->GetTypeId() != TYPEID_PLAYER)
+            if (unit->ToUnit()->GetTypeId() != TYPEID_PLAYER)
                 if (!unit->ToCreature()->isPet())
                     return true;
 
