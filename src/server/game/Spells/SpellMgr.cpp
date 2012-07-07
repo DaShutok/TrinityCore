@@ -3582,6 +3582,11 @@ void SpellMgr::LoadDbcDataCorrections()
 				spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_10_YARDS;
 				spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_10_YARDS;
 				spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_10_YARDS;
+			case 62039: // Hodir - Biting Cold
+                spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_MOVE;
+				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_NEARBY_ENEMY;
+				spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_NEARBY_ENEMY;
+				spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50_YARDS;
             default:
                 break;
         }
