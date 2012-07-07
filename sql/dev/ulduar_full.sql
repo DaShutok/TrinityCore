@@ -46,11 +46,13 @@ INSERT INTO `spell_script_names`(`spell_id`,`ScriptName`) VALUES
 ( '62168','spell_algalon_black_hole'),
 ( '62301','spell_algalon_cosmic_smash_initial'), 
 ( '64598','spell_algalon_cosmic_smash_initial'),
+( '64487','spell_algalon_ascend_to_the_heavens');
+INSERT INTO `spell_script_names`(`spell_id`,`ScriptName`) VALUES 
 ( '65121','spell_xt002_searing_light_spawn_life_spark'), 
 ( '63018','spell_xt002_searing_light_spawn_life_spark'),
 ( '63024','spell_xt002_gravity_bomb_aura'), 
-( '64234','spell_xt002_gravity_bomb_aura'),
-( '64487','spell_algalon_ascend_to_the_heavens');
+( '64234','spell_xt002_gravity_bomb_aura');
+
 
 
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN(62168);
@@ -736,3 +738,24 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 -- Template updates
 UPDATE `creature_template` SET `npcflag`=1 WHERE `entry` IN (33213,33241,33242,33244); 
  
+DELETE FROM `creature` WHERE `id`=34014;
+INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`MovementType`,`npcflag`,`unit_flags`,`dynamicflags`) VALUES
+(1000390, 34014, 603, 3, 1, 25501, 0, 2001.84, 51.6787, 417.73, 2.70377, 604800, 0, 0, 334680, 0, 0, 0, 0, 0),
+(1000391, 34014, 603, 3, 1, 25501, 0, 1997.38, 41.315, 417.725, 2.74932, 604800, 0, 0, 334680, 0, 0, 0, 0, 0);
+
+UPDATE `creature_template` SET `ScriptName` = 'npc_thorims_hammer' WHERE `entry` = 33364; -- Thorim
+UPDATE `creature_template` SET `ScriptName` = 'npc_mimirons_inferno' WHERE `entry` = 33369; -- Mimiron
+UPDATE `creature_template` SET `ScriptName` = 'npc_hodirs_fury' WHERE `entry` = 33108; -- Hodir
+UPDATE `creature_template` SET `ScriptName` = 'npc_freyas_ward_summon' WHERE `entry` = 33366; -- Freya
+
+DELETE FROM `spell_script_names` WHERE `spell_id` IN(65121, 63018, 63024, 64234);
+INSERT INTO `spell_script_names`(`spell_id`,`ScriptName`) VALUES 
+( '65121','spell_xt002_searing_light_spawn_life_spark'), 
+( '63018','spell_xt002_searing_light_spawn_life_spark'),
+( '63024','spell_xt002_gravity_bomb_aura'), 
+( '64234','spell_xt002_gravity_bomb_aura');
+
+UPDATE `creature_template` SET `ScriptName` = 'npc_focused_eyebeam' WHERE `entry` = 33632;
+UPDATE `creature_template` SET `ScriptName` = 'npc_focused_eyebeam' WHERE `entry` = 33802;
+UPDATE `creature_template` SET `ScriptName` = 'npc_left_arm' WHERE `entry` = 32933;
+UPDATE `creature_template` SET `ScriptName` = 'npc_right_arm' WHERE `entry` = 32934;
