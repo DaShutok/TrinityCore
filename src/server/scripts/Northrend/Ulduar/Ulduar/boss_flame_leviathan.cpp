@@ -1163,6 +1163,7 @@ public:
                 infernoTimer = 20000;
 
                 infernoCount++;
+                despawncount++;
                 if (infernoCount == 3)
                 {
                     pause = true;
