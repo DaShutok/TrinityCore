@@ -466,6 +466,7 @@ enum DeathState
     CORPSE      = 2,
     DEAD        = 3,
     JUST_RESPAWNED = 4,
+	GHOULED        = 5, //Raise ally, Deathknight's spell
 };
 
 enum UnitState

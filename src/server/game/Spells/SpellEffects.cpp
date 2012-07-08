@@ -765,6 +765,21 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                         targets.SetDst(*m_targets.GetDstPos());
                     spell_id = CalculateDamage(0, NULL);
                     break;
+				case 61999:
+					if (!unitTarget || m_caster->GetTypeId() != TYPEID_PLAYER || unitTarget->isAlive())
+                       {
+                          SendCastResult(SPELL_FAILED_TARGET_NOT_DEAD);
+                          finish(true);
+						  CancelGlobalCooldown();
+						  m_caster->ToPlayer()->RemoveSpellCooldown(m_spellInfo->Id, true);
+                          return;
+                       }else
+					    {
+                          unitTarget->CastSpell(unitTarget, 46619, true);
+                          CancelGlobalCooldown();
+                          return;
+					    }
+					   break;
             }
             break;
     }

@@ -5259,8 +5259,28 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
             break;
         case SPELLFAMILY_DEATHKNIGHT:
         {
-            //if (!(mode & AURA_EFFECT_HANDLE_REAL))
-            //    break;
+               if (!(mode & AURA_EFFECT_HANDLE_REAL))
+                   break;
+                   if (GetId() == 46619) // Raise Ally
+                      {
+                          if (!target || target->GetTypeId() != TYPEID_PLAYER)
+                              return;
+                           Player* player = target->ToPlayer();
+                           if (apply)
+                           {
+                               player->setDeathState(GHOULED);
+                               player->SetHealth(0);
+                               player->SetMovement(MOVE_ROOT);
+                            }
+                            else
+                            {
+                               player->RemoveAurasDueToSpell(62218);
+                               player->SetMovement(MOVE_UNROOT);
+                               player->SetHealth(0);
+                               player->setDeathState(JUST_DIED);
+                            }
+                            break;
+                       }
             break;
         }
     }
