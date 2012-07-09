@@ -3578,10 +3578,10 @@ void SpellMgr::LoadDbcDataCorrections()
 			case 64206: // XT-002 - Consumption
                 spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_5_YARDS;
                 break;
-			case 61920:
-				spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_10_YARDS;
-				spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_10_YARDS;
-				spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_10_YARDS;
+			case 61920: // Assembly Supercharge
+				spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_70_YARDS;
+				spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_70_YARDS;
+				spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_70_YARDS;
 			case 62039: // Hodir - Biting Cold
                 spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_MOVE;
 				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_NEARBY_ENEMY;
