@@ -63,7 +63,7 @@ INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`
 */
 
 -- Misc objects in fortress phased properly
-SET @OGUID := 282000;
+/*SET @OGUID := 282000;
 DELETE FROM `gameobject` WHERE `guid` IN (67165,67224,67222,67190,67195,67216,67193,67182,67186,67192,67161,67164,67180,67187);
 DELETE FROM `gameobject` WHERE `guid` BETWEEN @OGUID AND @OGUID+55;
 INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
@@ -122,4 +122,4 @@ INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`
 (@OGUID+52,193162,571,1,128,5377.54932,2870.92456,409.239166,-0.549776852,0,0,0,0,120,0,1),
 (@OGUID+53,193163,571,1,128,5378.068,2813.61719,409.239166,1.55334139,0,0,0,0,120,0,1),
 (@OGUID+54,193164,571,1,128,5378.921,2805.43677,409.239166,1.53588688,0,0,0,0,120,0,1),
-(@OGUID+55,193165,571,1,128,5378.452,2876.67456,409.239166,1.54461825,0,0,0,0,120,0,1);
+(@OGUID+55,193165,571,1,128,5378.452,2876.67456,409.239166,1.54461825,0,0,0,0,120,0,1);*/

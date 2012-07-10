@@ -27,6 +27,7 @@
 #include "Chat.h"
 #include "Spell.h"
 #include "BattlegroundMgr.h"
+#include "BattlefieldMgr.h"
 #include "CreatureAI.h"
 #include "MapManager.h"
 #include "BattlegroundIC.h"
@@ -1120,6 +1121,26 @@ bool SpellArea::IsFitToRequirements(Player const* player, uint32 newZone, uint32
                 return false;
             break;
         }
+		case 58730: // No fly Zone - Wintergrasp	
+            {	
+                if (!player)	
+                    return false;	
+	
+                Battlefield* Bf = sBattlefieldMgr->GetBattlefieldToZoneId(player->GetZoneId());	
+                if (!Bf || Bf->CanFlyIn() || (!player->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) && !player->HasAuraType(SPELL_AURA_FLY)))	
+                    return false;	
+                break;	
+            }	
+        case 57940: // Essence of Wintergrasp - Northrend	
+            {	
+                if (!player)	
+                    return false;	
+	
+                Battlefield* Bf = sBattlefieldMgr->GetBattlefieldToZoneId(4197);	
+                if (!Bf || player->GetTeamId() != Bf->GetDefenderTeam())	
+                    return false;	
+                break;	
+            }
         case 68719: // Oil Refinery - Isle of Conquest.
         case 68720: // Quarry - Isle of Conquest.
         {
