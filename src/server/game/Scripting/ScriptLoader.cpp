@@ -46,6 +46,7 @@ void AddSC_SmartSCripts();
 //Commands
 void AddSC_account_commandscript();
 void AddSC_achievement_commandscript();
+void AddSC_bf_commandscript();
 void AddSC_cast_commandscript();
 void AddSC_debug_commandscript();
 void AddSC_event_commandscript();
@@ -655,6 +656,7 @@ void AddCommandScripts()
 {
     AddSC_account_commandscript();
     AddSC_achievement_commandscript();
+	AddSC_bf_commandscript();
     AddSC_cast_commandscript();
     AddSC_debug_commandscript();
     AddSC_event_commandscript();
@@ -1241,7 +1243,6 @@ void AddBattlegroundScripts()
 
 #ifdef SCRIPTS
 /* This is where custom scripts' loading functions should be declared. */
-// Custom By Regi
 void AddSC_npc_testasd();
 void AddSC_boss_viscidus();
 void AddSC_Minipet();
@@ -1249,13 +1250,13 @@ void AddSC_transmogrify_script();
 void AddSC_ulduar();
 void AddSC_boss_thorim();
 void AddSC_boss_yoggsaron();
+void AddSC_wintergrasp();
 #endif
 
 void AddCustomScripts()
 {
 #ifdef SCRIPTS
  /* This is where custom scripts should be added. */
-// Custom by Regi
      AddSC_npc_testasd();
      AddSC_boss_viscidus();
      AddSC_Minipet();
@@ -1263,5 +1264,6 @@ void AddCustomScripts()
 	 AddSC_ulduar();
 	 AddSC_boss_thorim();
 	 AddSC_boss_yoggsaron();
+	 AddSC_wintergrasp();
 #endif
 }

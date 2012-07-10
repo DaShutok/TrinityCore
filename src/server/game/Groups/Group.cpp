@@ -370,8 +370,8 @@ bool Group::AddMember(Player* player)
     if (player)
     {
         player->SetGroupInvite(NULL);
-        if (player->GetGroup() && isBGGroup()) //if player is in group and he is being added to BG raid group, then call SetBattlegroundRaid()
-            player->SetBattlegroundRaid(this, subGroup);
+        if (player->GetGroup() && (isBGGroup() || isBFGroup())) //if player is in group and he is being added to BG raid group, then call SetBattlegroundRaid()
+		    player->SetBattlegroundOrBattlefieldRaid(this, subGroup);
         else if (player->GetGroup()) //if player is in bg raid and we are adding him to normal group, then call SetOriginalGroup()
             player->SetOriginalGroup(this, subGroup);
         else //if player is not in group, then call set group
@@ -462,7 +462,7 @@ bool Group::RemoveMember(uint64 guid, const RemoveMethod &method /*= GROUP_REMOV
         {
             // Battleground group handling
             if (isBGGroup())
-                player->RemoveFromBattlegroundRaid();
+                player->RemoveFromBattlegroundOrBattlefieldRaid();
             else
             // Regular group
             {
@@ -651,7 +651,7 @@ void Group::Disband(bool hideDestroy /* = false */)
         //we cannot call _removeMember because it would invalidate member iterator
         //if we are removing player from battleground raid
         if (isBGGroup())
-            player->RemoveFromBattlegroundRaid();
+            player->RemoveFromBattlegroundOrBattlefieldRaid();
         else
         {
             //we can remove player who is in battleground from his original group
@@ -2102,6 +2102,11 @@ bool Group::isRaidGroup() const
     return m_groupType & GROUPTYPE_RAID;
 }
 
+bool Group::isBFGroup() const
+{
+    return m_bfGroup != NULL;
+}
+
 bool Group::isBGGroup() const
 {
     return m_bgGroup != NULL;
@@ -2206,6 +2211,11 @@ uint8 Group::GetMemberGroup(uint64 guid) const
 void Group::SetBattlegroundGroup(Battleground* bg)
 {
     m_bgGroup = bg;
+}
+
+void Group::SetBattlefieldGroup(Battlefield *bg)
+{
+    m_bfGroup = bg;
 }
 
 void Group::SetGroupMemberFlag(uint64 guid, bool apply, GroupMemberFlags flag)
