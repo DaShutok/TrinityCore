@@ -3611,6 +3611,12 @@ void SpellMgr::LoadDbcDataCorrections()
 			case 50896:
 				spellInfo->rangeIndex = 13;
 				break;
+			case 56663:
+			case 56575:
+			case 56661:
+			case 61408:
+				spellInfo->CastingTimeIndex = 0;
+				break;
             default:
                 break;
         }
