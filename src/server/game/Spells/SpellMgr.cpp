@@ -3608,6 +3608,9 @@ void SpellMgr::LoadDbcDataCorrections()
 				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_NEARBY_ENEMY;
 				spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_NEARBY_ENEMY;
 				spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50_YARDS;
+			case 50896:
+				spellInfo->rangeIndex = 13;
+				break;
             default:
                 break;
         }
