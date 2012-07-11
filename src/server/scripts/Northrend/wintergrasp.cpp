@@ -110,8 +110,16 @@ class npc_wg_demolisher_engineer : public CreatureScript
     public:
         npc_wg_demolisher_engineer() : CreatureScript("npc_wg_demolisher_engineer") { }
 
+	uint32 vehiclecountali;
+	uint32 vehiclecounthorde;
+
         bool OnGossipHello(Player* player, Creature* creature)
         {
+			if (vehiclecountali >= 30)
+				vehiclecountali = 0;
+			if (vehiclecounthorde >= 30)
+				vehiclecounthorde = 0;
+
             if (creature->isQuestGiver())
                 player->PrepareQuestMenu(creature->GetGUID());
 
@@ -147,12 +155,60 @@ class npc_wg_demolisher_engineer : public CreatureScript
                 {
                     case 0:
                         creature->CastSpell(player, SPELL_BUILD_CATAPULT_FORCE, true);
+						if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
+							break;
+						else{
+							if (player->GetTeamId() == TEAM_ALLIANCE)
+							  {
+								 vehiclecountali++;
+						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_A, vehiclecountali);
+							     wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_A, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A) + 1);
+							  }
+							  else if (player->GetTeamId() == TEAM_HORDE)
+							  {
+								 vehiclecounthorde++;
+						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_H, vehiclecounthorde);
+								 wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_H, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H) + 1);
+							  }
+						    }
                         break;
                     case 1:
                         creature->CastSpell(player, SPELL_BUILD_DEMOLISHER_FORCE, true);
+						if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
+							break;
+						else{
+							  if (player->GetTeamId() == TEAM_ALLIANCE)
+							  {
+								 vehiclecountali++;
+						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_A, vehiclecountali);
+							     wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_A, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A) + 1);
+							  }
+							  else if (player->GetTeamId() == TEAM_HORDE)
+							  {
+								 vehiclecounthorde++;
+						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_H, vehiclecounthorde);
+								 wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_H, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H) + 1);
+							  }
+						    }
                         break;
                     case 2:
                         creature->CastSpell(player, player->GetTeamId() == TEAM_ALLIANCE ? SPELL_BUILD_SIEGE_VEHICLE_FORCE_ALLIANCE : SPELL_BUILD_SIEGE_VEHICLE_FORCE_HORDE, true);
+						if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
+							break;
+						else{
+							  if (player->GetTeamId() == TEAM_ALLIANCE)
+							  {
+								 vehiclecountali++;
+						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_A, vehiclecountali);
+							     wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_A, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A) + 1);
+							  }
+							  else if (player->GetTeamId() == TEAM_HORDE)
+							  {
+								 vehiclecounthorde++;
+						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_H, vehiclecounthorde);
+								 wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_H, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H) + 1);
+							  }
+						    }
                         break;
                 }
                 if (Creature* controlArms = creature->FindNearestCreature(NPC_WINTERGRASP_CONTROL_ARMS, 30.0f, true))
@@ -171,9 +227,11 @@ class npc_wg_demolisher_engineer : public CreatureScript
             switch (creature->GetEntry())
             {
                 case NPC_GOBLIN_MECHANIC:
-                    return (wintergrasp->GetData(BATTLEFIELD_WG_DATA_MAX_VEHICLE_H) > wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H));
+                    if (wintergrasp->GetData(BATTLEFIELD_WG_DATA_MAX_VEHICLE_H) > wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H))
+					return true;
                 case NPC_GNOMISH_ENGINEER:
-                    return (wintergrasp->GetData(BATTLEFIELD_WG_DATA_MAX_VEHICLE_A) > wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A));
+                    if (wintergrasp->GetData(BATTLEFIELD_WG_DATA_MAX_VEHICLE_A) > wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A))
+					return true;
                 default:
                     return false;
             }
