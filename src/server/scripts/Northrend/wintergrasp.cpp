@@ -115,15 +115,12 @@ class npc_wg_demolisher_engineer : public CreatureScript
 
         bool OnGossipHello(Player* player, Creature* creature)
         {
-			if (vehiclecountali >= 30)
-				vehiclecountali = 0;
-			if (vehiclecounthorde >= 30)
-				vehiclecounthorde = 0;
+			Battlefield* wintergrasp = sBattlefieldMgr->GetBattlefieldByBattleId(BATTLEFIELD_BATTLEID_WG);
+			vehiclecountali = wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A);
+			vehiclecounthorde = wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H);
 
             if (creature->isQuestGiver())
                 player->PrepareQuestMenu(creature->GetGUID());
-
-            Battlefield* wintergrasp = sBattlefieldMgr->GetBattlefieldByBattleId(BATTLEFIELD_BATTLEID_WG);
 
             if (canBuild(creature))
             {
@@ -154,10 +151,13 @@ class npc_wg_demolisher_engineer : public CreatureScript
                 switch (action - GOSSIP_ACTION_INFO_DEF)
                 {
                     case 0:
-                        creature->CastSpell(player, SPELL_BUILD_CATAPULT_FORCE, true);
 						if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
+						{
+							creature->CastSpell(player, SPELL_BUILD_CATAPULT_FORCE, true);
 							break;
-						else{
+						}
+
+                            creature->CastSpell(player, SPELL_BUILD_CATAPULT_FORCE, true);
 							if (player->GetTeamId() == TEAM_ALLIANCE)
 							  {
 								 vehiclecountali++;
@@ -170,13 +170,15 @@ class npc_wg_demolisher_engineer : public CreatureScript
 						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_H, vehiclecounthorde);
 								 wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_H, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H) + 1);
 							  }
-						    }
                         break;
                     case 1:
-                        creature->CastSpell(player, SPELL_BUILD_DEMOLISHER_FORCE, true);
 						if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
+						{
+							creature->CastSpell(player, SPELL_BUILD_DEMOLISHER_FORCE, true);
 							break;
-						else{
+						}
+
+                              creature->CastSpell(player, SPELL_BUILD_DEMOLISHER_FORCE, true);
 							  if (player->GetTeamId() == TEAM_ALLIANCE)
 							  {
 								 vehiclecountali++;
@@ -189,13 +191,15 @@ class npc_wg_demolisher_engineer : public CreatureScript
 						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_H, vehiclecounthorde);
 								 wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_H, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H) + 1);
 							  }
-						    }
                         break;
                     case 2:
-                        creature->CastSpell(player, player->GetTeamId() == TEAM_ALLIANCE ? SPELL_BUILD_SIEGE_VEHICLE_FORCE_ALLIANCE : SPELL_BUILD_SIEGE_VEHICLE_FORCE_HORDE, true);
 						if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
+						{
 							break;
-						else{
+							creature->CastSpell(player, player->GetTeamId() == TEAM_ALLIANCE ? SPELL_BUILD_SIEGE_VEHICLE_FORCE_ALLIANCE : SPELL_BUILD_SIEGE_VEHICLE_FORCE_HORDE, true);
+						}
+
+                              creature->CastSpell(player, player->GetTeamId() == TEAM_ALLIANCE ? SPELL_BUILD_SIEGE_VEHICLE_FORCE_ALLIANCE : SPELL_BUILD_SIEGE_VEHICLE_FORCE_HORDE, true);
 							  if (player->GetTeamId() == TEAM_ALLIANCE)
 							  {
 								 vehiclecountali++;
@@ -208,7 +212,6 @@ class npc_wg_demolisher_engineer : public CreatureScript
 						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_H, vehiclecounthorde);
 								 wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_H, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H) + 1);
 							  }
-						    }
                         break;
                 }
                 if (Creature* controlArms = creature->FindNearestCreature(NPC_WINTERGRASP_CONTROL_ARMS, 30.0f, true))
