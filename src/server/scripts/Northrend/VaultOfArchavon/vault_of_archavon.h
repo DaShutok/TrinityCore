@@ -18,6 +18,8 @@
 #ifndef DEF_ARCHAVON_H
 #define DEF_ARCHAVON_H
 
+#include "BattlefieldWG.h"
+
 enum Creatures
 {
     CREATURE_ARCHAVON                           = 31125,
@@ -45,6 +47,11 @@ enum AchievementCriteriaIds
 enum AchievementSpells
 {
     SPELL_EARTH_WIND_FIRE_ACHIEVEMENT_CHECK = 68308,
+};
+
+enum SpellRock
+{
+   SPELL_ROCK = 63080,
 };
 
 #endif

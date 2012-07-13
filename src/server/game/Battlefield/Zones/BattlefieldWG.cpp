@@ -228,6 +228,8 @@ bool BattlefieldWG::Update(uint32 diff)
 
 void BattlefieldWG::OnBattleStart()
 {
+	SetData(BATTLEFIELD_WG_DATA_ON_PROGRESS, 1);
+
     // Spawn titan relic
     m_titansRelic = SpawnGameObject(GO_WINTERGRASP_TITAN_S_RELIC, 5440.0f, 2840.8f, 430.43f, 0);
     if (m_titansRelic)
@@ -319,6 +321,8 @@ void BattlefieldWG::UpdateCounterVehicle(bool init)
 
 void BattlefieldWG::OnBattleEnd(bool endByTimer)
 {
+	SetData(BATTLEFIELD_WG_DATA_ON_PROGRESS, 2);
+
     // Remove relic
     if (m_titansRelic)
         m_titansRelic->RemoveFromWorld();

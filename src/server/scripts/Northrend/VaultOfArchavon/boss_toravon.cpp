@@ -58,9 +58,16 @@ class boss_toravon : public CreatureScript
 
         struct boss_toravonAI : public BossAI
         {
+			uint32 RockTimer;
+
             boss_toravonAI(Creature* creature) : BossAI(creature, DATA_TORAVON)
             {
             }
+
+			void Reset()
+			{
+				RockTimer = 28000;
+			}
 
             void EnterCombat(Unit* /*who*/)
             {
@@ -75,6 +82,16 @@ class boss_toravon : public CreatureScript
 
             void UpdateAI(const uint32 diff)
             {
+				if (me->AI()->GetData(BATTLEFIELD_WG_DATA_ON_PROGRESS) == 2)
+				{
+				  if (RockTimer <= diff)
+				  {
+					  DoCast(SPELL_ROCK);
+					  RockTimer = 28000;
+				  }
+				  else RockTimer -= diff;
+				}
+
                 if (!UpdateVictim())
                     return;
 

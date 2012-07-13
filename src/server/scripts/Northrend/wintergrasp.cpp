@@ -518,6 +518,56 @@ class npc_wg_quest_giver : public CreatureScript
         }
 };
 
+/*class npc_wg_vehicle : public CreatureScript
+{
+    public:
+
+		npc_wg_vehicle() : CreatureScript("npc_wg_vehicle"){ }
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+           return new npc_wg_vehicleAI(creature);
+        }
+
+		struct npc_wg_vehicleAI : public ScriptedAI
+        {
+			uint32 vehiclecountali;
+			uint32 vehiclecounthorde;
+
+            npc_wg_vehicleAI(Creature* creature) : ScriptedAI(creature) {}
+
+			void Reset()
+			{
+			   Battlefield* wintergrasp = sBattlefieldMgr->GetBattlefieldByBattleId(BATTLEFIELD_BATTLEID_WG);
+			   vehiclecountali = wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A);
+			   vehiclecounthorde = wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H);
+			}
+
+			void JustDied(Unit* killer)
+			{
+				Battlefield* wintergrasp = sBattlefieldMgr->GetBattlefieldByBattleId(BATTLEFIELD_BATTLEID_WG);
+				Player* player;
+
+			   vehiclecountali = wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A);
+			   vehiclecounthorde = wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H);
+
+				if (player->GetTeamId() == TEAM_ALLIANCE)
+				{
+				   //vehiclecountali = wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A);
+				   vehiclecountali--;
+				   wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_A, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A) - 1);
+				   wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_A, vehiclecountali);
+				} else if (player->GetTeamId() == TEAM_HORDE)
+				{
+					//vehiclecounthorde = wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H);
+					vehiclecounthorde--;
+					wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_H, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H) - 1);
+				    wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_H, vehiclecounthorde);
+				}
+			}
+		};
+};*/
+
 class spell_wintergrasp_force_building : public SpellScriptLoader
 {
     public:
@@ -588,6 +638,7 @@ void AddSC_wintergrasp()
     new npc_wg_spirit_guide();
     new npc_wg_demolisher_engineer();
     new npc_wg_quest_giver();
+	//new npc_wg_vehicle();
 
     new spell_wintergrasp_force_building();
     new spell_wintergrasp_grab_passenger();
