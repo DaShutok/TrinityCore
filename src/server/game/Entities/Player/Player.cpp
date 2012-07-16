@@ -1830,6 +1830,10 @@ void Player::setDeathState(DeathState s)
 
         // drunken state is cleared on death
         SetDrunkValue(0);
+
+		//Leave vehicle on death
+		ExitVehicle();
+
         // lost combo points at any target (targeted combo points clear in Unit::setDeathState)
         ClearComboPoints();
 
