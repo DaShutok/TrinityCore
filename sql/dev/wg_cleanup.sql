@@ -1,9 +1,0 @@
-DELETE FROM `creature` WHERE `id`=31153;
-DELETE FROM `creature` WHERE `id`=31108;
-DELETE FROM `creature` WHERE `id`=31052;
-DELETE FROM `creature` WHERE `id`=31054;
-DELETE FROM `creature` WHERE `id`=31036;
-DELETE FROM `creature` WHERE `id`=31109;
-DELETE FROM `creature` WHERE `id`=31051;
-DELETE FROM `creature` WHERE `id`=38433;
-DELETE FROM gameobject WHERE id = 194162
