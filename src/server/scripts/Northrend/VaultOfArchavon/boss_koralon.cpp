@@ -56,16 +56,9 @@ class boss_koralon : public CreatureScript
 
         struct boss_koralonAI : public BossAI
         {
-			uint32 RockTimer;
-
             boss_koralonAI(Creature* creature) : BossAI(creature, DATA_KORALON)
             {
             }
-
-			void Reset()
-			{
-				RockTimer = 28000;
-			}
 
             void EnterCombat(Unit* /*who*/)
             {
@@ -81,16 +74,6 @@ class boss_koralon : public CreatureScript
 
             void UpdateAI(const uint32 diff)
             {
-				if (me->AI()->GetData(BATTLEFIELD_WG_DATA_ON_PROGRESS) == 2)
-				{
-				  if (RockTimer <= diff)
-				  {
-					  DoCast(SPELL_ROCK);
-					  RockTimer = 28000;
-				  }
-				  else RockTimer -= diff;
-				}
-
                 if (!UpdateVictim())
                     return;
 

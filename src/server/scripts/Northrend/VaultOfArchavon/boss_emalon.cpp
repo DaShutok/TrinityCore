@@ -72,15 +72,12 @@ class boss_emalon : public CreatureScript
 
         struct boss_emalonAI : public BossAI
         {
-			uint32 RockTimer;
-
             boss_emalonAI(Creature* creature) : BossAI(creature, DATA_EMALON)
             {
             }
 
             void Reset()
             {
-				RockTimer = 28000;
                 _Reset();
 
                 for (uint8 i = 0; i < MAX_TEMPEST_MINIONS; ++i)
@@ -118,16 +115,6 @@ class boss_emalon : public CreatureScript
 
             void UpdateAI(const uint32 diff)
             {
-				if (me->AI()->GetData(BATTLEFIELD_WG_DATA_ON_PROGRESS) == 2)
-				{
-				  if (RockTimer <= diff)
-				  {
-					  DoCast(SPELL_ROCK);
-					  RockTimer = 28000;
-				  }
-				  else RockTimer -= diff;
-				}
-
                 if (!UpdateVictim())
                     return;
 
