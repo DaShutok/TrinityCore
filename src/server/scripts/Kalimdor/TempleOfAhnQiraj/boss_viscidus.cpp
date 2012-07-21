@@ -233,14 +233,14 @@ public:
         void DoSummonGlobs()
         {
 			for(int i = 0; i < 20; i++)
-                        {
-						  if((me->GetHealth()*100) / me->GetMaxHealth() >= hpborder)
-                          {
-                            me->CastSpell(me,Spell_Summon_glob[0],true);
-                            hpborder += 5;
-						    GlobCD = 10000;
-                          }else break;
-					    } 
+               {
+					if((me->GetHealth()*100) / me->GetMaxHealth() >= hpborder)
+                      {
+					      me->CastSpell(me,Spell_Summon_glob[0],true);
+                          hpborder += 5;
+						  GlobCD = 10000;
+                      }else break;
+			   } 
         }
 
 			void UpdateAI(const uint32 uiDiff)
