@@ -101,6 +101,7 @@ void Battlefield::HandlePlayerLeaveZone(Player* player, uint32 /*zone*/)
         {
             m_PlayersInWar[player->GetTeamId()].erase(player->GetGUID());
             player->GetSession()->SendBfLeaveMessage(m_BattleId);
+            player->ExitVehicle();
             if (Group* group = player->GetGroup()) // Remove the player from the raid group
                 group->RemoveMember(player->GetGUID());
 
@@ -296,7 +297,10 @@ void Battlefield::KickPlayerFromBattlefield(uint64 guid)
 {
     if (Player* player = sObjectAccessor->FindPlayer(guid))
         if (player->GetZoneId() == GetZoneId())
+        {
+            player->ExitVehicle();
             player->TeleportTo(KickPosition);
+        }
 }
 
 void Battlefield::StartBattle()

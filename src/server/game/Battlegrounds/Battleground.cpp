@@ -1053,7 +1053,10 @@ void Battleground::RemovePlayerAtLeave(uint64 guid, bool Transport, bool SendPac
         player->SetBGTeam(0);
 
         if (Transport)
+        {
             player->TeleportToBGEntryPoint();
+            player->ExitVehicle();
+        }
 
         sLog->outDetail("BATTLEGROUND: Removed player %s from Battleground.", player->GetName());
     }
