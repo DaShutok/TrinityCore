@@ -410,31 +410,6 @@ public:
     }
 };
 
-class The_kicker : public ItemScript
-{
-    public:
-        The_kicker() : ItemScript("The_kicker"){ }
-
-        bool OnUse(Player* player, Item* item, SpellCastTargets const& targets)
-        {
-			if (player->GetSelectedPlayer())
-			{
-				Player* target = player->GetSelectedPlayer();
-				std::string playerName;
-
-				if (player->GetSession()->GetSecurity() < SEC_GAMEMASTER)
-					player->SendEquipError(EQUIP_ERR_ITEM_LOCKED, item, NULL);
-					else
-					{
-						playerName = target->GetName();
-						target->GetSession()->KickPlayer();
-						sWorld->SendWorldText(LANG_COMMAND_KICKMESSAGE, playerName.c_str());
-					}
-			} else player->SendEquipError(EQUIP_ERR_ITEM_LOCKED, item, NULL);
-			return true;
-        }
-};
-
 void AddSC_item_scripts()
 {
     new item_only_for_flight();
@@ -448,5 +423,4 @@ void AddSC_item_scripts()
     new item_dehta_trap_smasher();
     new item_trident_of_nazjan();
     new item_captured_frog();
-	new The_kicker();
 }

@@ -80,7 +80,6 @@ public:
 
         void Reset()
         {
-			me->SetReactState(REACT_AGGRESSIVE);
             bIsSlam = false;
 
             uiBoulderTossTimer = urand(3000, 9000);
@@ -94,7 +93,6 @@ public:
         }
         void EnterCombat(Unit* /*who*/)
         {
-			me->SetReactState(REACT_AGGRESSIVE);
             DoScriptText(SAY_AGGRO, me);
 
             if (instance)
@@ -106,13 +104,6 @@ public:
             //Return since we have no target
             if (!UpdateVictim())
                 return;
-
-			if (me->GetPositionX() > 1020)
-			{
-				EnterEvadeMode();
-				me->CombatStop();
-				me->SetReactState(REACT_PASSIVE);
-			}
 
             if (uiBoulderTossTimer <= diff)
             {

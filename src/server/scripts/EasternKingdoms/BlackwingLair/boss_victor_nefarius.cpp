@@ -55,9 +55,9 @@ enum Creatures
 #define ADD_Z1    476.800476f
 #define ADD_Z2    476.796570f
 
-#define NEF_X     -7511
-#define NEF_Y     -1232
-#define NEF_Z     476
+#define NEF_X     -7445
+#define NEF_Y     -1332
+#define NEF_Z     536
 
 #define HIDE_X   -7592
 #define HIDE_Y   -1264
@@ -107,12 +107,9 @@ public:
 
     bool OnGossipHello(Player* player, Creature* creature)
     {
-		if (creature->GetMapId() == 469)
-	    {
-           player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-           player->SEND_GOSSIP_MENU(7134, creature->GetGUID());
-           return true;
-		}
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->SEND_GOSSIP_MENU(7134, creature->GetGUID());
+        return true;
     }
 
     CreatureAI* GetAI(Creature* creature) const

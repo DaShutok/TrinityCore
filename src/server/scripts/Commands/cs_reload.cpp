@@ -158,7 +158,6 @@ public:
             { "waypoint_data",                SEC_ADMINISTRATOR, true,  &HandleReloadWpCommand,                         "", NULL },
             { "vehicle_accessory",            SEC_ADMINISTRATOR, true,  &HandleReloadVehicleAccessoryCommand,           "", NULL },
             { "vehicle_template_accessory",   SEC_ADMINISTRATOR, true,  &HandleReloadVehicleTemplateAccessoryCommand,   "", NULL },
-	    { "item_template",                SEC_ADMINISTRATOR, true,  &HandleReloadItemTemplateCommand,               "", NULL },
             { NULL,                           0,                 false, NULL,                                           "", NULL }
         };
         static ChatCommand commandTable[] =
@@ -1305,14 +1304,6 @@ public:
         sObjectMgr->LoadVehicleTemplateAccessories();
         handler->SendGlobalGMSysMessage("Vehicle template accessories reloaded.");
         return true;
-    }
-
-	static bool HandleReloadItemTemplateCommand(ChatHandler* handler, const char* /*args*/)	
-    {	
-        sLog->outString("Re-Loading Item Prototypes... ");	
-        sObjectMgr->LoadItemTemplates();	
-        handler->SendGlobalGMSysMessage("DB table `item_template` reloaded.");	
-        return true;	
     }
 };
 

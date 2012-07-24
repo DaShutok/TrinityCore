@@ -244,7 +244,6 @@ class boss_gothik : public CreatureScript
 
             void JustDied(Unit* /*killer*/)
             {
-				DoTeleportTo(PosGroundLiveSide);
                 LiveTriggerGUID.clear();
                 DeadTriggerGUID.clear();
                 _JustDied();

@@ -68,7 +68,7 @@ enum Spells
     SPELL_BERSERK                               = 32965,
 };
 
-enum Enums
+enum eEnums
 {
     // any other constants
     FACTION_WORGEN                              = 24
@@ -96,25 +96,25 @@ class example_creature : public CreatureScript
             //These variables are for use only by this individual script.
             //Nothing else will ever call them but us.
 
-            uint32 SayTimer;                                    // Timer for random chat
-            uint32 RebuffTimer;                                 // Timer for rebuffing
-            uint32 Spell1Timer;                                 // Timer for spell 1 when in combat
-            uint32 Spell2Timer;                                 // Timer for spell 1 when in combat
-            uint32 Spell3Timer;                                 // Timer for spell 1 when in combat
-            uint32 BeserkTimer;                                 // Timer until we go into Beserk (enraged) mode
-            uint32 Phase;                                       // The current battle phase we are in
-            uint32 PhaseTimer;                                  // Timer until phase transition
+            uint32 m_uiSayTimer;                                    // Timer for random chat
+            uint32 m_uiRebuffTimer;                                 // Timer for rebuffing
+            uint32 m_uiSpell1Timer;                                 // Timer for spell 1 when in combat
+            uint32 m_uiSpell2Timer;                                 // Timer for spell 1 when in combat
+            uint32 m_uiSpell3Timer;                                 // Timer for spell 1 when in combat
+            uint32 m_uiBeserkTimer;                                 // Timer until we go into Beserk (enraged) mode
+            uint32 m_uiPhase;                                       // The current battle phase we are in
+            uint32 m_uiPhaseTimer;                                  // Timer until phase transition
 
             // *** HANDLED FUNCTION ***
             //This is called after spawn and whenever the core decides we need to evade
             void Reset()
             {
-                Phase = 1;                                      // Start in phase 1
-                PhaseTimer = 60000;                             // 60 seconds
-                Spell1Timer = 5000;                             //  5 seconds
-                Spell2Timer = urand(10000, 20000);               // between 10 and 20 seconds
-                Spell3Timer = 19000;                            // 19 seconds
-                BeserkTimer = 120000;                           //  2 minutes
+                m_uiPhase = 1;                                      // Start in phase 1
+                m_uiPhaseTimer = 60000;                             // 60 seconds
+                m_uiSpell1Timer = 5000;                             //  5 seconds
+                m_uiSpell2Timer = urand(10000, 20000);               // between 10 and 20 seconds
+                m_uiSpell3Timer = 19000;                            // 19 seconds
+                m_uiBeserkTimer = 120000;                           //  2 minutes
 
                 me->RestoreFaction();
             }
@@ -144,11 +144,11 @@ class example_creature : public CreatureScript
 
             // *** HANDLED FUNCTION ***
             //Our Receive emote function
-            void ReceiveEmote(Player* /*player*/, uint32 TextEmote)
+            void ReceiveEmote(Player* /*player*/, uint32 uiTextEmote)
             {
-                me->HandleEmoteCommand(TextEmote);
+                me->HandleEmoteCommand(uiTextEmote);
 
-                switch (TextEmote)
+                switch (uiTextEmote)
                 {
                     case TEXT_EMOTE_DANCE:
                         DoScriptText(SAY_DANCE, me);
@@ -167,24 +167,24 @@ class example_creature : public CreatureScript
                 if (!me->getVictim())
                 {
                     //Random Say timer
-                    if (SayTimer <= uiDiff)
+                    if (m_uiSayTimer <= uiDiff)
                     {
                         //Random switch between 5 outcomes
                         DoScriptText(RAND(SAY_RANDOM_0, SAY_RANDOM_1, SAY_RANDOM_2, SAY_RANDOM_3, SAY_RANDOM_4), me);
 
-                        SayTimer = 45000;                      //Say something agian in 45 seconds
+                        m_uiSayTimer = 45000;                      //Say something agian in 45 seconds
                     }
                     else
-                        SayTimer -= uiDiff;
+                        m_uiSayTimer -= uiDiff;
 
                     //Rebuff timer
-                    if (RebuffTimer <= uiDiff)
+                    if (m_uiRebuffTimer <= uiDiff)
                     {
                         DoCast(me, SPELL_BUFF);
-                        RebuffTimer = 900000;                  //Rebuff agian in 15 minutes
+                        m_uiRebuffTimer = 900000;                  //Rebuff agian in 15 minutes
                     }
                     else
-                        RebuffTimer -= uiDiff;
+                        m_uiRebuffTimer -= uiDiff;
                 }
 
                 //Return since we have no target
@@ -192,7 +192,7 @@ class example_creature : public CreatureScript
                     return;
 
                 //Spell 1 timer
-                if (Spell1Timer <= uiDiff)
+                if (m_uiSpell1Timer <= uiDiff)
                 {
                     //Cast spell one on our current target.
                     if (rand()%50 > 10)
@@ -200,58 +200,58 @@ class example_creature : public CreatureScript
                     else if (me->IsWithinDist(me->getVictim(), 25.0f))
                         DoCast(me->getVictim(), SPELL_ONE);
 
-                    Spell1Timer = 5000;
+                    m_uiSpell1Timer = 5000;
                 }
                 else
-                    Spell1Timer -= uiDiff;
+                    m_uiSpell1Timer -= uiDiff;
 
                 //Spell 2 timer
-                if (Spell2Timer <= uiDiff)
+                if (m_uiSpell2Timer <= uiDiff)
                 {
                     //Cast spell two on our current target.
                     DoCast(me->getVictim(), SPELL_TWO);
-                    Spell2Timer = 37000;
+                    m_uiSpell2Timer = 37000;
                 }
                 else
-                    Spell2Timer -= uiDiff;
+                    m_uiSpell2Timer -= uiDiff;
 
                 //Beserk timer
-                if (Phase > 1)
+                if (m_uiPhase > 1)
                 {
                     //Spell 3 timer
-                    if (Spell3Timer <= uiDiff)
+                    if (m_uiSpell3Timer <= uiDiff)
                     {
                         //Cast spell one on our current target.
                         DoCast(me->getVictim(), SPELL_THREE);
 
-                        Spell3Timer = 19000;
+                        m_uiSpell3Timer = 19000;
                     }
                     else
-                        Spell3Timer -= uiDiff;
+                        m_uiSpell3Timer -= uiDiff;
 
-                    if (BeserkTimer <= uiDiff)
+                    if (m_uiBeserkTimer <= uiDiff)
                     {
                         //Say our line then cast uber death spell
                         DoScriptText(SAY_BERSERK, me, me->getVictim());
                         DoCast(me->getVictim(), SPELL_BERSERK);
 
                         //Cast our beserk spell agian in 12 seconds if we didn't kill everyone
-                        BeserkTimer = 12000;
+                        m_uiBeserkTimer = 12000;
                     }
                     else
-                        BeserkTimer -= uiDiff;
+                        m_uiBeserkTimer -= uiDiff;
                 }
-                else if (Phase == 1)                            //Phase timer
+                else if (m_uiPhase == 1)                            //Phase timer
                 {
-                    if (PhaseTimer <= uiDiff)
+                    if (m_uiPhaseTimer <= uiDiff)
                     {
                         //Go to next phase
-                        ++Phase;
+                        ++m_uiPhase;
                         DoScriptText(SAY_PHASE, me);
                         DoCast(me, SPELL_FRENZY);
                     }
                     else
-                        PhaseTimer -= uiDiff;
+                        m_uiPhaseTimer -= uiDiff;
                 }
 
                 DoMeleeAttackIfReady();

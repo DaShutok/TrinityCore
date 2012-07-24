@@ -40,7 +40,7 @@ enum DeathKnightSpells
     DK_SPELL_IMPROVED_BLOOD_PRESENCE_TRIGGERED  = 63611,
     DK_SPELL_UNHOLY_PRESENCE                    = 48265,
     DK_SPELL_IMPROVED_UNHOLY_PRESENCE_TRIGGERED = 63622,
-    SPELL_DK_ITEM_T8_MALEE_4P_BONUS             = 64736,
+    SPELL_DK_ITEM_T8_MELEE_4P_BONUS             = 64736,
     DK_SPELL_BLACK_ICE_R1                       = 49140,
 };
 
@@ -412,7 +412,7 @@ class spell_dk_scourge_strike : public SpellScriptLoader
                 {
                     multiplier = (GetEffectValue() * unitTarget->GetDiseasesByCaster(caster->GetGUID()) / 100.f);
                     // Death Knight T8 Melee 4P Bonus
-                    if (AuraEffect const* aurEff = caster->GetAuraEffect(SPELL_DK_ITEM_T8_MALEE_4P_BONUS, EFFECT_0))
+                    if (AuraEffect const* aurEff = caster->GetAuraEffect(SPELL_DK_ITEM_T8_MELEE_4P_BONUS, EFFECT_0))
                         AddPctF(multiplier, aurEff->GetAmount());
                 }
             }
@@ -825,37 +825,17 @@ class spell_dk_death_grip : public SpellScriptLoader
 
             void HandleDummy(SpellEffIndex /*effIndex*/)
             {
-	        Unit* caster = GetCaster();
                 int32 damage = GetEffectValue();
                 Position const* pos = GetExplTargetDest();
                 if (Unit* target = GetHitUnit())
                 {
                     if (!target->HasAuraType(SPELL_AURA_DEFLECT_SPELLS)) // Deterrence
                         target->CastSpell(pos->GetPositionX(), pos->GetPositionY(), pos->GetPositionZ(), damage, true);
-
-		    target->CastStop();
-		}
-            }
-
-	    SpellCastResult CheckCast()
-            {
-                Unit* caster = GetCaster();
-                if (Unit* target = GetExplTargetUnit())
-                {
-	               if(target->GetTypeId() == TYPEID_PLAYER && caster->GetDistance2d(target) < 8)
-		        {
-		               caster->ToPlayer()->RemoveSpellCooldown(49576, true);
-			       return SPELL_FAILED_TOO_CLOSE;
-		        }
-		} else
-		    return SPELL_FAILED_BAD_TARGETS;
-
-                return SPELL_CAST_OK;
+                }
             }
 
             void Register()
             {
-		OnCheckCast += SpellCheckCastFn(spell_dk_death_grip_SpellScript::CheckCast);
                 OnEffectHitTarget += SpellEffectFn(spell_dk_death_grip_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
             }
 

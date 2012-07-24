@@ -46,8 +46,9 @@ void AddSC_SmartSCripts();
 //Commands
 void AddSC_account_commandscript();
 void AddSC_achievement_commandscript();
-void AddSC_bf_commandscript();
+void AddSC_ban_commandscript();
 void AddSC_cast_commandscript();
+void AddSC_character_commandscript();
 void AddSC_debug_commandscript();
 void AddSC_event_commandscript();
 void AddSC_gm_commandscript();
@@ -58,17 +59,18 @@ void AddSC_honor_commandscript();
 void AddSC_instance_commandscript();
 void AddSC_learn_commandscript();
 void AddSC_list_commandscript();
+void AddSC_lookup_commandscript();
 void AddSC_misc_commandscript();
 void AddSC_modify_commandscript();
 void AddSC_npc_commandscript();
 void AddSC_quest_commandscript();
 void AddSC_reload_commandscript();
 void AddSC_reset_commandscript();
-void AddSC_tele_commandscript();
 void AddSC_server_commandscript();
+void AddSC_tele_commandscript();
+void AddSC_ticket_commandscript();
 void AddSC_titles_commandscript();
 void AddSC_wp_commandscript();
-void AddSC_character_commandscript();
 
 #ifdef SCRIPTS
 //world
@@ -656,8 +658,9 @@ void AddCommandScripts()
 {
     AddSC_account_commandscript();
     AddSC_achievement_commandscript();
-	AddSC_bf_commandscript();
+    AddSC_ban_commandscript();
     AddSC_cast_commandscript();
+    AddSC_character_commandscript();
     AddSC_debug_commandscript();
     AddSC_event_commandscript();
     AddSC_gm_commandscript();
@@ -667,6 +670,7 @@ void AddCommandScripts()
     AddSC_honor_commandscript();
     AddSC_instance_commandscript();
     AddSC_learn_commandscript();
+    AddSC_lookup_commandscript();
     AddSC_list_commandscript();
     AddSC_misc_commandscript();
     AddSC_modify_commandscript();
@@ -674,11 +678,11 @@ void AddCommandScripts()
     AddSC_quest_commandscript();
     AddSC_reload_commandscript();
     AddSC_reset_commandscript();
-    AddSC_tele_commandscript();
     AddSC_server_commandscript();
+    AddSC_tele_commandscript();
+    AddSC_ticket_commandscript();
     AddSC_titles_commandscript();
     AddSC_wp_commandscript();
-    AddSC_character_commandscript();
 }
 
 void AddWorldScripts()
@@ -1219,7 +1223,6 @@ void AddNorthrendScripts()
     AddSC_zuldrak();
     AddSC_crystalsong_forest();
     AddSC_isle_of_conquest();
-
 #endif
 }
 
@@ -1243,27 +1246,13 @@ void AddBattlegroundScripts()
 
 #ifdef SCRIPTS
 /* This is where custom scripts' loading functions should be declared. */
-void AddSC_npc_testasd();
-void AddSC_boss_viscidus();
-void AddSC_Minipet();
-void AddSC_transmogrify_script();
-void AddSC_ulduar();
-void AddSC_boss_thorim();
-void AddSC_boss_yoggsaron();
-void AddSC_wintergrasp();
+
 #endif
 
 void AddCustomScripts()
 {
 #ifdef SCRIPTS
- /* This is where custom scripts should be added. */
-     AddSC_npc_testasd();
-     AddSC_boss_viscidus();
-     AddSC_Minipet();
-     AddSC_transmogrify_script();
-	 AddSC_ulduar();
-	 AddSC_boss_thorim();
-	 AddSC_boss_yoggsaron();
-	 AddSC_wintergrasp();
+    /* This is where custom scripts should be added. */
+
 #endif
 }

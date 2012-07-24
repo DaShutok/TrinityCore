@@ -93,7 +93,6 @@ public:
 
         void Reset()
         {
-            me->SetFullHealth();
             Phase = IDLE;
             luiCrystals.clear();
             ohNovos = true;

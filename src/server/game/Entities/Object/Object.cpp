@@ -41,12 +41,13 @@
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 #include "SpellAuraEffects.h"
-#include "BattlefieldMgr.h"
+#include "UpdateFieldFlags.h"
 #include "TemporarySummon.h"
 #include "Totem.h"
 #include "OutdoorPvPMgr.h"
 #include "MovementPacketBuilder.h"
 #include "DynamicTree.h"
+#include "Group.h"
 
 uint32 GuidHigh2TypeId(uint32 guid_hi)
 {
@@ -74,6 +75,7 @@ Object::Object() : m_PackGUID(sizeof(uint64)+1)
     m_uint32Values      = NULL;
     _changedFields      = NULL;
     m_valuesCount       = 0;
+    _fieldNotifyFlags   = UF_FLAG_DYNAMIC;
 
     m_inWorld           = false;
     m_objectUpdated     = false;
@@ -463,17 +465,13 @@ void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask*
             if (((GameObject*)this)->ActivateToQuest(target) || target->isGameMaster())
                 IsActivateToQuest = true;
 
-            updateMask->SetBit(GAMEOBJECT_DYNAMIC);
-
             if (((GameObject*)this)->GetGoArtKit())
                 updateMask->SetBit(GAMEOBJECT_BYTES_1);
         }
         else if (isType(TYPEMASK_UNIT))
         {
             if (((Unit*)this)->HasFlag(UNIT_FIELD_AURASTATE, PER_CASTER_AURA_STATE_MASK))
-            {
                 updateMask->SetBit(UNIT_FIELD_AURASTATE);
-            }
         }
     }
     else                                                    // case UPDATETYPE_VALUES
@@ -481,10 +479,8 @@ void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask*
         if (isType(TYPEMASK_GAMEOBJECT) && !((GameObject*)this)->IsTransport())
         {
             if (((GameObject*)this)->ActivateToQuest(target) || target->isGameMaster())
-            {
                 IsActivateToQuest = true;
-            }
-            updateMask->SetBit(GAMEOBJECT_DYNAMIC);
+
             updateMask->SetBit(GAMEOBJECT_BYTES_1);
 
             if (ToGameObject()->GetGoType() == GAMEOBJECT_TYPE_CHEST && ToGameObject()->GetGOInfo()->chest.groupLootRules &&
@@ -494,9 +490,7 @@ void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask*
         else if (isType(TYPEMASK_UNIT))
         {
             if (((Unit*)this)->HasFlag(UNIT_FIELD_AURASTATE, PER_CASTER_AURA_STATE_MASK))
-            {
                 updateMask->SetBit(UNIT_FIELD_AURASTATE);
-            }
         }
     }
 
@@ -788,26 +782,96 @@ void Object::_LoadIntoDataField(char const* data, uint32 startOffset, uint32 cou
     }
 }
 
-void Object::_SetUpdateBits(UpdateMask* updateMask, Player* /*target*/) const
+void Object::GetUpdateFieldData(Player const* target, uint32*& flags, bool& isOwner, bool& isItemOwner, bool& hasSpecialInfo, bool& isPartyMember) const
 {
-    bool* indexes = _changedFields;
-
-    for (uint16 index = 0; index < m_valuesCount; ++index, ++indexes)
+    // This function assumes updatefield index is always valid
+    switch (GetTypeId())
     {
-        if (*indexes)
-            updateMask->SetBit(index);
+        case TYPEID_ITEM:
+        case TYPEID_CONTAINER:
+            flags = ItemUpdateFieldFlags;
+            isOwner = isItemOwner = ((Item*)this)->GetOwnerGUID() == target->GetGUID();
+            break;
+        case TYPEID_UNIT:
+        case TYPEID_PLAYER:
+        {
+            Player* plr = ToUnit()->GetCharmerOrOwnerPlayerOrPlayerItself();
+            flags = UnitUpdateFieldFlags;
+            isOwner = ToUnit()->GetOwnerGUID() == target->GetGUID();
+            hasSpecialInfo = ToUnit()->HasAuraTypeWithCaster(SPELL_AURA_EMPATHY, target->GetGUID());
+            isPartyMember = plr && plr->IsInSameGroupWith(target);
+            break;
+        }
+        case TYPEID_GAMEOBJECT:
+            flags = GameObjectUpdateFieldFlags;
+            isOwner = ToGameObject()->GetOwnerGUID() == target->GetGUID();
+            break;
+        case TYPEID_DYNAMICOBJECT:
+            flags = DynamicObjectUpdateFieldFlags;
+            isOwner = ((DynamicObject*)this)->GetCasterGUID() == target->GetGUID();
+            break;
+        case TYPEID_CORPSE:
+            flags = CorpseUpdateFieldFlags;
+            isOwner = ToCorpse()->GetOwnerGUID() == target->GetGUID();
+            break;
     }
 }
 
-void Object::_SetCreateBits(UpdateMask* updateMask, Player* /*target*/) const
+bool Object::IsUpdateFieldVisible(uint32 flags, bool isSelf, bool isOwner, bool isItemOwner, bool isPartyMember) const
+{
+    if (flags == UF_FLAG_NONE)
+        return false;
+
+    if (flags & UF_FLAG_PUBLIC)
+        return true;
+
+    if (flags & UF_FLAG_PRIVATE && isSelf)
+        return true;
+
+    if (flags & UF_FLAG_OWNER && isOwner)
+        return true;
+
+    if (flags & UF_FLAG_ITEM_OWNER && isItemOwner)
+        return true;
+
+    if (flags & UF_FLAG_PARTY_MEMBER && isPartyMember)
+        return true;
+
+    return false;
+}
+
+void Object::_SetUpdateBits(UpdateMask* updateMask, Player* target) const
+{
+    bool* indexes = _changedFields;
+    uint32* flags = NULL;
+    bool isSelf = target == this;
+    bool isOwner = false;
+    bool isItemOwner = false;
+    bool hasSpecialInfo = false;
+    bool isPartyMember = false;
+
+    GetUpdateFieldData(target, flags, isOwner, isItemOwner, hasSpecialInfo, isPartyMember);
+
+    for (uint16 index = 0; index < m_valuesCount; ++index, ++indexes)
+        if (_fieldNotifyFlags & flags[index] || (flags[index] & UF_FLAG_SPECIAL_INFO && hasSpecialInfo) || (*indexes && IsUpdateFieldVisible(flags[index], isSelf, isOwner, isItemOwner, isPartyMember)))
+            updateMask->SetBit(index);
+}
+
+void Object::_SetCreateBits(UpdateMask* updateMask, Player* target) const
 {
     uint32* value = m_uint32Values;
+    uint32* flags = NULL;
+    bool isSelf = target == this;
+    bool isOwner = false;
+    bool isItemOwner = false;
+    bool hasSpecialInfo = false;
+    bool isPartyMember = false;
+
+    GetUpdateFieldData(target, flags, isOwner, isItemOwner, hasSpecialInfo, isPartyMember);
 
     for (uint16 index = 0; index < m_valuesCount; ++index, ++value)
-    {
-        if (*value)
+        if (_fieldNotifyFlags & flags[index] || (flags[index] & UF_FLAG_SPECIAL_INFO && hasSpecialInfo) || (*value && IsUpdateFieldVisible(flags[index], isSelf, isOwner, isItemOwner, isPartyMember)))
             updateMask->SetBit(index);
-    }
 }
 
 void Object::SetInt32Value(uint16 index, int32 value)
@@ -1584,13 +1648,6 @@ void WorldObject::UpdateAllowedPositionZ(float x, float y, float &z) const
     {
         case TYPEID_UNIT:
         {
-            Unit* victim = ToCreature()->getVictim();
-            if (victim)
-            {
-                // anyway creature move to victim for thinly Z distance (shun some VMAP wrong ground calculating)
-                if (fabs(GetPositionZ() - victim->GetPositionZ()) < 5.0f)
-                    return;
-            }
             // non fly unit don't must be in air
             // non swim unit must be at ground (mostly speedup, because it don't must be in water and water level check less fast
             if (!ToCreature()->CanFly())
@@ -2270,12 +2327,7 @@ void WorldObject::SetZoneScript()
         if (map->IsDungeon())
             m_zoneScript = (ZoneScript*)((InstanceMap*)map)->GetInstanceScript();
         else if (!map->IsBattlegroundOrArena())
-        {	 	
-            if (Battlefield* bf = sBattlefieldMgr->GetBattlefieldToZoneId(GetZoneId()))	 	
-                m_zoneScript = bf; 	 	
-            else	 	
-                m_zoneScript = sOutdoorPvPMgr->GetZoneScript(GetZoneId());	
-        }
+            m_zoneScript = sOutdoorPvPMgr->GetZoneScript(GetZoneId());
     }
 }
 
@@ -2453,15 +2505,6 @@ Creature* WorldObject::SummonTrigger(float x, float y, float z, float ang, uint3
     return summon;
 }
 
-Player* WorldObject::FindNearestPlayer(float range, bool alive)
-{
-    Player* player = NULL;
-    Trinity::AnyPlayerInObjectRangeCheck checker(this, range, alive);
-    Trinity::PlayerSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(this, player, checker);
-    VisitNearbyWorldObject(range, searcher);
-    return player;
-}
-
 Creature* WorldObject::FindNearestCreature(uint32 entry, float range, bool alive) const
 {
     Creature* creature = NULL;
@@ -2478,14 +2521,6 @@ GameObject* WorldObject::FindNearestGameObject(uint32 entry, float range) const
     Trinity::GameObjectLastSearcher<Trinity::NearestGameObjectEntryInObjectRangeCheck> searcher(this, go, checker);
     VisitNearbyGridObject(range, searcher);
     return go;
-}
-
-std::list<Player*> WorldObject::GetNearestPlayersList(float range, bool alive) {
-    std::list<Player*> players;
-    Trinity::AnyPlayerInObjectRangeCheck checker(this, range, alive);
-    Trinity::PlayerListSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(this, players, checker);
-    VisitNearbyWorldObject(range, searcher);
-    return players;
 }
 
 void WorldObject::GetGameObjectListWithEntryInGrid(std::list<GameObject*>& gameobjectList, uint32 entry, float maxSearchRange) const

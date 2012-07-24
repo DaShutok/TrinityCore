@@ -55,9 +55,6 @@ public:
         uint64 go_roomrunes[MAX_DRAGONSPIRE_HALL_RUNES];
         uint8 Runemaxprotectors[MAX_DRAGONSPIRE_HALL_RUNES];
         uint8 Runeprotectorsdead[MAX_DRAGONSPIRE_HALL_RUNES];
-		uint32 RuneDoor;
-		uint64 GythEntry;
-		uint64 GythExit;
 
         void Initialize()
         {
@@ -79,9 +76,6 @@ public:
             go_emberseerin          = 0;
             go_doors                = 0;
             go_emberseerout         = 0;
-			RuneDoor                = 0;
-			GythEntry               = 0;
-			GythExit                = 0;
         }
 
         bool IsEncounterInProgress() const
@@ -184,12 +178,6 @@ public:
                 case GO_ROOM_7_RUNE:
                     go_roomrunes[6] = go->GetGUID();
                     break;
-				case GO_GYTH_ENTRY_DOOR:
-					GythEntry = go->GetGUID();
-					break;
-				case GO_GYTH_EXIT_DOOR:
-					GythExit = go->GetGUID();
-					break;
             }
         }
 
@@ -286,10 +274,6 @@ public:
                     return go_roomrunes[5];
                 case GO_ROOM_7_RUNE:
                     return go_roomrunes[6];
-				case GO_GYTH_ENTRY_DOOR:
-					return GythEntry;
-				case GO_GYTH_EXIT_DOOR:
-					return GythExit;
             }
 
             return 0;
@@ -334,46 +318,11 @@ public:
 
             OUT_LOAD_INST_DATA_COMPLETE;
         }
-
-		void SetData(uint32 type, uint32 data)
-        {
-			switch (type)
-			{
-			case DATA_RUNE_DOOR:
-				RuneDoor++;
-				if (RuneDoor == 7)
-				{
-				if (GameObject* go = instance->GetGameObject(go_emberseerin))
-                    go->UseDoorOrButton();
-				if (GameObject* go = instance->GetGameObject(go_doors))
-                    go->UseDoorOrButton();
-                    break;
-				}
-			}
-		}
     };
 
-};
-
-class go_door_room : public GameObjectScript
-{
-public:
-    go_door_room() : GameObjectScript("go_door_room") {}
-
-    bool OnGossipHello(Player* /*pPlayer*/, GameObject* go)
-    {
-        InstanceScript* instance = go->GetInstanceScript();
-
-        if (!instance)
-            return false;
-		go->Delete();
-		instance->SetData(DATA_RUNE_DOOR, DONE);
-        return true;
-    }
 };
 
 void AddSC_instance_blackrock_spire()
 {
     new instance_blackrock_spire();
-	new go_door_room();
 }

@@ -300,6 +300,9 @@ class Object
         virtual void BuildUpdate(UpdateDataMapType&) {}
         void BuildFieldsUpdate(Player*, UpdateDataMapType &) const;
 
+        void SetFieldNotifyFlag(uint16 flag) { _fieldNotifyFlags |= flag; }
+        void RemoveFieldNotifyFlag(uint16 flag) { _fieldNotifyFlags &= ~flag; }
+
         // FG: some hacky helpers
         void ForceValuesUpdateAtIndex(uint32);
 
@@ -320,13 +323,16 @@ class Object
         Object();
 
         void _InitValues();
-        void _Create (uint32 guidlow, uint32 entry, HighGuid guidhigh);
+        void _Create(uint32 guidlow, uint32 entry, HighGuid guidhigh);
         std::string _ConcatFields(uint16 startIndex, uint16 size) const;
         void _LoadIntoDataField(const char* data, uint32 startOffset, uint32 count);
 
-        virtual void _SetUpdateBits(UpdateMask* updateMask, Player* target) const;
+        void GetUpdateFieldData(Player const* target, uint32*& flags, bool& isOwner, bool& isItemOwner, bool& hasSpecialInfo, bool& isPartyMember) const;
 
-        virtual void _SetCreateBits(UpdateMask* updateMask, Player* target) const;
+        bool IsUpdateFieldVisible(uint32 flags, bool isSelf, bool isOwner, bool isItemOwner, bool isPartyMember) const;
+
+        void _SetUpdateBits(UpdateMask* updateMask, Player* target) const;
+        void _SetCreateBits(UpdateMask* updateMask, Player* target) const;
         void _BuildMovementUpdate(ByteBuffer * data, uint16 flags) const;
         void _BuildValuesUpdate(uint8 updatetype, ByteBuffer *data, UpdateMask* updateMask, Player* target) const;
 
@@ -345,6 +351,8 @@ class Object
         bool* _changedFields;
 
         uint16 m_valuesCount;
+
+        uint16 _fieldNotifyFlags;
 
         bool m_objectUpdated;
 
@@ -789,10 +797,8 @@ class WorldObject : public Object, public WorldLocation
         GameObject* SummonGameObject(uint32 entry, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 respawnTime);
         Creature*   SummonTrigger(float x, float y, float z, float ang, uint32 dur, CreatureAI* (*GetAI)(Creature*) = NULL);
 
-		Player*     FindNearestPlayer(float range, bool alive = true);
         Creature*   FindNearestCreature(uint32 entry, float range, bool alive = true) const;
         GameObject* FindNearestGameObject(uint32 entry, float range) const;
-		std::list<Player*>  GetNearestPlayersList(float range, bool alive = true);
 
         void GetGameObjectListWithEntryInGrid(std::list<GameObject*>& lList, uint32 uiEntry, float fMaxSearchRange) const;
         void GetCreatureListWithEntryInGrid(std::list<Creature*>& lList, uint32 uiEntry, float fMaxSearchRange) const;

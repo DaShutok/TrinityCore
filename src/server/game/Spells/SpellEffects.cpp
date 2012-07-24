@@ -765,21 +765,6 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                         targets.SetDst(*m_targets.GetDstPos());
                     spell_id = CalculateDamage(0, NULL);
                     break;
-				case 61999:
-					if (!unitTarget || m_caster->GetTypeId() != TYPEID_PLAYER || unitTarget->isAlive())
-                       {
-                          SendCastResult(SPELL_FAILED_TARGET_NOT_DEAD);
-                          finish(true);
-						  CancelGlobalCooldown();
-						  m_caster->ToPlayer()->RemoveSpellCooldown(m_spellInfo->Id, true);
-                          return;
-                       }else
-					    {
-                          unitTarget->CastSpell(unitTarget, 46619, true);
-                          CancelGlobalCooldown();
-                          return;
-					    }
-					   break;
             }
             break;
     }
@@ -2420,7 +2405,7 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
 
                         if (properties->Category == SUMMON_CATEGORY_ALLY)
                         {
-                            summon->SetUInt64Value(UNIT_FIELD_SUMMONEDBY, m_originalCaster->GetGUID());
+                            summon->SetOwnerGUID(m_originalCaster->GetGUID());
                             summon->setFaction(m_originalCaster->getFaction());
                             summon->SetUInt32Value(UNIT_CREATED_BY_SPELL, m_spellInfo->Id);
                         }
@@ -6216,7 +6201,6 @@ void Spell::EffectPlayerNotification(SpellEffIndex effIndex)
         case 58730: // Restricted Flight Area
         case 58600: // Restricted Flight Area
             unitTarget->ToPlayer()->GetSession()->SendNotification(LANG_ZONE_NOFLYZONE);
-			unitTarget->PlayDirectSound(9417); // Fel Reaver sound
             break;
     }
 

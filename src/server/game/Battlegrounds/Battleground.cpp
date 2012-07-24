@@ -1053,10 +1053,7 @@ void Battleground::RemovePlayerAtLeave(uint64 guid, bool Transport, bool SendPac
         player->SetBGTeam(0);
 
         if (Transport)
-        {
             player->TeleportToBGEntryPoint();
-            player->ExitVehicle();
-        }
 
         sLog->outDetail("BATTLEGROUND: Removed player %s from Battleground.", player->GetName());
     }
@@ -1216,7 +1213,7 @@ void Battleground::AddOrSetPlayerToCorrectBgGroup(Player* player, uint32 team)
         if (group->IsMember(playerGuid))
         {
             uint8 subgroup = group->GetMemberGroup(playerGuid);
-            player->SetBattlegroundOrBattlefieldRaid(group, subgroup);
+            player->SetBattlegroundRaid(group, subgroup);
         }
         else
         {
