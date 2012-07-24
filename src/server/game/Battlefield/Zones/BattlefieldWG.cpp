@@ -166,6 +166,16 @@ bool BattlefieldWG::SetupBattlefield()
         }
     }
 
+	// Spawn Mechanic
+	for (uint8 i = 0; i < WG_MECHANIC_SPAWN; i++)
+	{
+        if (Creature* creature = SpawnCreature(WGMechanic[i].entryHorde, WGMechanic[i].x, WGMechanic[i].y, WGMechanic[i].z, WGMechanic[i].o, TEAM_HORDE))
+            MechanicSpawn[TEAM_HORDE].insert(creature->GetGUID());
+		
+        if (Creature* creature = SpawnCreature(WGMechanic[i].entryAlliance, WGMechanic[i].x, WGMechanic[i].y, WGMechanic[i].z, WGMechanic[i].o, TEAM_ALLIANCE))
+            MechanicSpawn[TEAM_ALLIANCE].insert(creature->GetGUID());
+	}
+
     // Spawn all gameobjects
     for (uint8 i = 0; i < WG_MAX_OBJ; i++)
     {
