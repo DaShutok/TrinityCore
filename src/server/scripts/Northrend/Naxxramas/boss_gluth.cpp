@@ -61,6 +61,9 @@ public:
         {
             // Do not let Gluth be affected by zombies' debuff
             me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_INFECTED_WOUND, true);
+            // Immunity to SPELL_DECIMATE
+	    me->ApplySpellImmune(0, IMMUNITY_ID, 28374, true);
+	    me->ApplySpellImmune(0, IMMUNITY_ID, 54426, true);
         }
 
         void MoveInLineOfSight(Unit* who)
@@ -144,7 +147,31 @@ public:
 
 };
 
+class npc_gluth_zombie : public CreatureScript
+{
+    public:
+
+		npc_gluth_zombie() : CreatureScript("npc_gluth_zombie"){ }
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+           return new npc_gluth_zombieAI(creature);
+        }
+
+		struct npc_gluth_zombieAI : public ScriptedAI
+        {
+            npc_gluth_zombieAI(Creature* creature) : ScriptedAI(creature) {}
+
+			void SpellHit(Unit* /*caster*/, const SpellInfo* spell)
+			{
+				if (spell->Id == SPELL_DECIMATE)
+					me->SetHealth(RAID_MODE(25200, 50400));
+			}
+		};
+};
+
 void AddSC_boss_gluth()
 {
     new boss_gluth();
+	new npc_gluth_zombie();
 }

@@ -177,7 +177,11 @@ void Vehicle::ApplyAllImmunities()
         case 160: // Strand of the Ancients
         case 244: // Wintergrasp
         case 510: // Isle of Conquest
-            _me->SetControlled(true, UNIT_STATE_ROOT);
+            _me->SetControlled(true, UNIT_STATE_ROOT);				
+            //me->AddUnitMovementFlag(MOVEMENTFLAG_ROOT);	 	
+            //me->SetSpeed(MOVE_TURN_RATE, 0.7f);	 	
+            //me->SetSpeed(MOVE_PITCH_RATE, 0.7f);	 	
+            //me->m_movementInfo.flags2=59;
             // why we need to apply this? we can simple add immunities to slow mechanic in DB
             _me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_DECREASE_SPEED, true);
             break;
@@ -464,6 +468,21 @@ void Vehicle::Dismiss()
     sLog->outDebug(LOG_FILTER_VEHICLES, "Vehicle::Dismiss Entry: %u, GuidLow %u", _creatureEntry, _me->GetGUIDLow());
     Uninstall();
     GetBase()->ToCreature()->DespawnOrUnsummon();
+}
+
+	
+void Vehicle::TeleportVehicle(float x, float y, float z, float ang) 	 	
+{ 	 	
+    vehiclePlayers.clear(); 	 	
+    for(int8 i = 0; i < 8; i++) 	 	
+        if (Unit* player = GetPassenger(i))	
+            vehiclePlayers.insert(player->GetGUID());	 	
+	 	
+    RemoveAllPassengers(); // this can unlink Guns from Siege Engines 	 	
+    _me->NearTeleportTo(x, y, z, ang); 	 	
+    for (GuidSet::const_iterator itr = vehiclePlayers.begin(); itr != vehiclePlayers.end(); ++itr) 	 	
+        if(Unit* plr = sObjectAccessor->FindUnit(*itr))	 	
+                plr->NearTeleportTo(x, y, z, ang);	 	
 }
 
 void Vehicle::InitMovementInfoForBase()

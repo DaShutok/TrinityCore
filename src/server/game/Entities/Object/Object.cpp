@@ -42,6 +42,7 @@
 #include "GridNotifiersImpl.h"
 #include "SpellAuraEffects.h"
 #include "UpdateFieldFlags.h"
+#include "BattlefieldMgr.h"
 #include "TemporarySummon.h"
 #include "Totem.h"
 #include "OutdoorPvPMgr.h"
@@ -465,13 +466,17 @@ void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask*
             if (((GameObject*)this)->ActivateToQuest(target) || target->isGameMaster())
                 IsActivateToQuest = true;
 
+            updateMask->SetBit(GAMEOBJECT_DYNAMIC);
+
             if (((GameObject*)this)->GetGoArtKit())
                 updateMask->SetBit(GAMEOBJECT_BYTES_1);
         }
         else if (isType(TYPEMASK_UNIT))
         {
             if (((Unit*)this)->HasFlag(UNIT_FIELD_AURASTATE, PER_CASTER_AURA_STATE_MASK))
+            {
                 updateMask->SetBit(UNIT_FIELD_AURASTATE);
+            }
         }
     }
     else                                                    // case UPDATETYPE_VALUES
@@ -479,8 +484,10 @@ void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask*
         if (isType(TYPEMASK_GAMEOBJECT) && !((GameObject*)this)->IsTransport())
         {
             if (((GameObject*)this)->ActivateToQuest(target) || target->isGameMaster())
+            {
                 IsActivateToQuest = true;
-
+            }
+            updateMask->SetBit(GAMEOBJECT_DYNAMIC);
             updateMask->SetBit(GAMEOBJECT_BYTES_1);
 
             if (ToGameObject()->GetGoType() == GAMEOBJECT_TYPE_CHEST && ToGameObject()->GetGOInfo()->chest.groupLootRules &&
@@ -490,7 +497,9 @@ void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask*
         else if (isType(TYPEMASK_UNIT))
         {
             if (((Unit*)this)->HasFlag(UNIT_FIELD_AURASTATE, PER_CASTER_AURA_STATE_MASK))
+            {
                 updateMask->SetBit(UNIT_FIELD_AURASTATE);
+            }
         }
     }
 
@@ -868,7 +877,7 @@ void Object::_SetCreateBits(UpdateMask* updateMask, Player* target) const
     bool isPartyMember = false;
 
     GetUpdateFieldData(target, flags, isOwner, isItemOwner, hasSpecialInfo, isPartyMember);
-
+     
     for (uint16 index = 0; index < m_valuesCount; ++index, ++value)
         if (_fieldNotifyFlags & flags[index] || (flags[index] & UF_FLAG_SPECIAL_INFO && hasSpecialInfo) || (*value && IsUpdateFieldVisible(flags[index], isSelf, isOwner, isItemOwner, isPartyMember)))
             updateMask->SetBit(index);
@@ -1648,6 +1657,13 @@ void WorldObject::UpdateAllowedPositionZ(float x, float y, float &z) const
     {
         case TYPEID_UNIT:
         {
+            Unit* victim = ToCreature()->getVictim();
+            if (victim)
+            {
+                // anyway creature move to victim for thinly Z distance (shun some VMAP wrong ground calculating)
+                if (fabs(GetPositionZ() - victim->GetPositionZ()) < 5.0f)
+                    return;
+            }
             // non fly unit don't must be in air
             // non swim unit must be at ground (mostly speedup, because it don't must be in water and water level check less fast
             if (!ToCreature()->CanFly())
@@ -2327,7 +2343,12 @@ void WorldObject::SetZoneScript()
         if (map->IsDungeon())
             m_zoneScript = (ZoneScript*)((InstanceMap*)map)->GetInstanceScript();
         else if (!map->IsBattlegroundOrArena())
-            m_zoneScript = sOutdoorPvPMgr->GetZoneScript(GetZoneId());
+        {	 	
+            if (Battlefield* bf = sBattlefieldMgr->GetBattlefieldToZoneId(GetZoneId()))	 	
+                m_zoneScript = bf; 	 	
+            else	 	
+                m_zoneScript = sOutdoorPvPMgr->GetZoneScript(GetZoneId());	
+        }
     }
 }
 
@@ -2505,6 +2526,15 @@ Creature* WorldObject::SummonTrigger(float x, float y, float z, float ang, uint3
     return summon;
 }
 
+Player* WorldObject::FindNearestPlayer(float range, bool alive)
+{
+    Player* player = NULL;
+    Trinity::AnyPlayerInObjectRangeCheck checker(this, range, alive);
+    Trinity::PlayerSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(this, player, checker);
+    VisitNearbyWorldObject(range, searcher);
+    return player;
+}
+
 Creature* WorldObject::FindNearestCreature(uint32 entry, float range, bool alive) const
 {
     Creature* creature = NULL;
@@ -2521,6 +2551,14 @@ GameObject* WorldObject::FindNearestGameObject(uint32 entry, float range) const
     Trinity::GameObjectLastSearcher<Trinity::NearestGameObjectEntryInObjectRangeCheck> searcher(this, go, checker);
     VisitNearbyGridObject(range, searcher);
     return go;
+}
+
+std::list<Player*> WorldObject::GetNearestPlayersList(float range, bool alive) {
+    std::list<Player*> players;
+    Trinity::AnyPlayerInObjectRangeCheck checker(this, range, alive);
+    Trinity::PlayerListSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(this, players, checker);
+    VisitNearbyWorldObject(range, searcher);
+    return players;
 }
 
 void WorldObject::GetGameObjectListWithEntryInGrid(std::list<GameObject*>& gameobjectList, uint32 entry, float maxSearchRange) const

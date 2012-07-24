@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -204,7 +204,7 @@ class boss_auriaya : public CreatureScript
                }
             }
 
-            void JustDied(Unit* /*killer*/)
+            void JustDied(Unit* /*who*/)
             {
                 DoScriptText(SAY_DEATH, me);
                 _JustDied();
@@ -298,14 +298,14 @@ class npc_auriaya_seeping_trigger : public CreatureScript
 
         void Reset()
         {
-            me->DespawnOrUnsummon(600000);
+			me->DespawnOrUnsummon(600000);
             DoCast(me, SPELL_SEEPING_ESSENCE);
         }
 
         void UpdateAI(uint32 const /*diff*/)
         {
             if (instance->GetBossState(BOSS_AURIAYA) != IN_PROGRESS)
-                me->DespawnOrUnsummon();
+				me->DespawnOrUnsummon();
         }
 
         private:
@@ -376,7 +376,7 @@ class npc_sanctum_sentry : public CreatureScript
                 DoMeleeAttackIfReady();
             }
 
-            void JustDied(Unit* /*killer*/)
+            void JustDied(Unit* /*who*/)
             {
                 if (Creature* Auriaya = ObjectAccessor::GetCreature(*me, instance->GetData64(BOSS_AURIAYA)))
                     Auriaya->AI()->DoAction(ACTION_CRAZY_CAT_LADY);
@@ -451,7 +451,7 @@ class npc_feral_defender : public CreatureScript
                 DoMeleeAttackIfReady();
             }
 
-            void JustDied(Unit* /*killer*/)
+            void JustDied(Unit* /*who*/)
             {
                 DoCast(me, SPELL_SUMMON_ESSENCE);
                 if (Creature* Auriaya = ObjectAccessor::GetCreature(*me, instance->GetData64(BOSS_AURIAYA)))
@@ -472,9 +472,9 @@ class npc_feral_defender : public CreatureScript
 class SanctumSentryCheck
 {
     public:
-        bool operator()(WorldObject* object) const
+        bool operator() (WorldObject* unit)
         {
-            if (object->GetEntry() == NPC_SANCTUM_SENTRY)
+            if (unit->ToUnit()->GetEntry() == NPC_SANCTUM_SENTRY)
                 return false;
 
             return true;
@@ -490,7 +490,7 @@ class spell_auriaya_strenght_of_the_pack : public SpellScriptLoader
         {
             PrepareSpellScript(spell_auriaya_strenght_of_the_pack_SpellScript);
 
-            void FilterTargets(std::list<WorldObject*>& unitList)
+			void FilterTargets(std::list<WorldObject*>& unitList)
             {
                 unitList.remove_if(SanctumSentryCheck());
             }
@@ -518,7 +518,7 @@ class spell_auriaya_sentinel_blast : public SpellScriptLoader
 
             void FilterTargets(std::list<WorldObject*>& unitList)
             {
-                unitList.remove_if(PlayerOrPetCheck());
+                unitList.remove_if (PlayerOrPetCheck());
             }
 
             void Register()

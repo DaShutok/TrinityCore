@@ -79,12 +79,6 @@ public:
 
         void Reset()
         {
-            ResetTimer = 0;
-        }
-
-        void EnterEvadeMode()
-        {
-            ScriptedAI::EnterEvadeMode();
             ResetTimer = 2000;
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -331,6 +331,7 @@ class boss_hodir : public CreatureScript
                 _EnterCombat();
                 DoScriptText(SAY_AGGRO, me);
                 DoCast(me, SPELL_BITING_COLD, true);
+				me->SetReactState(REACT_AGGRESSIVE);
 
                 gettingColdInHereTimer = 1000;
                 gettingColdInHere = true;
@@ -358,6 +359,8 @@ class boss_hodir : public CreatureScript
                 {
                     damage = 0;
                     DoScriptText(SAY_DEATH, me);
+                    instance->SetBossState(BOSS_HODIR, DONE);
+                    me->CastSpell(me, 64899, true);
                     if (iCouldSayThatThisCacheWasRare)
                         instance->SetData(DATA_HODIR_RARE_CACHE, 1);
 
@@ -651,7 +654,7 @@ class npc_hodir_priest : public CreatureScript
                 DoSpellAttackIfReady(SPELL_SMITE);
             }
 
-            void JustDied(Unit* /*killer*/)
+            void JustDied(Unit* /*who*/)
              {
                 if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
@@ -713,7 +716,7 @@ class npc_hodir_shaman : public CreatureScript
                 DoSpellAttackIfReady(SPELL_LAVA_BURST);
             }
 
-            void JustDied(Unit* /*killer*/)
+            void JustDied(Unit* /*who*/)
              {
                 if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
@@ -774,7 +777,7 @@ class npc_hodir_druid : public CreatureScript
                 DoSpellAttackIfReady(SPELL_WRATH);
             }
 
-            void JustDied(Unit* /*killer*/)
+            void JustDied(Unit* /*who*/)
              {
                 if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
@@ -854,7 +857,7 @@ class npc_hodir_mage : public CreatureScript
                 DoSpellAttackIfReady(SPELL_FIREBALL);
             }
 
-            void JustDied(Unit* /*killer*/)
+            void JustDied(Unit* /*who*/)
              {
                   if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);

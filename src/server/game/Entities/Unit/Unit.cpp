@@ -57,7 +57,7 @@
 #include "MoveSpline.h"
 #include "ConditionMgr.h"
 #include "UpdateFieldFlags.h"
-
+#include "BattlefieldMgr.h"
 #include <math.h>
 
 float baseMoveSpeed[MAX_MOVE_TYPE] =
@@ -368,7 +368,7 @@ bool Unit::haveOffhandWeapon() const
         return m_canDualWield;
 }
 
-void Unit::MonsterMoveWithSpeed(float x, float y, float z, float speed)
+void Unit::MonsterMoveWithSpeed(float x, float y, float z, float speed, bool generatePath = false, bool forceDestination = false);)
 {
     Movement::MoveSplineInit init(*this);
     init.MoveTo(x,y,z);
@@ -12779,7 +12779,7 @@ void Unit::SetSpeed(UnitMoveType mtype, float rate, bool forced)
 
 void Unit::setDeathState(DeathState s)
 {
-    if (s != ALIVE && s != JUST_RESPAWNED)
+    if (s != ALIVE && s != JUST_RESPAWNED && s != GHOULED)
     {
         CombatStop();
         DeleteThreatList();
@@ -15673,8 +15673,13 @@ void Unit::Kill(Unit* victim, bool durabilityLoss)
     // outdoor pvp things, do these after setting the death state, else the player activity notify won't work... doh...
     // handle player kill only if not suicide (spirit of redemption for example)
     if (player && this != victim)
+	{
         if (OutdoorPvP* pvp = player->GetOutdoorPvP())
             pvp->HandleKill(player, victim);
+
+		if (Battlefield* bf = sBattlefieldMgr->GetBattlefieldToZoneId(player->GetZoneId()))	
+            bf->HandleKill(player, victim);
+	}
 
     //if (victim->GetTypeId() == TYPEID_PLAYER)
     //    if (OutdoorPvP* pvp = victim->ToPlayer()->GetOutdoorPvP())

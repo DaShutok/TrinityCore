@@ -343,6 +343,7 @@ public:
         {
             _JustDied();
             DoScriptText(SAY_DEATH, me);
+			me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
             std::map<uint64, float>::const_iterator itr;
             for (itr = chained.begin(); itr != chained.end(); ++itr)

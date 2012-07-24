@@ -35,6 +35,7 @@ set(scripts_STAT_SRCS
   Northrend/Ulduar/Ulduar/boss_freya.cpp
   Northrend/Ulduar/Ulduar/boss_razorscale.cpp
   Northrend/Ulduar/Ulduar/boss_kologarn.cpp
+  Northrend/Ulduar/Ulduar/ulduar.cpp
   Northrend/Ulduar/HallsOfStone/boss_krystallus.cpp
   Northrend/Ulduar/HallsOfStone/halls_of_stone.h
   Northrend/Ulduar/HallsOfStone/instance_halls_of_stone.cpp
@@ -186,6 +187,7 @@ set(scripts_STAT_SRCS
   Northrend/borean_tundra.cpp
   Northrend/howling_fjord.cpp
   Northrend/dalaran.cpp
+  Northrend/Wintergrasp.cpp
   Northrend/DraktharonKeep/boss_trollgore.cpp
   Northrend/DraktharonKeep/instance_drak_tharon_keep.cpp
   Northrend/DraktharonKeep/boss_novos.cpp

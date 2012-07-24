@@ -35,6 +35,7 @@ enum Data
     DATA_THE_BEAST,
     DATA_GENERAL_DRAKKISATH,
     DATA_DRAGONSPIRE_ROOM,
+	DATA_RUNE_DOOR           = 0,
 };
 enum Npc
 {

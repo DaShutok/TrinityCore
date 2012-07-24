@@ -32,8 +32,8 @@ enum DruidSpells
     DRUID_LIFEBLOOM_FINAL_HEAL          = 33778,
     DRUID_LIFEBLOOM_ENERGIZE            = 64372,
     DRUID_SURVIVAL_INSTINCTS            = 50322,
-    DRUID_SAVAGE_ROAR                   = 62071,
     SPELL_DRUID_ITEM_T8_BALANCE_RELIC   = 64950,
+    DRUID_SAVAGE_ROAR                   = 62071
 };
 
 // 54846 Glyph of Starfire
@@ -399,7 +399,7 @@ class spell_dru_lifebloom : public SpellScriptLoader
             void AfterRemove(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
             {
                 // Final heal only on duration end
-                if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE)
+                if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE && GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_ENEMY_SPELL)
                     return;
 
                 // final heal

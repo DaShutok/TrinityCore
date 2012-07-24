@@ -17,6 +17,7 @@
 
 #include "ScriptPCH.h"
 #include "vault_of_archavon.h"
+#include "BattlefieldMgr.h"
 
 #define EMOTE_BERSERK           -1590002
 
@@ -76,6 +77,10 @@ class boss_archavon : public CreatureScript
             // Below UpdateAI may need review/debug.
             void UpdateAI(const uint32 diff)
             {
+				Battlefield* wintergrasp = sBattlefieldMgr->GetBattlefieldByBattleId(BATTLEFIELD_BATTLEID_WG);
+				if (wintergrasp->IsWarTime())
+					me->CastSpell(me, 63080);
+
                 if (!UpdateVictim())
                     return;
 

@@ -36,6 +36,7 @@
 #include "CellImpl.h"
 #include "ScriptMgr.h"
 #include "Vehicle.h"
+#include "BattlefieldMgr.h"
 
 class Aura;
 //
@@ -627,10 +628,7 @@ int32 AuraEffect::CalculateAmount(Unit* caster)
                 uint8 cp = caster->ToPlayer()->GetComboPoints();
 
                 // Idol of Feral Shadows. Cant be handled as SpellMod in SpellAura:Dummy due its dependency from CPs
-                if (AuraEffect const* aurEff = caster->GetAuraEffect(34241, EFFECT_0))
-                    amount += cp * aurEff->GetAmount();
-                // Idol of Worship. Cant be handled as SpellMod in SpellAura:Dummy due its dependency from CPs
-                else if (AuraEffect const* aurEff = caster->GetAuraEffect(60774, EFFECT_0))
+                if (AuraEffect const* aurEff = caster->GetAuraEffect(34241, 0))
                     amount += cp * aurEff->GetAmount();
 
                 amount += uint32(CalculatePctU(caster->GetTotalAttackPowerValue(BASE_ATTACK), cp));
@@ -5037,7 +5035,10 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                             // Waiting to resurrect spell cancel, we must remove player from resurrect queue
                             if (target->GetTypeId() == TYPEID_PLAYER)
                                 if (Battleground* bg = target->ToPlayer()->GetBattleground())
-                                    bg->RemovePlayerFromResurrectQueue(target->GetGUID());
+                                    bg->RemovePlayerFromResurrectQueue(target->GetGUID());	
+                                if(Battlefield* bf = sBattlefieldMgr->GetBattlefieldToZoneId(target->GetZoneId()))	
+                                    bf->RemovePlayerFromResurrectQueue(target->GetGUID());
+
                             break;
                         case 36730:                                     // Flame Strike
                         {
@@ -5074,6 +5075,7 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                             target->CastSpell((Unit*)NULL, GetAmount(), true, NULL, this);
                             break;
                         case 58600: // Restricted Flight Area
+						case 58730: // Restricted Flight Area
                             if (aurApp->GetRemoveMode() == AURA_REMOVE_BY_EXPIRE)
                                 target->CastSpell(target, 58601, true);
                             break;
@@ -5262,8 +5264,33 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
             break;
         case SPELLFAMILY_DEATHKNIGHT:
         {
-            //if (!(mode & AURA_EFFECT_HANDLE_REAL))
-            //    break;
+               if (!(mode & AURA_EFFECT_HANDLE_REAL))
+                   break;
+                   if (GetId() == 46619) // Raise Ally
+                      {
+                          if (!target || target->GetTypeId() != TYPEID_PLAYER)
+                              return;
+                           Player* player = target->ToPlayer();
+                           if (apply)
+                           {
+                               player->setDeathState(GHOULED);
+                               WorldPacket data(SMSG_PRE_RESURRECT, player->GetPackGUID().size());
+                               data.append(player->GetPackGUID());
+                               player->GetSession()->SendPacket(&data);
+                               player->StopMirrorTimers();
+                               player->SetFloatValue(UNIT_FIELD_BOUNDINGRADIUS, float(1.0f));
+                               player->SetHealth(1);
+                               player->SetMovement(MOVE_ROOT);
+                            }
+                            else
+                            {
+                               player->RemoveAurasDueToSpell(62218);
+                               player->SetMovement(MOVE_UNROOT);
+                               player->SetHealth(0);
+                               player->setDeathState(JUST_DIED);
+                            }
+                            break;
+                       }
             break;
         }
     }

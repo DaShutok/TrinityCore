@@ -27,6 +27,7 @@
 #include "Chat.h"
 #include "Spell.h"
 #include "BattlegroundMgr.h"
+#include "BattlefieldMgr.h"
 #include "CreatureAI.h"
 #include "MapManager.h"
 #include "BattlegroundIC.h"
@@ -1120,6 +1121,26 @@ bool SpellArea::IsFitToRequirements(Player const* player, uint32 newZone, uint32
                 return false;
             break;
         }
+		case 58730: // No fly Zone - Wintergrasp	
+            {	
+                if (!player)	
+                    return false;	
+	
+                Battlefield* Bf = sBattlefieldMgr->GetBattlefieldToZoneId(player->GetZoneId());	
+                if (!Bf || Bf->CanFlyIn() || (!player->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) && !player->HasAuraType(SPELL_AURA_FLY)))	
+                    return false;	
+                break;	
+            }	
+        case 57940: // Essence of Wintergrasp - Northrend	
+            {	
+                if (!player)	
+                    return false;	
+	
+                Battlefield* Bf = sBattlefieldMgr->GetBattlefieldToZoneId(4197);	
+                if (!Bf || player->GetTeamId() != Bf->GetDefenderTeam())	
+                    return false;	
+                break;	
+            }
         case 68719: // Oil Refinery - Isle of Conquest.
         case 68720: // Quarry - Isle of Conquest.
         {
@@ -3545,6 +3566,57 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->manaCost = 0;
                 spellInfo->manaPerSecond = 0;
                 break;
+				// Leviathan auras
+            case 65076:
+            case 65075:
+            case 64482:
+                spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_50_YARDS;
+                spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_50_YARDS;
+                break;
+				//Freya Auras
+			case 65585:
+			case 62385:
+			case 62713:
+			case 62968:
+				spellInfo->EffectRadiusIndex[EFFECT_0] = EFFECT_RADIUS_50_YARDS;
+				spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_50_YARDS;
+				spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_50_YARDS;
+				break;
+			case 64436:
+				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_CASTER;
+				break;
+			case 61632:
+				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[2] = TARGET_UNIT_CASTER;
+				break;
+			case 64206: // XT-002 - Consumption
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_5_YARDS;
+                break;
+			case 61920: // Assembly Supercharge
+				spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_70_YARDS;
+				spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_70_YARDS;
+				spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_70_YARDS;
+			case 62039: // Hodir - Biting Cold
+                spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_MOVE;
+				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_NEARBY_ENEMY;
+				spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_NEARBY_ENEMY;
+				spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50_YARDS;
+			case 50896:
+				spellInfo->rangeIndex = 13;
+				break;
+			case 56663:
+			case 56575:
+			case 56661:
+			case 61408:
+				spellInfo->CastingTimeIndex = 0;
+				break;
             default:
                 break;
         }
