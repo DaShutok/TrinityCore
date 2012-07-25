@@ -555,6 +555,7 @@ public:
 
         void JustDied(Unit* /*killer*/)
         {
+            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
             DoScriptText(SAY_DEATH, me);
             Summons.DespawnAll();
             if (m_pInstance)
