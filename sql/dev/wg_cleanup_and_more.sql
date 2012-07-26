@@ -43,8 +43,7 @@ DELETE FROM `creature` WHERE `id` in (
  28312,
  32627,
  27881,
- 28094,
- 28366);
+ 28094);
 
 DELETE FROM gameobject WHERE id IN (
  192488,
@@ -92,7 +91,6 @@ DELETE FROM gameobject WHERE id IN (
  194962,
  192829,
  190221,
- 190373,
  190377,
  190378,
  190356,
@@ -118,16 +116,10 @@ DELETE FROM gameobject WHERE id IN (
  190372,
  190374,
  190376,
- 190221,
  190373,
- 190377,
- 190378,
  191797,
  191798,
  191805,
- 190356,
- 190357,
- 190358,
  190375, 
  191810,
  194323,
@@ -135,6 +127,6 @@ DELETE FROM gameobject WHERE id IN (
  190763,
  192951);
 
-UPDATE creature_template SET ScriptName = 'npc_wg_vehicle' WHERE entry IN (28312, 32627, 27881, 28094, 28366);
+UPDATE creature_template SET ScriptName = 'npc_wg_vehicle' WHERE entry IN (28312, 32627, 27881, 28094);
 
 UPDATE `gameobject_template` SET `type` = 6, `faction` = 114, `data1` = 80, `data2` = 10, `data3` = 49759 WHERE `entry` = 192951;

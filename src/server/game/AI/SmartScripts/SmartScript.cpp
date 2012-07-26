@@ -1370,6 +1370,8 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
             if (!IsSmart())
                 break;
 
+            bool RunPos = e.action.MoveToPos.RunPos ? true : false;
+
             WorldObject* target = NULL;
 
             if (e.GetTargetType() == SMART_TARGET_CREATURE_RANGE || e.GetTargetType() == SMART_TARGET_CREATURE_GUID ||
@@ -1385,6 +1387,9 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                 target = targets->front();
                 delete targets;
             }
+
+            if (RunPos == true)
+                me->SetSpeed(MOVE_WALK, me->GetCreatureTemplate()->speed_run);
 
             if (!target)
                 me->GetMotionMaster()->MovePoint(e.action.MoveToPos.pointId, e.target.x, e.target.y, e.target.z);
