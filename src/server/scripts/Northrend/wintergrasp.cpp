@@ -352,7 +352,7 @@ class npc_wg_queue : public CreatureScript
         }
 };
 
-class go_wg_vehicle_teleporter : public GameObjectScript
+/*class go_wg_vehicle_teleporter : public GameObjectScript
 {
     public:
         go_wg_vehicle_teleporter() : GameObjectScript("go_wg_vehicle_teleporter") { }
@@ -389,7 +389,7 @@ class go_wg_vehicle_teleporter : public GameObjectScript
         {
             return new go_wg_vehicle_teleporterAI(go);
         }
-};
+};*/
 
 class npc_wg_quest_giver : public CreatureScript
 {
@@ -625,6 +625,43 @@ class spell_wintergrasp_grab_passenger : public SpellScriptLoader
         }
 };
 
+class spell_wintergrasp_teleporter : public SpellScriptLoader
+{
+    public:
+        spell_wintergrasp_teleporter() : SpellScriptLoader("spell_wintergrasp_teleporter") { }
+
+        class spell_wintergrasp_teleporter_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_wintergrasp_teleporter_SpellScript);
+
+            void HandleScript(SpellEffIndex /*effIndex*/)
+            {
+				int32 damage = GetEffectValue();
+
+                if (Player* target = GetHitPlayer())
+				{
+					if (target->GetVehicle())
+						if (Vehicle* vehicle = target->GetVehicle())
+						{
+							target->ExitVehicle();
+							vehicle->TeleportVehicle(5145.877f, 2841.932f, 409.01917f, 0);
+						}
+                    target->CastSpell(5145.877f, 2841.932f, 409.01917f, damage, true);
+				}
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_wintergrasp_teleporter_SpellScript::HandleScript, EFFECT_2, SPELL_EFFECT_SCRIPT_EFFECT);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_wintergrasp_teleporter_SpellScript();
+        }
+};
+
 void AddSC_wintergrasp()
 {
     new npc_wg_queue();
@@ -635,6 +672,7 @@ void AddSC_wintergrasp()
 
     new spell_wintergrasp_force_building();
     new spell_wintergrasp_grab_passenger();
+    new spell_wintergrasp_teleporter();
 
-    new go_wg_vehicle_teleporter();
+    //new go_wg_vehicle_teleporter();
 }

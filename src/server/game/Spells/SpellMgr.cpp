@@ -3617,6 +3617,11 @@ void SpellMgr::LoadDbcDataCorrections()
 			case 61408:
 				spellInfo->CastingTimeIndex = 0;
 				break;
+			case 49759:
+				spellInfo->Effect[2] = SPELL_EFFECT_SCRIPT_EFFECT;
+				spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_CASTER;
+				spellInfo->EffectImplicitTargetB[2] = 0;
+				break;
             default:
                 break;
         }
