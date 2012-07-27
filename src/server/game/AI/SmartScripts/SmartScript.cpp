@@ -1956,6 +1956,13 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
             delete targets;
             break;
         }
+        case SMART_ACTION_SET_HEALTH:
+        {
+            if (e.action.setHealth.health <= 0)
+                break;
+
+            me->SetHealth(e.action.setHealth.health);
+        }
         default:
             sLog->outErrorDb("SmartScript::ProcessAction: Entry %d SourceType %u, Event %u, Unhandled Action type %u", e.entryOrGuid, e.GetScriptType(), e.event_id, e.GetActionType());
             break;
