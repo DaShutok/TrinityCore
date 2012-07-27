@@ -178,57 +178,57 @@ class boss_skadi : public CreatureScript
 public:
     boss_skadi() : CreatureScript("boss_skadi") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_skadiAI (pCreature);
+        return new boss_skadiAI (creature);
     }
 
     struct boss_skadiAI : public ScriptedAI
     {
-        boss_skadiAI(Creature *c) : ScriptedAI(c), Summons(me)
+        boss_skadiAI(Creature *creature) : ScriptedAI(creature), Summons(me)
         {
-            m_pInstance = c->GetInstanceScript();
+            instance = creature->GetInstanceScript();
         }
 
-        InstanceScript* m_pInstance;
+        InstanceScript* instance;
         SummonList Summons;
         std::vector<uint64> triggersGUID;
 
-        uint64 m_uiWhirlGUID;
-        uint64 m_uiGraufGUID;
-        uint32 m_uiCrushTimer;
-        uint32 m_uiSpawnTriggerTimer;
-        uint32 m_uiPoisonedSpearTimer;
-        uint32 m_uiWhirlwindTimer;
-        uint32 m_uiWaypointId;
-        uint32 m_uiMovementTimer;
-        uint32 m_uiMountTimer;
-        uint32 m_uiSummonTimer;
-        uint8 m_uiSpellHitCount;
-        uint8 m_Start, m_End, m_LocNr, m_LocCount;
-        bool m_bSaidEmote;
-        bool m_isWhirling;
-        bool m_bAchiev;
+        uint64 WhirlGUID;
+        uint64 GraufGUID;
+        uint32 CrushTimer;
+        uint32 SpawnTriggerTimer;
+        uint32 PoisonedSpearTimer;
+        uint32 WhirlwindTimer;
+        uint32 WaypointId;
+        uint32 MovementTimer;
+        uint32 MountTimer;
+        uint32 SummonTimer;
+        uint8 SpellHitCount;
+        uint8 Start, End, LocNr, LocCount;
+        bool SaidEmote;
+        bool isWhirling;
+        bool Achiev;
 
         eSide BreathSide;
         eCombatPhase Phase;
 
-		uint8 m_uiDeadPlayer;
+		uint8 DeadPlayer;
 
         void Reset()
         {
             triggersGUID.clear();
 
-            m_uiCrushTimer = 8000;
-            m_uiPoisonedSpearTimer = 10000;
-            m_uiWhirlwindTimer = 20000;
-            m_uiMountTimer = 3000;
-            m_uiWaypointId = 0;
-            m_bAchiev = true;
-            m_bSaidEmote = false;
-            m_isWhirling = false;
-            m_uiWhirlGUID = 0;
-            m_uiSpellHitCount = 0;
+            CrushTimer = 8000;
+            PoisonedSpearTimer = 10000;
+            WhirlwindTimer = 20000;
+            MountTimer = 3000;
+            WaypointId = 0;
+            Achiev = true;
+            SaidEmote = false;
+            isWhirling = false;
+            WhirlGUID = 0;
+            SpellHitCount = 0;
 
             Phase = SKADI;
             BreathSide = NONE;
@@ -237,12 +237,12 @@ public:
             me->SetSpeed(MOVE_FLIGHT, 3.0f);
             me->SetReactState(REACT_AGGRESSIVE);
             //me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
-            if ((Unit::GetCreature((*me), m_uiGraufGUID) == NULL) && !me->IsMounted())
+            if ((Unit::GetCreature((*me), GraufGUID) == NULL) && !me->IsMounted())
                  me->SummonCreature(CREATURE_GRAUF,Location[0].GetPositionX(),Location[0].GetPositionY(),Location[0].GetPositionZ(),3.0f);
-            if (m_pInstance)
+            if (instance)
             {
-                m_pInstance->SetData(DATA_SKADI_THE_RUTHLESS_EVENT, NOT_STARTED);
-                m_pInstance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
+                instance->SetData(DATA_SKADI_THE_RUTHLESS_EVENT, NOT_STARTED);
+                instance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
             }
         }
 
@@ -251,7 +251,7 @@ public:
 	        me->SetCanFly(false);
             me->Dismount();
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
-            if (Unit::GetCreature((*me), m_uiGraufGUID) == NULL)
+            if (Unit::GetCreature((*me), GraufGUID) == NULL)
                 me->SummonCreature(CREATURE_GRAUF,Location[0].GetPositionX(),Location[0].GetPositionY(),Location[0].GetPositionZ(),3.0f);
         }
 
@@ -276,16 +276,16 @@ public:
 
             Phase = FLYING;
 
-            m_uiMovementTimer = 1000;
-            m_uiSummonTimer = 10000;
+            MovementTimer = 1000;
+            SummonTimer = 10000;
             me->SetInCombatWithZone();
-            if (m_pInstance)
+            if (instance)
             {
-                m_pInstance->SetData(DATA_SKADI_THE_RUTHLESS_EVENT, IN_PROGRESS);
-                m_pInstance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
+                instance->SetData(DATA_SKADI_THE_RUTHLESS_EVENT, IN_PROGRESS);
+                instance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
                 me->GetMotionMaster()->MoveJump(Location[0].GetPositionX(), Location[0].GetPositionY(), Location[0].GetPositionZ(), 5.0f, 10.0f);
                 me->SetWalk(false);
-                m_uiMountTimer = 1000;
+                MountTimer = 1000;
                 Summons.DespawnEntry(CREATURE_GRAUF);
             }
         }
@@ -295,7 +295,7 @@ public:
             switch (pSummoned->GetEntry())
             {
                 case CREATURE_GRAUF:
-                    m_uiGraufGUID = pSummoned->GetGUID();
+                    GraufGUID = pSummoned->GetGUID();
                     break;
                 case CREATURE_YMIRJAR_WARRIOR:
                 case CREATURE_YMIRJAR_WITCH_DOCTOR:
@@ -316,7 +316,7 @@ public:
         void SummonedCreatureDespawn(Creature* pSummoned)
         {
             if (pSummoned->GetEntry() == CREATURE_GRAUF)
-                m_uiGraufGUID = 0;
+                GraufGUID = 0;
             Summons.Despawn(pSummoned);
         }
 
@@ -324,13 +324,13 @@ public:
         {
             if (spell->Id == SPELL_HARPOON_DAMAGE)
             {
-	        m_uiSpellHitCount++;
+	        SpellHitCount++;
 
-		if (m_uiSpellHitCount < MAX_HIT_COUNT)
+		if (SpellHitCount < MAX_HIT_COUNT)
 		{
 		   DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
 		}
-                if (m_uiSpellHitCount >= MAX_HIT_COUNT)
+                if (SpellHitCount >= MAX_HIT_COUNT)
                 {
 		            me->SetFullHealth();
                     Phase = SKADI;
@@ -352,9 +352,9 @@ public:
                     }
                     me->GetMotionMaster()->MoveJump(Location[4].GetPositionX(), Location[4].GetPositionY(), Location[4].GetPositionZ(), 5.0f, 10.0f);
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
-                    m_uiCrushTimer = 10000;
-                    m_uiPoisonedSpearTimer = 8000;
-                    m_uiWhirlwindTimer = 4000;
+                    CrushTimer = 10000;
+                    PoisonedSpearTimer = 8000;
+                    WhirlwindTimer = 4000;
                 }
             }
         }
@@ -376,101 +376,101 @@ public:
                     if (me->GetPositionX() >= 515)
                     {
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
-                        if (!m_bSaidEmote)
+                        if (!SaidEmote)
                         {
                             DoScriptText(EMOTE_RANGE, me);
-                            m_bSaidEmote = true;
+                            SaidEmote = true;
                         }
                     }
                     else
                     {
                         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
-                        m_bSaidEmote = false;
+                        SaidEmote = false;
                     }
 
-                    if (m_uiMountTimer && m_uiMountTimer <= diff)
+                    if (MountTimer && MountTimer <= diff)
                     {
                         me->Mount(DATA_MOUNT);
                         me->SetCanFly(true);
-                        m_uiMountTimer = 0;
-                    } else m_uiMountTimer -= diff;
+                        MountTimer = 0;
+                    } else MountTimer -= diff;
 
-                    if (m_uiSummonTimer <= diff)
+                    if (SummonTimer <= diff)
                     {
                         SpawnMobs();
-                        m_uiSummonTimer = 25000;
-                    } else m_uiSummonTimer -= diff;
+                        SummonTimer = 25000;
+                    } else SummonTimer -= diff;
 
                     if (BreathSide != NONE)
-                        if (m_uiSpawnTriggerTimer <= diff)
+                        if (SpawnTriggerTimer <= diff)
                         {
-                            me->SummonCreature(CREATURE_TRIGGER,Location[m_LocCount]);
-                            m_uiSpawnTriggerTimer = 125;
-                            m_LocCount++;
-                            if (m_LocCount > m_End)
+                            me->SummonCreature(CREATURE_TRIGGER,Location[LocCount]);
+                            SpawnTriggerTimer = 125;
+                            LocCount++;
+                            if (LocCount > End)
                                 BreathSide = NONE;
-                        } else m_uiSpawnTriggerTimer -= diff;
+                        } else SpawnTriggerTimer -= diff;
 
-                    if (m_uiMovementTimer <= diff)
+                    if (MovementTimer <= diff)
                     {
-                        switch (m_uiWaypointId)
+                        switch (WaypointId)
                         {
                             case 0:
                                 me->GetMotionMaster()->MovePoint(0, Location[1].GetPositionX(), Location[1].GetPositionY(), Location[1].GetPositionZ());
-                                m_uiMovementTimer = 5000;
+                                MovementTimer = 5000;
                                 break;
                             case 1:
                                 me->GetMotionMaster()->MovePoint(0, Location[2].GetPositionX(), Location[2].GetPositionY(), Location[2].GetPositionZ());
-                                m_uiMovementTimer = 2000;
+                                MovementTimer = 2000;
                                 break;
                             case 2:
                                 me->GetMotionMaster()->MovePoint(0, Location[3].GetPositionX(), Location[3].GetPositionY(), Location[3].GetPositionZ());
-                                m_uiMovementTimer = 15000;
+                                MovementTimer = 15000;
                                 break;
                             case 3:
                                 switch (urand(0,1))
                                 {
                                     case 0:
                                         BreathSide = LEFT;
-                                        m_Start = 8;
-                                        m_End = 37;
-                                        m_LocNr = 69;
+                                        Start = 8;
+                                        End = 37;
+                                        LocNr = 69;
                                         break;
                                     case 1:
                                         BreathSide = RIGHT;
-                                        m_Start = 38;
-                                        m_End = 68;
-                                        m_LocNr = 70;
+                                        Start = 38;
+                                        End = 68;
+                                        LocNr = 70;
                                         break;
                                 }
-                                me->GetMotionMaster()->MovePoint(0, Location[m_LocNr].GetPositionX(), Location[m_LocNr].GetPositionY(), Location[m_LocNr].GetPositionZ());
+                                me->GetMotionMaster()->MovePoint(0, Location[LocNr].GetPositionX(), Location[LocNr].GetPositionY(), Location[LocNr].GetPositionZ());
                                 DoScriptText(RAND(SAY_DRAKE_BREATH_1, SAY_DRAKE_BREATH_2, SAY_DRAKE_BREATH_3), me);
                                 //DoScriptText(EMOTE_BREATH, me);
-                                m_uiMovementTimer = 2500;
-                                m_uiSpawnTriggerTimer = 3000;
-                                m_LocCount = m_Start;
+                                MovementTimer = 2500;
+                                SpawnTriggerTimer = 3000;
+                                LocCount = Start;
                                 break;
                             case 4:
                                 me->GetMotionMaster()->MovePoint(0, Location[71].GetPositionX(), Location[71].GetPositionY(), Location[71].GetPositionZ());
-                                m_uiMovementTimer = 2000;
+                                MovementTimer = 2000;
                                 //SpawnTrigger();
 
                                 // if there are harpoon hits at this point, disable achievement
-                                if (m_uiSpellHitCount)
-                                    m_bAchiev = false;
+                                if (SpellHitCount)
+                                    Achiev = false;
                                 break;
                             case 5:
                                 me->GetMotionMaster()->MovePoint(0, Location[72].GetPositionX(), Location[72].GetPositionY(), Location[72].GetPositionZ());
-                                m_uiMovementTimer = 15000;
+                                MovementTimer = 15000;
                                 break;
                             case 6:
                                 me->GetMotionMaster()->MovePoint(0, Location[3].GetPositionX(), Location[3].GetPositionY(), Location[3].GetPositionZ());
-                                m_uiWaypointId = 2;
-                                m_uiMovementTimer = 15000;
+                                WaypointId = 2;
+                                MovementTimer = 15000;
                                 break;
                         }
-                        m_uiWaypointId++;
-                    } else m_uiMovementTimer -= diff;
+                        WaypointId++;
+                    } else MovementTimer -= diff;
                     break;
                 case SKADI:
                     //Return since we have no target
@@ -479,54 +479,54 @@ public:
 
                     if (!me->HasAura(DUNGEON_MODE(SPELL_WHIRLWIND, H_SPELL_WHIRLWIND)))
                     {
-                        if (m_isWhirling)
+                        if (isWhirling)
                         {
-                            m_isWhirling = false;
+                            isWhirling = false;
                             me->GetMotionMaster()->Clear();
                             me->GetMotionMaster()->MoveChase(me->getVictim());
-                            m_uiWhirlwindTimer = 13000;
+                            WhirlwindTimer = 13000;
                         }
 
-                        if (m_uiCrushTimer <= diff)
+                        if (CrushTimer <= diff)
                         {
                             if(!me->IsNonMeleeSpellCasted(false))
                             {
                                 DoCastVictim(DUNGEON_MODE(SPELL_CRUSH, H_SPELL_CRUSH));
-                                m_uiCrushTimer = urand(8000, 12000);
+                                CrushTimer = urand(8000, 12000);
                             }
-                        } else m_uiCrushTimer -= diff;
+                        } else CrushTimer -= diff;
 
-                        if (m_uiPoisonedSpearTimer <= diff)
+                        if (PoisonedSpearTimer <= diff)
                         {
                             if(!me->IsNonMeleeSpellCasted(false))
                             {
                                 if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM))
                                     DoCast(pTarget, DUNGEON_MODE(SPELL_POISONED_SPEAR, H_SPELL_POISONED_SPEAR));
-                                m_uiPoisonedSpearTimer = urand(10000, 12000);
+                                PoisonedSpearTimer = urand(10000, 12000);
                             }
-                        } else m_uiPoisonedSpearTimer -= diff;
+                        } else PoisonedSpearTimer -= diff;
                     }
 
-                    if (!m_isWhirling)
+                    if (!isWhirling)
                     {
-                        if (m_uiWhirlwindTimer <= diff)
+                        if (WhirlwindTimer <= diff)
                         {
                             if(!me->IsNonMeleeSpellCasted(false))
                             {
                                 if (Unit *newTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
-                                    m_uiWhirlGUID = newTarget->GetGUID();
+                                    WhirlGUID = newTarget->GetGUID();
 
                                 DoCast(DUNGEON_MODE(SPELL_WHIRLWIND, H_SPELL_WHIRLWIND));
-                                m_isWhirling = true;
+                                isWhirling = true;
                             }
-                        } else m_uiWhirlwindTimer -= diff;
+                        } else WhirlwindTimer -= diff;
                     }
 
-                    if (m_isWhirling)  //somewhat hacky to get skadi move during whirlwind
+                    if (isWhirling)  //somewhat hacky to get skadi move during whirlwind
                     {
-                        if (m_uiWhirlwindTimer <= diff)
+                        if (WhirlwindTimer <= diff)
                         {
-                            Unit *whirlTarget = Unit::GetUnit(*me, m_uiWhirlGUID);
+                            Unit *whirlTarget = Unit::GetUnit(*me, WhirlGUID);
                             if (whirlTarget && whirlTarget->isAlive())
                             {
                                 me->GetMotionMaster()->Clear();
@@ -535,7 +535,7 @@ public:
                             else if (Unit *newTarget = SelectTarget(SELECT_TARGET_RANDOM, 1)) //whirl target died
                             {
                                 me->GetMotionMaster()->Clear();
-                                m_uiWhirlGUID = newTarget->GetGUID();
+                                WhirlGUID = newTarget->GetGUID();
                                 me->GetMotionMaster()->MovePoint(0,newTarget->GetPositionX(),newTarget->GetPositionY(),newTarget->GetPositionZ());
                             }
                             else                                                            //only 1 target left
@@ -544,8 +544,8 @@ public:
                                 me->GetMotionMaster()->MoveChase(me->getVictim());
                             }
 
-                            m_uiWhirlwindTimer = 500;
-                        } else m_uiWhirlwindTimer -= diff;
+                            WhirlwindTimer = 500;
+                        } else WhirlwindTimer -= diff;
                     }
 
                     DoMeleeAttackIfReady();
@@ -558,19 +558,19 @@ public:
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
             DoScriptText(SAY_DEATH, me);
             Summons.DespawnAll();
-            if (m_pInstance)
+            if (instance)
             {
-                m_pInstance->SetData(DATA_SKADI_THE_RUTHLESS_EVENT, DONE);
+                instance->SetData(DATA_SKADI_THE_RUTHLESS_EVENT, DONE);
 
-                if (IsHeroic() && m_uiDeadPlayer < 3)
-					m_pInstance->DoCompleteAchievement(ACHIEV_MY_GIRL_LOVES_TO_SKADI);
+                if (IsHeroic() && DeadPlayer < 3)
+					instance->DoCompleteAchievement(ACHIEV_MY_GIRL_LOVES_TO_SKADI);
             }
         }
 
         void KilledUnit(Unit* /*victim*/)
         {
             DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
-	        m_uiDeadPlayer++;
+	        DeadPlayer++;
         }
 
         void SpawnMobs()
@@ -620,10 +620,10 @@ class go_harpoon_launcher : public GameObjectScript
         if (!instance)
             return false;
 
-        if (Creature* pSkadi = Unit::GetCreature(*go, instance->GetData64(DATA_SKADI_THE_RUTHLESS)))
-            if (pSkadi->GetPositionX() >= 515)
+        if (Creature* skadi = Unit::GetCreature(*go, instance->GetData64(DATA_SKADI_THE_RUTHLESS)))
+            if (skadi->GetPositionX() >= 515)
             {
-			   player->CastSpell(pSkadi, SPELL_RAPID_FIRE, true);
+			   player->CastSpell(skadi, SPELL_RAPID_FIRE, true);
 			}
 
         return false;
