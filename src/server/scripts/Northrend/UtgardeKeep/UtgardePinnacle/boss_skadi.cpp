@@ -256,15 +256,11 @@ public:
         }
 
 	void DamageTaken(Unit* /*doneBy*/, uint32& damage)
-        {
-            if (Phase == FLYING)
-	    {
-	       if (damage > me->GetHealth())
-	       {
-		     damage = 0;
-	       }
-	    }
-	 }
+    {
+        if (Phase == FLYING)
+            if (damage > me->GetHealth())
+                damage = 0;
+    }
 
         void EnterCombat(Unit* /*who*/)
         {
@@ -324,12 +320,11 @@ public:
         {
             if (spell->Id == SPELL_HARPOON_DAMAGE)
             {
-	        SpellHitCount++;
+                SpellHitCount++;
 
-		if (SpellHitCount < MAX_HIT_COUNT)
-		{
-		   DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
-		}
+                if (SpellHitCount < MAX_HIT_COUNT)
+                    DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
+
                 if (SpellHitCount >= MAX_HIT_COUNT)
                 {
 		            me->SetFullHealth();
@@ -338,17 +333,17 @@ public:
                     me->Dismount();
                     me->SetCanFly(false);
                     me->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                    if (Creature* pGrauf = me->SummonCreature(CREATURE_GRAUF, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS))
+                    if (Creature* grauf = me->SummonCreature(CREATURE_GRAUF, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS))
                     {
-                        pGrauf->GetMotionMaster()->MoveFall();
-                        pGrauf->HandleEmoteCommand(EMOTE_ONESHOT_FLYDEATH);
+                        grauf->GetMotionMaster()->MoveFall();
+                        grauf->HandleEmoteCommand(EMOTE_ONESHOT_FLYDEATH);
                     }
 
                     me->SetReactState(REACT_AGGRESSIVE);
-                    if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM))
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
                     {
-                        me->AI()->AttackStart(pTarget);
-                        me->GetMotionMaster()->MoveChase(pTarget);
+                        me->AI()->AttackStart(target);
+                        me->GetMotionMaster()->MoveChase(target);
                     }
                     me->GetMotionMaster()->MoveJump(Location[4].GetPositionX(), Location[4].GetPositionY(), Location[4].GetPositionZ(), 5.0f, 10.0f);
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
@@ -359,10 +354,10 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit *pTarget, const SpellInfo *spell)
+        void SpellHitTarget(Unit *target, const SpellInfo *spell)
         {
             if (spell->Id == DUNGEON_MODE(SPELL_POISONED_SPEAR, H_SPELL_POISONED_SPEAR))
-                pTarget->CastSpell(pTarget, DUNGEON_MODE(SPELL_POISONED_SPEAR_DOT, H_SPELL_POISONED_SPEAR_DOT), true);
+                target->CastSpell(target, DUNGEON_MODE(SPELL_POISONED_SPEAR_DOT, H_SPELL_POISONED_SPEAR_DOT), true);
         }
 
         void UpdateAI(const uint32 diff)
