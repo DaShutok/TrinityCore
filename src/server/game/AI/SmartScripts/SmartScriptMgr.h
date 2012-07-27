@@ -484,9 +484,9 @@ enum SMART_ACTION
     SMART_ACTION_SEND_GOSSIP_MENU                   = 98,     // menuId, optionId
     SMART_ACTION_GO_SET_LOOT_STATE                  = 99,     // state
     SMART_ACTION_SEND_TARGET_TO_TARGET              = 100,    // id
-    SMART_ACTION_SET_HEALTH                         = 101,    // Health value not pct
+    SMART_ACTION_SET_HEALTH                         = 110,    // Health value not pct
 
-    SMART_ACTION_END                                = 102,
+    SMART_ACTION_END                                = 111,
 };
 
 struct SmartAction
