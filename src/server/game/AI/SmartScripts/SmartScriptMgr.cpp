@@ -842,6 +842,7 @@ bool SmartAIMgr::IsEventValid(SmartScriptHolder& e)
             break;
         }
         case SMART_ACTION_SET_HEALTH:
+		case SMART_ACTION_SET_HEALTH_PCT:
         {
             if (e.action.setHealth.health <= 0)
             {
