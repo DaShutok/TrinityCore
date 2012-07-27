@@ -1390,6 +1390,8 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
 
             if (RunPos == true)
                 me->SetSpeed(MOVE_WALK, me->GetCreatureTemplate()->speed_run);
+            else if (RunPos == false)
+                me->SetSpeed(MOVE_WALK, me->GetCreatureTemplate()->speed_walk);
 
             if (!target)
                 me->GetMotionMaster()->MovePoint(e.action.MoveToPos.pointId, e.target.x, e.target.y, e.target.z);
