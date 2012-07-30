@@ -825,37 +825,38 @@ class spell_dk_death_grip : public SpellScriptLoader
 
             void HandleDummy(SpellEffIndex /*effIndex*/)
             {
-	        Unit* caster = GetCaster();
+                Unit* caster = GetCaster();
                 int32 damage = GetEffectValue();
                 Position const* pos = GetExplTargetDest();
                 if (Unit* target = GetHitUnit())
                 {
                     if (!target->HasAuraType(SPELL_AURA_DEFLECT_SPELLS)) // Deterrence
+                    {
                         target->CastSpell(pos->GetPositionX(), pos->GetPositionY(), pos->GetPositionZ(), damage, true);
-
-		    target->CastStop();
-		}
+                        target->CastStop();
+                    }
+                }
             }
 
-	    SpellCastResult CheckCast()
+            SpellCastResult CheckCast()
             {
                 Unit* caster = GetCaster();
                 if (Unit* target = GetExplTargetUnit())
                 {
 	               if(target->GetTypeId() == TYPEID_PLAYER && caster->GetDistance2d(target) < 8)
-		        {
+                   {
 		               caster->ToPlayer()->RemoveSpellCooldown(49576, true);
-			       return SPELL_FAILED_TOO_CLOSE;
-		        }
-		} else
-		    return SPELL_FAILED_BAD_TARGETS;
+                       return SPELL_FAILED_TOO_CLOSE;
+                   }
+                } else
+                      return SPELL_FAILED_BAD_TARGETS;
 
                 return SPELL_CAST_OK;
             }
 
             void Register()
             {
-		OnCheckCast += SpellCheckCastFn(spell_dk_death_grip_SpellScript::CheckCast);
+                OnCheckCast += SpellCheckCastFn(spell_dk_death_grip_SpellScript::CheckCast);
                 OnEffectHitTarget += SpellEffectFn(spell_dk_death_grip_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
             }
 
