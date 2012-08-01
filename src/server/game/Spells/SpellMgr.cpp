@@ -3617,6 +3617,9 @@ void SpellMgr::LoadDbcDataCorrections()
 				spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_CASTER;
 				spellInfo->EffectImplicitTargetB[2] = 0;
 				break;
+			case 45524:
+				spellInfo->EffectImplicitTargetA[2] = 0;
+				break;
             default:
                 break;
         }

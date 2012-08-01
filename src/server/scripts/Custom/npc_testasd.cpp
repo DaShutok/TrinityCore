@@ -27,11 +27,15 @@ EndScriptData */
 #include <cstring>
 enum eEnums
 {
+	SPELL_FROSTBOLT             = 62601,
+	SPELL_FROSTFIRE             = 71130,
+	SPELL_EVOCATION             = 12051,
+
 };
 #define  GOSSIP_ITEM_1          "Hola deseas ser transformado?"
 #define  GOSSIP_ITEM_2          "Adios"
 #define  GOSSIP_ITEM_3          "Que tal un combate?"
-#define  GOSSIP_ITEM_4          "Me aburro"
+#define  GOSSIP_ITEM_4          "Duelo"
 
 class npc_testasd : public CreatureScript
 {
@@ -46,6 +50,10 @@ class npc_testasd : public CreatureScript
         {
             npc_testasdAI(Creature* creature) : ScriptedAI(creature) {}
 
+			uint32 FrostBolt;
+			uint32 FrostFire;
+			uint32 ManaTimer;
+
 			void ReceiveEmote(Player* player, uint32 emote)
             {
                 switch (emote)
@@ -56,25 +64,86 @@ class npc_testasd : public CreatureScript
                     case TEXT_EMOTE_SALUTE:
 			            me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
                         break;
-		}
-	     }
+		        }
+	        }
 
-	};
+			 void Reset()
+			 {
+				 me->RestoreFaction();
+				 me->RestoreDisplayId();
 
-	      CreatureAI* GetAI(Creature* creature) const
+				 FrostBolt = 1000;
+				 FrostFire = 4000;
+				 ManaTimer = 1000;
+			 }
+
+			 void EnterCombat(Unit* /*Who*/)
+			 {
+				 me->MonsterYell("MORIR", LANG_UNIVERSAL, NULL);
+				 FrostBolt = 1000;
+				 FrostFire = 4000;
+				 ManaTimer = 1000;
+			 }
+
+			 void DamageTaken(Unit* /*doneBy*/, uint32& damage)
+			 {
+				 if (damage > me->GetHealth())
+				 {
+					 damage = 0;
+					 me->MonsterYell("RENDIR", LANG_UNIVERSAL, NULL);
+					 Reset();
+				 }
+			 }
+
+			 void UpdateAI(const uint32 diff)
+			 {
+				 if (!UpdateVictim())
+					 return;
+
+				 if (ManaTimer <= diff)
+				 {
+					 if (me->GetPower(POWER_MANA) < 6000)
+					 {
+						DoCast(me, SPELL_EVOCATION);
+						ManaTimer = 1000;
+						me->MonsterYell("RECARGAR", LANG_UNIVERSAL, NULL);
+					 } else ManaTimer = 1000;
+				 } else ManaTimer -= diff;
+
+				 if (FrostBolt <= diff)
+				 {
+					 DoCast(me->getVictim(), SPELL_FROSTBOLT);
+					 FrostBolt = urand(2000, 6000);
+					 if (me->GetPower(POWER_MANA) > 6000)
+					     me->SetPower(POWER_MANA, me->GetPower(POWER_MANA) - 2000);
+				 } else FrostBolt -= diff;
+
+				 if (FrostFire <= diff)
+				 {
+					 DoCast(me->getVictim(), SPELL_FROSTFIRE);
+					 FrostFire = urand(3000, 8000);
+					 if (me->GetPower(POWER_MANA) > 6000)
+					     me->SetPower(POWER_MANA, me->GetPower(POWER_MANA) - 2000);
+				 } else FrostFire -= diff;
+
+				 DoMeleeAttackIfReady();
+			 }
+	   };
+
+	     CreatureAI* GetAI(Creature* creature) const
          {
             return new npc_testasdAI(creature);
          }
 
-          bool OnGossipHello(Player* player, Creature* creature)
-          {
+        bool OnGossipHello(Player* player, Creature* creature)
+        {
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 	        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
 	        player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
             return true;
-           }
+        }
 		  
         bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
         {
@@ -101,8 +170,8 @@ class npc_testasd : public CreatureScript
 			
 			if (action == GOSSIP_ACTION_INFO_DEF+4)
 			{
-				creature->MonsterWhisper("Todavia no implementado", player->GetGUID());
-				player->CLOSE_GOSSIP_MENU();
+				creature->setFaction(16);
+				creature->SetDisplayId(24623);
 			} 
 
 			return true;
