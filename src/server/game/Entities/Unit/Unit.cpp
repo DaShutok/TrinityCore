@@ -371,7 +371,7 @@ bool Unit::haveOffhandWeapon() const
 void Unit::MonsterMoveWithSpeed(float x, float y, float z, float speed, bool generatePath, bool forceDestination)
 {
     Movement::MoveSplineInit init(*this);
-    init.MoveTo(x,y,z);
+    init.MoveTo(x, y, z, generatePath, forceDestination);
     init.SetVelocity(speed);
     init.Launch();
 }
@@ -10872,6 +10872,8 @@ bool Unit::isSpellCrit(Unit* victim, SpellInfo const* spellProto, SpellSchoolMas
                 case 379:   // Earth Shield
                 case 33778: // Lifebloom Final Bloom
                 case 64844: // Divine Hymn
+                case 71607: // Item - Bauble of True Blood 10m
+                case 71646: // Item - Bauble of True Blood 25m
                     break;
                 default:
                     return false;
@@ -12886,6 +12888,20 @@ void Unit::DeleteThreatList()
     if (CanHaveThreatList() && !m_ThreatManager.isThreatListEmpty())
         SendClearThreatListOpcode();
     m_ThreatManager.clearReferences();
+}
+
+//======================================================================
+
+void Unit::DeleteFromThreatList(Unit* victim)
+{
+    if (CanHaveThreatList() && !m_ThreatManager.isThreatListEmpty())
+    {
+        // remove unreachable target from our threat list
+        // next tick we will select next possible target
+        m_HostileRefManager.deleteReference(victim);
+        m_ThreatManager.modifyThreatPercent(victim, -101);
+       // _removeAttacker(victim);
+    }
 }
 
 //======================================================================

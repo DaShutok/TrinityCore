@@ -45,9 +45,8 @@ class PointMovementGenerator : public MovementGeneratorMedium< T, PointMovementG
         uint32 id;
         float i_x, i_y, i_z;
         float speed;
-		bool i_recalculateSpeed;
+        bool i_recalculateSpeed;
         bool m_generatePath;
-
 };
 
 class AssistanceMovementGenerator : public PointMovementGenerator<Creature>
