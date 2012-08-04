@@ -130,3 +130,6 @@ DELETE FROM gameobject WHERE id IN (
 UPDATE creature_template SET ScriptName = 'npc_wg_vehicle' WHERE entry IN (28312, 32627, 27881, 28094);
 
 UPDATE `gameobject_template` SET `type` = 6, `faction` = 114, `data1` = 80, `data2` = 10, `data3` = 49759 WHERE `entry` = 192951;
+
+DELETE FROM spell_script_names WHERE spell_id = 49759;
+INSERT INTO spell_script_names VALUES (49759, 'spell_wintergrasp_teleporter');

@@ -3618,7 +3618,7 @@ void SpellMgr::LoadDbcDataCorrections()
 				spellInfo->EffectImplicitTargetB[2] = 0;
 				break;
 			case 45524:
-				spellInfo->EffectImplicitTargetA[2] = 0;
+				spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_TARGET_ENEMY;
 				break;
             default:
                 break;

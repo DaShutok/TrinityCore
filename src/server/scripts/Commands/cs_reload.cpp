@@ -158,7 +158,7 @@ public:
             { "waypoint_data",                SEC_ADMINISTRATOR, true,  &HandleReloadWpCommand,                         "", NULL },
             { "vehicle_accessory",            SEC_ADMINISTRATOR, true,  &HandleReloadVehicleAccessoryCommand,           "", NULL },
             { "vehicle_template_accessory",   SEC_ADMINISTRATOR, true,  &HandleReloadVehicleTemplateAccessoryCommand,   "", NULL },
-	    { "item_template",                SEC_ADMINISTRATOR, true,  &HandleReloadItemTemplateCommand,               "", NULL },
+            { "item_template",                SEC_ADMINISTRATOR, true,  &HandleReloadItemTemplateCommand,               "", NULL },
             { NULL,                           0,                 false, NULL,                                           "", NULL }
         };
         static ChatCommand commandTable[] =
