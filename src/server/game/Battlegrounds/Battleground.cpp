@@ -1196,6 +1196,11 @@ void Battleground::AddPlayer(Player* player)
     PlayerAddedToBGCheckIfBGIsRunning(player);
     AddOrSetPlayerToCorrectBgGroup(player, team);
 
+    //Remove pet buffs
+    if (player->GetPet())
+        if (Creature* pet = player->GetPet())
+            pet->RemoveAllAuras();
+
     // Log
     sLog->outDetail("BATTLEGROUND: Player %s joined the battle.", player->GetName());
 }
