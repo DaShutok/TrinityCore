@@ -942,7 +942,7 @@ public:
     static bool HandleReloadItemEnchantementsCommand(ChatHandler* handler, const char* /*args*/)
     {
         sLog->outString("Re-Loading Item Random Enchantments Table...");
-        LoadRandomEnchantmentsTable();
+        sObjectMgr->LoadItemSetNames();
         handler->SendGlobalGMSysMessage("DB table `item_enchantment_template` reloaded.");
         return true;
     }
