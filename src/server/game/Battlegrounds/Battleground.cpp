@@ -891,6 +891,10 @@ void Battleground::EndBattleground(uint32 winner)
         player->ResetAllPowers();
         player->CombatStopWithPets(true);
 
+        //Resurrect player at this point to prevent bugs
+        if (player->isDead())
+            player->ResurrectPlayer(1.0f);
+
         BlockMovement(player);
 
         sBattlegroundMgr->BuildPvpLogDataPacket(&data, this);
