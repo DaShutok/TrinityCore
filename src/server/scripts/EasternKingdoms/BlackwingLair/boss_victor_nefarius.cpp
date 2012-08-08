@@ -115,6 +115,7 @@ public:
            player->SEND_GOSSIP_MENU(7134, creature->GetGUID());
            return true;
 		}
+		return true;
     }
 
     CreatureAI* GetAI(Creature* creature) const

@@ -29,18 +29,19 @@ enum TransmogrifyActions {
     ACTION_TRANSMOGRIFY_REMOVE_DISPLAY
 };
 
-const uint16 PriceInGold = 100 * 100 * 100; // 1k golds
-
 class npc_transmogrify : public CreatureScript
 {
     public:
         npc_transmogrify() : CreatureScript("npc_transmogrify") { }
 
-        bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+        uint32 PriceInGold;
+
+        bool OnGossipHello(Player* player, Creature* creature)
         {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "Hacer el cambio.", GOSSIP_SENDER_MAIN, ACTION_TRANSMOGRIFY_ADD_DISPLAY);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "Limpiar el objeto.", GOSSIP_SENDER_MAIN, ACTION_TRANSMOGRIFY_REMOVE_DISPLAY);
-            pPlayer->SEND_GOSSIP_MENU(51000, pCreature->GetGUID());
+            PriceInGold = 10 * 100 * 100;
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "Hacer el cambio.", GOSSIP_SENDER_MAIN, ACTION_TRANSMOGRIFY_ADD_DISPLAY);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "Limpiar el objeto.", GOSSIP_SENDER_MAIN, ACTION_TRANSMOGRIFY_REMOVE_DISPLAY);
+            player->SEND_GOSSIP_MENU(51000, creature->GetGUID());
             return true;
         }
 
