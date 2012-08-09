@@ -256,12 +256,18 @@ public:
                 me->SummonCreature(CREATURE_GRAUF,Location[0].GetPositionX(),Location[0].GetPositionY(),Location[0].GetPositionZ(),3.0f);
         }
 
-	void DamageTaken(Unit* /*doneBy*/, uint32& damage)
-    {
-        if (Phase == FLYING)
-            if (damage > me->GetHealth())
-                damage = 0;
-    }
+        void DamageTaken(Unit* /*doneBy*/, uint32& damage)
+        {
+            SpellInfo* spell = NULL;
+
+            switch(spell->Id)
+            {
+                case 56570:
+                case 56578:
+                    damage = 1;
+                    break;
+            }
+        }
 
         void EnterCombat(Unit* /*who*/)
         {
