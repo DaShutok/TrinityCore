@@ -427,9 +427,15 @@ bool Creature::UpdateEntry(uint32 Entry, uint32 team, const CreatureData* data)
     //! The only time I saw Movement Flags: DisableGravity, CanFly, Flying (50332672) on the same unit
     //! it was a vehicle
     if (cInfo->InhabitType & INHABIT_AIR && cInfo->InhabitType & INHABIT_GROUND)
+	//{
+		//SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
         SetCanFly(true);
+	//}
     else if (cInfo->InhabitType & INHABIT_AIR)
+	//{
+		//SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
         SetDisableGravity(true);
+	//}
     /*! Implemented in LoadCreatureAddon. Suspect there's a rule for UNIT_BYTE_1_FLAG_HOVER
         in relation to DisableGravity also.
 
@@ -1565,9 +1571,15 @@ void Creature::setDeathState(DeathState s)
         CreatureTemplate const* cinfo = GetCreatureTemplate();
         SetWalk(true);
         if (cinfo->InhabitType & INHABIT_AIR && cinfo->InhabitType & INHABIT_GROUND)
+		//{
+			//SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
             SetCanFly(true);
+		//}
         else if (cinfo->InhabitType & INHABIT_AIR)
+		//{
+			//SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
             SetDisableGravity(true);
+		//}
         if (cinfo->InhabitType & INHABIT_WATER)
             AddUnitMovementFlag(MOVEMENTFLAG_SWIMMING);
         SetUInt32Value(UNIT_NPC_FLAGS, cinfo->npcflag);
