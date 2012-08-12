@@ -91,7 +91,6 @@ public:
             { "additem",            SEC_ADMINISTRATOR,      false, &HandleAddItemCommand,               "", NULL },
             { "additemset",         SEC_ADMINISTRATOR,      false, &HandleAddItemSetCommand,            "", NULL },
             { "bank",               SEC_ADMINISTRATOR,      false, &HandleBankCommand,                  "", NULL },
-            { "mailbox",            SEC_GAMEMASTER,         false, &HandleMailBoxCommand,               "", NULL },
             { "wchange",            SEC_ADMINISTRATOR,      false, &HandleChangeWeather,                "", NULL },
             { "maxskill",           SEC_ADMINISTRATOR,      false, &HandleMaxSkillCommand,              "", NULL },
             { "setskill",           SEC_ADMINISTRATOR,      false, &HandleSetSkillCommand,              "", NULL },
@@ -1402,12 +1401,6 @@ public:
     static bool HandleBankCommand(ChatHandler* handler, char const* /*args*/)
     {
         handler->GetSession()->SendShowBank(handler->GetSession()->GetPlayer()->GetGUID());
-        return true;
-    }
-
-    static bool HandleMailBoxCommand(ChatHandler* handler, char const* args)
-    {
-        handler->GetSession()->SendShowMailBox(handler->GetSession()->GetPlayer()->GetGUID());
         return true;
     }
 
