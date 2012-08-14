@@ -170,9 +170,41 @@ public:
     }
 };
 
+class spell_gen_12457 : public SpellScriptLoader
+{
+    public:
+        spell_gen_12457() : SpellScriptLoader("spell_gen_12457") { }
+
+        class spell_gen_12457_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_12457_SpellScript);
+
+            void HandleScript(SpellEffIndex /*effIndex*/)
+            {
+                Unit* caster = GetCaster();
+
+                if (caster->GetPositionX() > 3672.576f)
+                    caster->SummonCreature(27788, 3702.728f, -1124.066f, 98.09221f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 120000);
+                else if (caster->GetPositionX() < 3672.576f)
+                         caster->SummonCreature(27788, 3638.094f, -1260.717f, 98.09137f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 120000);
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_12457_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_12457_SpellScript();
+        }
+};
+
 void AddSC_dragonblight()
 {
     new npc_alexstrasza_wr_gate;
     new spell_q12096_q12092_dummy;
     new spell_q12096_q12092_bark;
+    new spell_gen_12457;
 }
