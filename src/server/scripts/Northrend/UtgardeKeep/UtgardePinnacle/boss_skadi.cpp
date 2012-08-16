@@ -292,8 +292,8 @@ public:
                 case CREATURE_YMIRJAR_HARPOONER:
                     summoned->setActive(true);
                     summoned->SetInCombatWithZone();
-                    if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                        summoned->AI()->AttackStart(pTarget);
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                        summoned->AI()->AttackStart(target);
                     break;
                 case CREATURE_TRIGGER:
                     summoned->CastSpell((Unit*)NULL, DUNGEON_MODE(SPELL_FREEZING_CLOUD, H_SPELL_FREEZING_CLOUD), true);
@@ -489,8 +489,8 @@ public:
                         {
                             if(!me->IsNonMeleeSpellCasted(false))
                             {
-                                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM))
-                                    DoCast(pTarget, DUNGEON_MODE(SPELL_POISONED_SPEAR, H_SPELL_POISONED_SPEAR));
+                                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
+                                    DoCast(target, DUNGEON_MODE(SPELL_POISONED_SPEAR, H_SPELL_POISONED_SPEAR));
                                 PoisonedSpearTimer = urand(10000, 12000);
                             }
                         } else PoisonedSpearTimer -= diff;

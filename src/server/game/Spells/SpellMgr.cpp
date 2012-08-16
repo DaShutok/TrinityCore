@@ -3569,60 +3569,61 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_50_YARDS;
                 spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_50_YARDS;
                 break;
-				//Freya Auras
-			case 65585:
-			case 62385:
-			case 62713:
-			case 62968:
-				spellInfo->EffectRadiusIndex[EFFECT_0] = EFFECT_RADIUS_50_YARDS;
-				spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_50_YARDS;
-				spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_50_YARDS;
-				break;
-			case 64436:
-				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
-				spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_CASTER;
-				spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
-				spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_CASTER;
-				break;
-			case 61632:
-				spellInfo->MaxAffectedTargets = 1;
-				break;
-			case 64206: // XT-002 - Consumption
+                 //Freya Auras
+            case 65585:
+            case 62385:
+            case 62713:
+            case 62968:
+                spellInfo->EffectRadiusIndex[EFFECT_0] = EFFECT_RADIUS_50_YARDS;
+                spellInfo->EffectRadiusIndex[EFFECT_1] = EFFECT_RADIUS_50_YARDS;
+                spellInfo->EffectRadiusIndex[EFFECT_2] = EFFECT_RADIUS_50_YARDS;
+                break;
+            case 64436:
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
+                spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_CASTER;
+                spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
+                spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_CASTER;
+                break;
+            case 61632:
+                spellInfo->MaxAffectedTargets = 1;
+                break;
+            case 64206: // XT-002 - Consumption
                 spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_5_YARDS;
                 break;
-			case 61920: // Assembly Supercharge
-				spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_70_YARDS;
-				spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_70_YARDS;
-				spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_70_YARDS;
-			case 62039: // Hodir - Biting Cold
+            case 61920: // Assembly Supercharge
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_70_YARDS;
+                spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_70_YARDS;
+                spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_70_YARDS;
+            case 62039: // Hodir - Biting Cold
                 spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_MOVE;
-				spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_NEARBY_ENEMY;
-				spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_NEARBY_ENEMY;
-				spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50_YARDS;
-			case 50896:
-				spellInfo->rangeIndex = 13;
-				break;
-			case 56663:
-			case 56575:
-			case 56661:
-			case 61408:
-				spellInfo->CastingTimeIndex = 0;
-				break;
-			case 49759:
-				spellInfo->Effect[2] = SPELL_EFFECT_SCRIPT_EFFECT;
-				spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_CASTER;
-				spellInfo->EffectImplicitTargetB[2] = 0;
-				break;
-			case 45524:
-				spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_TARGET_ENEMY;
-				break;
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_NEARBY_ENEMY;
+                spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_NEARBY_ENEMY;
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50_YARDS;
+                break;
+            case 50896:
+                spellInfo->rangeIndex = 13;
+                break;
+            case 56663:
+            case 56575:
+            case 56661:
+            case 61408:
+                spellInfo->CastingTimeIndex = 0;
+                break;
+            case 49759:
+                spellInfo->Effect[2] = SPELL_EFFECT_SCRIPT_EFFECT;
+                spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_CASTER;
+                spellInfo->EffectImplicitTargetB[2] = 0;
+                break;
+            case 45524:
+                spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_TARGET_ENEMY;
+                break;
             case 49550:
                 spellInfo->Effect[2] = 0;
                 spellInfo->EffectImplicitTargetA[2] = 0;
                 break;
             case 56570:
             case 56578:
-				spellInfo->EffectBasePoints[0] = 1;
+                spellInfo->EffectBasePoints[0] = 1;
                 break;
             default:
                 break;
