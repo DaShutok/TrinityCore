@@ -3620,6 +3620,10 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->Effect[2] = 0;
                 spellInfo->EffectImplicitTargetA[2] = 0;
                 break;
+            case 56570:
+            case 56578:
+				spellInfo->EffectBasePoints[0] = 1;
+                break;
             default:
                 break;
         }

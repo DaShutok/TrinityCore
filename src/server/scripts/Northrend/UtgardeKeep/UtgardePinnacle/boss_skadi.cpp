@@ -29,7 +29,7 @@ Script Data End */
 #include "utgarde_pinnacle.h"
 
 //Yell
-enum eYells
+enum Yells
 {
     SAY_AGGRO                           = -1575004,
     SAY_DRAKE_BREATH_1                  = -1575011,
@@ -127,20 +127,20 @@ static Position Location[]=
     {413.9327f, -540.9407f, 138.2614f, 0},      //72
 };
 
-enum eCombatPhase
+enum CombatPhase
 {
     FLYING,
     SKADI
 };
 
-enum eSide
+enum Side
 {
     LEFT,
     RIGHT,
     NONE
 };
 
-enum eSpells
+enum Spells
 {
     SPELL_CRUSH                 = 50234,
     H_SPELL_CRUSH               = 59330,
@@ -166,7 +166,7 @@ enum eCreature
     DATA_MOUNT                     = 27043,
 };
 
-enum eAchievments
+enum Achievments
 {
     ACHIEV_TIMED_START_EVENT       = 17726,
     ACHIEV_MY_GIRL_LOVES_TO_SKADI  = 2156,
@@ -211,8 +211,8 @@ public:
         bool isWhirling;
         bool Achiev;
 
-        eSide BreathSide;
-        eCombatPhase Phase;
+        Side BreathSide;
+        CombatPhase Phase;
 
 		uint8 DeadPlayer;
 
@@ -256,19 +256,6 @@ public:
                 me->SummonCreature(CREATURE_GRAUF,Location[0].GetPositionX(),Location[0].GetPositionY(),Location[0].GetPositionZ(),3.0f);
         }
 
-        void DamageTaken(Unit* /*doneBy*/, uint32& damage)
-        {
-            SpellInfo* spell = NULL;
-
-            switch(spell->Id)
-            {
-                case 56570:
-                case 56578:
-                    damage = 1;
-                    break;
-            }
-        }
-
         void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
@@ -293,34 +280,34 @@ public:
             }
         }
 
-        void JustSummoned(Creature* pSummoned)
+        void JustSummoned(Creature* summoned)
         {
-            switch (pSummoned->GetEntry())
+            switch (summoned->GetEntry())
             {
                 case CREATURE_GRAUF:
-                    GraufGUID = pSummoned->GetGUID();
+                    GraufGUID = summoned->GetGUID();
                     break;
                 case CREATURE_YMIRJAR_WARRIOR:
                 case CREATURE_YMIRJAR_WITCH_DOCTOR:
                 case CREATURE_YMIRJAR_HARPOONER:
-                    pSummoned->setActive(true);
-                    pSummoned->SetInCombatWithZone();
+                    summoned->setActive(true);
+                    summoned->SetInCombatWithZone();
                     if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                        pSummoned->AI()->AttackStart(pTarget);
+                        summoned->AI()->AttackStart(pTarget);
                     break;
                 case CREATURE_TRIGGER:
-                    pSummoned->CastSpell((Unit*)NULL, DUNGEON_MODE(SPELL_FREEZING_CLOUD, H_SPELL_FREEZING_CLOUD), true);
-					pSummoned->DespawnOrUnsummon(10*IN_MILLISECONDS);
+                    summoned->CastSpell((Unit*)NULL, DUNGEON_MODE(SPELL_FREEZING_CLOUD, H_SPELL_FREEZING_CLOUD), true);
+					summoned->DespawnOrUnsummon(10*IN_MILLISECONDS);
                     break;
             }
-            Summons.Summon(pSummoned);
+            Summons.Summon(summoned);
         }
 
-        void SummonedCreatureDespawn(Creature* pSummoned)
+        void SummonedCreatureDespawn(Creature* summoned)
         {
-            if (pSummoned->GetEntry() == CREATURE_GRAUF)
+            if (summoned->GetEntry() == CREATURE_GRAUF)
                 GraufGUID = 0;
-            Summons.Despawn(pSummoned);
+            Summons.Despawn(summoned);
         }
 
         void SpellHit(Unit* /*caster*/, const SpellInfo* spell)
