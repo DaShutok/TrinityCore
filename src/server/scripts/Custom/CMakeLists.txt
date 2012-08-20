@@ -12,6 +12,7 @@ set(scripts_STAT_SRCS
   ${scripts_STAT_SRCS}
    Custom/npc_testasd.cpp
    Custom/npc_transmogrify.cpp
+   Custom/VAS_AutoBalance.cpp
 )
 
 message("  -> Prepared: Custom")

@@ -1220,6 +1220,26 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_WINTERGRASP_NOBATTLETIME] = ConfigMgr::GetIntDefault("Wintergrasp.NoBattleTimer", 150);
     m_int_configs[CONFIG_WINTERGRASP_RESTART_AFTER_CRASH] = ConfigMgr::GetIntDefault("Wintergrasp.CrashRestartTimer", 10);
 
+    m_int_configs[VAS_VasDebug] = ConfigMgr::GetIntDefault ("VAS.AutoBalance.Debug", 1);
+    m_int_configs[VAS_DebugByID] = ConfigMgr::GetIntDefault ("VAS.AutoBalance.DebugByID", 0);
+    m_int_configs[VAS_AutoInstance] = ConfigMgr::GetIntDefault ("VAS.AutoBalance.AutoInstance", 1);
+    m_int_configs[VAS_PlayerChangeNotify] = ConfigMgr::GetIntDefault ("VAS.AutoBalance.PlayerChangeNotify", 1);
+
+    m_float_configs[VAS_Creature_Update_Timer] = ConfigMgr::GetFloatDefault("VAS.AutoBalance.Creature.Update.Timer", 60.0f);
+    m_float_configs[VAS_Config_xPlayer] = ConfigMgr::GetFloatDefault("VAS.AutoBalance.XPlayer", 1.0f);
+    m_float_configs[VAS_Min_D_Mod] = ConfigMgr::GetFloatDefault("Min.D.Mod", 0.10f);
+    m_float_configs[VAS_Min_HP_Mod] = ConfigMgr::GetFloatDefault("Min.HP.Mod", 0.20f);
+    m_float_configs[VAS_VAS_Group_Modifer] = ConfigMgr::GetFloatDefault("VAS.Group.Modifer", 1.0f);
+    m_float_configs[VAS_VAS_Damage_Modifer] = ConfigMgr::GetFloatDefault("VAS.Damage.Modifer", 1.0f);
+
+    std::string VAS_AutoBalance_40_Name = ConfigMgr::GetStringDefault("VAS.AutoBalance.40.Name", "");
+    std::string VAS_AutoBalance_25_Name = ConfigMgr::GetStringDefault("VAS.AutoBalance.25.Name", "");
+    std::string VAS_AutoBalance_20_Name = ConfigMgr::GetStringDefault("VAS.AutoBalance.20.Name", "");
+    std::string VAS_AutoBalance_10_Name = ConfigMgr::GetStringDefault("VAS.AutoBalance.10.Name", "");
+    std::string VAS_AutoBalance_5_Name = ConfigMgr::GetStringDefault("VAS.AutoBalance.5.Name", "");
+    std::string VAS_AutoBalance_2_Name = ConfigMgr::GetStringDefault("VAS.AutoBalance.2.Name", "");
+    std::string VAS_color = ConfigMgr::GetStringDefault("VAS.AutoBalance.Color", "cffFF8000");
+
     // call ScriptMgr if we're reloading the configuration
     if (reload)
         sScriptMgr->OnConfigLoad(reload);
@@ -1787,6 +1807,8 @@ void World::SetInitialWorldSettings()
     }
     else
         sLog->SetLogDB(false);
+		
+    sScriptMgr->SetInitialWorldSettings();
 
     uint32 startupDuration = GetMSTimeDiffToNow(startupBegin);
     sLog->outString();

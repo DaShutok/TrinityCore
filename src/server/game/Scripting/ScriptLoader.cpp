@@ -1254,6 +1254,7 @@ void AddBattlegroundScripts()
 
 #ifdef SCRIPTS
 /* This is where custom scripts' loading functions should be declared. */
+void AddSC_VAS_AutoBalance();
 void AddSC_npc_testasd();
 void AddSC_boss_viscidus();
 void AddSC_Minipet();
@@ -1268,6 +1269,7 @@ void AddCustomScripts()
 {
 #ifdef SCRIPTS
  /* This is where custom scripts should be added. */
+     AddSC_VAS_AutoBalance();
      AddSC_npc_testasd();
      AddSC_boss_viscidus();
      AddSC_Minipet();
