@@ -449,14 +449,14 @@ class VAS_AutoBalance_WorldMapScript : public WorldMapScript
     {
 
         if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-            sLog->outDetail(LOG_FILTER_TSCR, "### VAS_AutoBalance_WorldMapScript - OnPlayerEnter Map=%s player=%s",map->GetMapName(),player->GetName());
+            sLog->outDetail("### VAS_AutoBalance_WorldMapScript - OnPlayerEnter Map=%s player=%s",map->GetMapName(),player->GetName());
     }
 
     void OnPlayerLeave(Map* map, Player* player)
     {
 
         if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-            sLog->outDetail(LOG_FILTER_TSCR, "### VAS_AutoBalance_WorldMapScript - OnPlayerLeave Map=%s player=%s",map->GetMapName(),player->GetName());
+            sLog->outDetail("### VAS_AutoBalance_WorldMapScript - OnPlayerLeave Map=%s player=%s",map->GetMapName(),player->GetName());
     }
 };
 
