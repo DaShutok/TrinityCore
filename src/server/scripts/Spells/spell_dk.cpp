@@ -868,6 +868,43 @@ class spell_dk_death_grip : public SpellScriptLoader
         }
 };
 
+class spell_dk_death_grip_visual : public SpellScriptLoader
+{
+    public:
+        spell_dk_death_grip_visual() : SpellScriptLoader("spell_dk_death_grip_visual") { }
+
+        class spell_dk_death_grip_visual_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_dk_death_grip_visual_SpellScript);
+
+            SpellCastResult CheckCast()
+            {
+                Unit* caster = GetCaster();
+                if (Unit* target = GetExplTargetUnit())
+                {
+	               if(target->GetTypeId() == TYPEID_PLAYER && caster->GetDistance2d(target) < 8)
+                   {
+                       return SPELL_FAILED_TOO_CLOSE;
+                   }
+                } else
+                      return SPELL_FAILED_BAD_TARGETS;
+
+                return SPELL_CAST_OK;
+            }
+
+            void Register()
+            {
+                OnCheckCast += SpellCheckCastFn(spell_dk_death_grip_visual_SpellScript::CheckCast);
+            }
+
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_dk_death_grip_visual_SpellScript();
+        }
+};
+
 void AddSC_deathknight_spell_scripts()
 {
     new spell_dk_anti_magic_shell_raid();
@@ -886,4 +923,5 @@ void AddSC_deathknight_spell_scripts()
     new spell_dk_death_strike();
     new spell_dk_death_coil();
     new spell_dk_death_grip();
+    new spell_dk_death_grip_visual();
 }
