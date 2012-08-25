@@ -1235,13 +1235,13 @@ public:
                     if (Creature* leviathan = me->GetVehicleCreatureBase())
                     {
                         float orient = leviathan->GetOrientation();
-						leviathan->SetOrientation(orient + (direction ? M_PI/60 : -M_PI/60));
+                        leviathan->SetFacingTo(orient + (direction ? M_PI/60 : -M_PI/60));
                         me->SetOrientation(orient + (direction ? M_PI/60 : -M_PI/60));
                     }
                     else
                     {
                         float orient = me->GetOrientation();
-                        me->SetOrientation(orient + (direction ? M_PI/60 : -M_PI/60));
+                        me->SetFacingTo(orient + (direction ? M_PI/60 : -M_PI/60));
                         float x, y, z;
                         z = me->GetPositionZ();
                         me->GetNearPoint2D(x, y, 10.0f, me->GetOrientation());
@@ -1277,7 +1277,7 @@ public:
                             {
                                 float orient = float(2*M_PI * rand_norm());
                                 leviathan->CastSpell(leviathan, 14821, true); // temporary
-                                leviathan->SetOrientation(orient);
+                                leviathan->SetFacingTo(orient);
                                 leviathan->SetOrientation(orient);
                                 me->SetOrientation(orient);
                             }
