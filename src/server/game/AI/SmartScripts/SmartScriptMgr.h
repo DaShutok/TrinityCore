@@ -1197,12 +1197,12 @@ const uint32 SmartAIEventMask[SMART_EVENT_END][2] =
 enum SmartEventFlags
 {
     SMART_EVENT_FLAG_NOT_REPEATABLE        = 0x001,                     //Event can not repeat
-    SMART_EVENT_FLAG_DIFFICULTY_0          = 0x002,                     //Event only occurs in instance difficulty 0
-    SMART_EVENT_FLAG_DIFFICULTY_1          = 0x004,                     //Event only occurs in instance difficulty 1
-    SMART_EVENT_FLAG_DIFFICULTY_2          = 0x008,                     //Event only occurs in instance difficulty 2
-    SMART_EVENT_FLAG_DIFFICULTY_3          = 0x010,                     //Event only occurs in instance difficulty 3
-    SMART_EVENT_FLAG_RESERVED_5            = 0x020,
-    SMART_EVENT_FLAG_RESERVED_6            = 0x040,
+    SMART_EVENT_FLAG_DIFFICULTY_0          = 0x002,                     //Event only occurs in normal instances and 10 raid
+    SMART_EVENT_FLAG_DIFFICULTY_1          = 0x004,                     //Event only occurs in heroic instances and 25 raid
+    SMART_EVENT_FLAG_DIFFICULTY_2          = 0x008,                     //Event only occurs in 10 heroic raid
+    SMART_EVENT_FLAG_DIFFICULTY_3          = 0x010,                     //Event only occurs in 25 heroic raid
+    SMART_EVENT_FLAG_RESERVED_5            = 0x020,                     //Not used
+    SMART_EVENT_FLAG_RESERVED_6            = 0x040,                     //Not used
     SMART_EVENT_FLAG_DEBUG_ONLY            = 0x080,                     //Event only occurs in debug build
     SMART_EVENT_FLAG_DONT_RESET            = 0x100,                     //Event will not reset in SmartScript::OnReset()
 
