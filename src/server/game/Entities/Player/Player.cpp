@@ -1811,7 +1811,7 @@ void Player::Update(uint32 p_time)
     if (IsHasDelayedTeleport() && isAlive())
         TeleportTo(m_teleport_dest, m_teleport_options);
 
-	//Esto es para evitar que los players beban/coman en monturas
+    //Prevent players drink/eat while mounted
     if (HasAuraType(SPELL_AURA_MOUNTED))
     {
         RemoveAurasByType(SPELL_AURA_MOD_POWER_REGEN);
