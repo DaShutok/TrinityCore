@@ -1810,6 +1810,13 @@ void Player::Update(uint32 p_time)
     //because we don't want player's ghost teleported from graveyard
     if (IsHasDelayedTeleport() && isAlive())
         TeleportTo(m_teleport_dest, m_teleport_options);
+
+	//Esto es para evitar que los players beban/coman en monturas
+    if (HasAuraType(SPELL_AURA_MOUNTED))
+    {
+        RemoveAurasByType(SPELL_AURA_MOD_POWER_REGEN);
+        RemoveAurasByType(SPELL_AURA_MOD_REGEN);
+    }
 }
 
 void Player::setDeathState(DeathState s)
