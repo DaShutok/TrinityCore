@@ -378,6 +378,12 @@ public:
                     pHorsemenChest->SetRespawnTime(pHorsemenChest->GetRespawnDelay());
             }
 
+            if (id == BOSS_GOTHIK && state == DONE) // If server crash after doing this boss, open gothik gate
+            {
+                if (GameObject* gothikDoor = instance->GetGameObject(gothikGateGUID))
+                    gothikDoor->SetGoState(GO_STATE_ACTIVE);
+            }
+
             return true;
         }
 
