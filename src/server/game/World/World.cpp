@@ -40,6 +40,7 @@
 #include "ArenaTeamMgr.h"
 #include "GuildMgr.h"
 #include "TicketMgr.h"
+#include "CreatureEventAIMgr.h"
 #include "SpellMgr.h"
 #include "GroupMgr.h"
 #include "Chat.h"
@@ -1638,6 +1639,16 @@ void World::SetInitialWorldSettings()
 
     sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading Scripts text locales...");      // must be after Load*Scripts calls
     sObjectMgr->LoadDbScriptStrings();
+
+    sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading spell script names...");
+    sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading CreatureEventAI Texts...");
+    sEventAIMgr->LoadCreatureEventAI_Texts();
+
+    sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading CreatureEventAI Summons...");
+    sEventAIMgr->LoadCreatureEventAI_Summons();
+
+    sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading CreatureEventAI Scripts...");
+    sEventAIMgr->LoadCreatureEventAI_Scripts();
 
     sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading spell script names...");
     sObjectMgr->LoadSpellScriptNames();
