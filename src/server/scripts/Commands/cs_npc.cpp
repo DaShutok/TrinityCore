@@ -42,7 +42,7 @@ public:
             { "formation",      SEC_MODERATOR,      false, &HandleNpcAddFormationCommand,      "", NULL },
             { "item",           SEC_GAMEMASTER,     false, &HandleNpcAddVendorItemCommand,     "", NULL },
             { "move",           SEC_GAMEMASTER,     false, &HandleNpcAddMoveCommand,           "", NULL },
-            { "temp",           SEC_ADMINISTRATOR,     false, &HandleNpcAddTempSpawnCommand,      "", NULL },
+            { "temp",           SEC_ADMINISTRATOR,  false, &HandleNpcAddTempSpawnCommand,      "", NULL },
             //{ TODO: fix or remove this command
             { "weapon",         SEC_ADMINISTRATOR,  false, &HandleNpcAddWeaponCommand,         "", NULL },
             //}
