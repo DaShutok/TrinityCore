@@ -19,12 +19,13 @@
 #ifndef DEF_SHADOWFANG_H
 #define DEF_SHADOWFANG_H
 
-enum eData
+enum ShadowfangKeepBosses
 {
-    TYPE_FREE_NPC               = 1,
-    TYPE_RETHILGORE             = 2,
-    TYPE_FENRUS                 = 3,
-    TYPE_NANDOS                 = 4
+    BOSS_BARON_ASHBURY               = 1,
+    BOSS_BARON_SILVERLINE            = 2,
+    BOSS_COMMANDER_SPRINGVALE        = 3,
+    BOSS_LORD_WALDEN                 = 4,
+    BOSS_LORD_GODFREY                = 5,
 };
 
 #endif
