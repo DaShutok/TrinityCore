@@ -52,7 +52,7 @@ void BattlefieldMgr::InitBattlefield()
             sLog->outString();
             sLog->outString("Battlefield : Wintergrasp successfully initiated.");
         }
-    } else sLog->outString("Battlefield : Wintergrasp disable");
+    } else sLog->outError("Battlefield : Wintergrasp disabled");
 
     /* For Cataclysm: Tol Barad
        pBf = new BattlefieldTB;
