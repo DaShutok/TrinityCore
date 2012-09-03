@@ -41,7 +41,10 @@ public:
 
     struct instance_shadowfang_keep_InstanceMapScript : public InstanceScript
     {
-        instance_shadowfang_keep_InstanceMapScript(Map* map) : InstanceScript(map) {}
+        instance_shadowfang_keep_InstanceMapScript(Map* map) : InstanceScript(map) 
+        {
+            SetBossNumber(MAX_ENCOUNTER);
+        }
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string str_data;
@@ -74,20 +77,6 @@ public:
             switch (type)
             {
             }
-
-            if (data == DONE)
-            {
-                OUT_SAVE_INST_DATA;
-
-                std::ostringstream saveStream;
-                saveStream << m_auiEncounter[0] << ' ' << m_auiEncounter[1] << ' ' << m_auiEncounter[2] << ' ' << m_auiEncounter[3] 
-                           << ' ' << m_auiEncounter[4] << ' ' << m_auiEncounter[5];
-
-                str_data = saveStream.str();
-
-                SaveToDB();
-                OUT_SAVE_INST_DATA_COMPLETE;
-            }
         }
 
         uint32 GetData(uint32 type)
@@ -100,29 +89,18 @@ public:
 
         std::string GetSaveData()
         {
-            return str_data;
+            std::ostringstream saveStream;
+            saveStream << " " << GetBossSaveData();
+            return saveStream.str();
         }
 
-        void Load(const char* in)
+        void Load(const char* str)
         {
-            if (!in)
-            {
-                OUT_LOAD_INST_DATA_FAIL;
-                return;
-            }
+            std::istringstream loadStream(str);
+            uint32 temp;
 
-            OUT_LOAD_INST_DATA(in);
-
-            std::istringstream loadStream(in);
-            loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
-
-            for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            {
-                if (m_auiEncounter[i] == IN_PROGRESS)
-                    m_auiEncounter[i] = NOT_STARTED;
-            }
-
-            OUT_LOAD_INST_DATA_COMPLETE;
+            for (uint32 i = 0; i < MAX_ENCOUNTER; ++i)
+                loadStream >> temp;
         }
 
         void Update(uint32 uiDiff)
