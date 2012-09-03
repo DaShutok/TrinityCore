@@ -31,7 +31,7 @@
 // these variables aren't used outside of this file, so declare them only here
 uint32 BG_EY_HonorScoreTicks[BG_HONOR_MODE_NUM] =
 {
-    260, // normal honor
+    330, // normal honor
     160  // holiday
 };
 
@@ -49,6 +49,8 @@ BattlegroundEY::BattlegroundEY()
     StartMessageIds[BG_STARTING_EVENT_SECOND] = LANG_BG_EY_START_ONE_MINUTE;
     StartMessageIds[BG_STARTING_EVENT_THIRD]  = LANG_BG_EY_START_HALF_MINUTE;
     StartMessageIds[BG_STARTING_EVENT_FOURTH] = LANG_BG_EY_HAS_BEGUN;
+
+    m_IsInformedNearVictory = false;
 }
 
 BattlegroundEY::~BattlegroundEY()
@@ -267,8 +269,8 @@ void BattlegroundEY::UpdatePointStatuses()
 void BattlegroundEY::UpdateTeamScore(uint32 Team)
 {
     uint32 score = GetTeamScore(Team);
-    //TODO there should be some sound played when one team is near victory!! - and define variables
-    /*if (!m_IsInformedNearVictory && score >= BG_EY_WARNING_NEAR_VICTORY_SCORE)
+    //TODO find correct sound id
+    if (!m_IsInformedNearVictory && score >= BG_EY_WARNING_NEAR_VICTORY_SCORE)
     {
         if (Team == ALLIANCE)
             SendMessageToAll(LANG_BG_EY_A_NEAR_VICTORY, CHAT_MSG_BG_SYSTEM_NEUTRAL);
@@ -276,7 +278,7 @@ void BattlegroundEY::UpdateTeamScore(uint32 Team)
             SendMessageToAll(LANG_BG_EY_H_NEAR_VICTORY, CHAT_MSG_BG_SYSTEM_NEUTRAL);
         PlaySoundToAll(BG_EY_SOUND_NEAR_VICTORY);
         m_IsInformedNearVictory = true;
-    }*/
+    }
 
     if (score >= BG_EY_MAX_TEAM_SCORE)
     {
