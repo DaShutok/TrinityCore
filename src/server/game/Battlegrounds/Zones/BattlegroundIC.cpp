@@ -424,6 +424,13 @@ bool BattlegroundIC::SetupBattleground()
     for (uint8 i = BG_IC_GO_HUGE_SEAFORIUM_BOMBS_A_1; i < BG_IC_GO_HUGE_SEAFORIUM_BOMBS_H_4; i++)
         GetBGObject(i)->SetRespawnTime(10);
 
+    //Prevent players to attack bosses until door is broke
+    if (Creature* wyrmbane = GetBGCreature(BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE))
+        wyrmbane->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+    if (Creature* agmar = GetBGCreature(BG_IC_NPC_OVERLORD_AGMAR))
+        agmar->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
     return true;
 }
 
@@ -830,6 +837,18 @@ void BattlegroundIC::DestroyGate(Player* player, GameObject* go)
         UpdateWorldState(uws_open, 1);
     }
     DoorOpen((player->GetTeamId() == TEAM_ALLIANCE ? BG_IC_GO_HORDE_KEEP_PORTCULLIS : BG_IC_GO_DOODAD_PORTCULLISACTIVE02));
+
+    switch (player->GetTeamId())
+    {
+        case TEAM_ALLIANCE:
+             if (Creature* agmar = GetBGCreature(BG_IC_NPC_OVERLORD_AGMAR))
+                 agmar->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+             break;
+        case TEAM_HORDE:
+             if (Creature* wyrmbane = GetBGCreature(BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE))
+                 wyrmbane->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+             break;
+    }
 
     uint32 lang_entry = 0;
 
