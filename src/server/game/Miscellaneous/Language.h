@@ -1076,6 +1076,7 @@ enum TrinityStrings
     LANG_GMNAME_SERVER_ANNOUNCE         = 20000,
     LANG_COMMAND_NEW_KICKMESSAGE        = 20001,
     LANG_COMMAND_KICK_PLAYER_MESSAGE    = 20002,
+    LANG_WARDEN_LOG                     = 20003,
 
     // NOT RESERVED IDS                   12000-1999999999
     // `db_script_string` table index     2000000000-2000009999 (MIN_DB_SCRIPT_STRING_ID-MAX_DB_SCRIPT_STRING_ID)
