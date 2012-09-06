@@ -1,6 +1,6 @@
 DELETE FROM trinity_string WHERE entry IN (20000, 20001, 20002);
 INSERT INTO `trinity_string` (`entry`, `content_default`, `content_loc1`, `content_loc2`, `content_loc3`, `content_loc4`, `content_loc5`, `content_loc6`, `content_loc7`, `content_loc8`) VALUES
-('20000','|cffFFFF00[SERVER]|r |cff00FF00%s: %s|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('20000','|cffFFFF00[Server Notice]|r |cff00FF00%s: %s|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 ('20001','|cffFFFFFF %s kick %s, reason (%s)|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 ('20002','|cffFF0000 You will be kick in 5 seg. by: %s , reason(%s)|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
