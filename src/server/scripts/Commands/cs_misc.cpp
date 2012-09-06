@@ -962,7 +962,8 @@ public:
         else
             handler->PSendSysMessage(LANG_COMMAND_NEW_KICKMESSAGE, handler->GetSession()->GetPlayerName(), playerName.c_str(), kickreasonstr.c_str());
 
-        target->GetSession()->KickPlayer();
+        ChatHandler(target).PSendSysMessage(LANG_COMMAND_KICK_PLAYER_MESSAGE, handler->GetSession()->GetPlayerName(), kickreasonstr.c_str());
+        target->KickWithTime(50000); //5 seg
 
         return true;
     }
