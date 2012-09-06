@@ -80,7 +80,8 @@ public:
             { "recall",             SEC_MODERATOR,          false, &HandleRecallCommand,                "", NULL },
             { "save",               SEC_PLAYER,             false, &HandleSaveCommand,                  "", NULL },
             { "saveall",            SEC_MODERATOR,          true,  &HandleSaveAllCommand,               "", NULL },
-            { "kick",               SEC_GAMEMASTER,         true,  &HandleKickPlayerCommand,            "", NULL },
+            { "oldkick",            SEC_GAMEMASTER,         true,  &HandleKickPlayerCommand,            "", NULL },
+            { "kick",               SEC_GAMEMASTER,         false, &HandleShowKickCommand,              "", NULL },
             { "start",              SEC_PLAYER,             false, &HandleStartCommand,                 "", NULL },
             { "taxicheat",          SEC_MODERATOR,          false, &HandleTaxiCheatCommand,             "", NULL },
             { "linkgrave",          SEC_ADMINISTRATOR,      false, &HandleLinkGraveCommand,             "", NULL },
@@ -926,6 +927,40 @@ public:
             sWorld->SendWorldText(LANG_COMMAND_KICKMESSAGE, playerName.c_str());
         else
             handler->PSendSysMessage(LANG_COMMAND_KICKMESSAGE, playerName.c_str());
+
+        target->GetSession()->KickPlayer();
+
+        return true;
+    }
+
+    // kick player
+    static bool HandleShowKickCommand(ChatHandler* handler, char const* args)
+    {
+        Player* target = NULL;
+        std::string playerName;
+        if (!handler->extractPlayerTarget((char*)args, &target, NULL, &playerName))
+            return false;
+
+        char* kickreason = strtok(NULL, "\r");
+        std::string kickreasonstr("No reason");
+        if (kickreason != NULL)
+            kickreasonstr = kickreason;
+
+        if (handler->GetSession() && target == handler->GetSession()->GetPlayer())
+        {
+            handler->SendSysMessage(LANG_COMMAND_KICKSELF);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        // check online security
+        if (handler->HasLowerSecurity(target, 0))
+            return false;
+
+        if (sWorld->getBoolConfig(CONFIG_SHOW_KICK_IN_WORLD))
+            sWorld->SendWorldText(LANG_COMMAND_NEW_KICKMESSAGE, handler->GetSession()->GetPlayerName(), playerName.c_str(), kickreasonstr.c_str());
+        else
+            handler->PSendSysMessage(LANG_COMMAND_NEW_KICKMESSAGE, handler->GetSession()->GetPlayerName(), playerName.c_str(), kickreasonstr.c_str());
 
         target->GetSession()->KickPlayer();
 
