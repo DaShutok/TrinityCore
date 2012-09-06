@@ -37,7 +37,8 @@
 #define BOOL_TO_STRING(b) ((b)? "true":"false")
 #define VAS_SCRIPT_HOOK_VERSION_NEEDED 1.01f
 
-enum VAS_ConfigFloatValues{
+enum VAS_ConfigFloatValues
+{
     CONFIG_XPLAYER = 0,
     MIN_D_MOD,
     MIN_HP_MOD,
@@ -46,7 +47,8 @@ enum VAS_ConfigFloatValues{
     VAS_VERSION
 };
 
-enum VAS_ConfigIntegerValues{
+enum VAS_ConfigIntegerValues
+{
     AUTOINSTANCE = 0,
     CREATURE_UPDATE_TIMER,
     PLAYER_CHANGE_NOTIFY,
@@ -55,7 +57,8 @@ enum VAS_ConfigIntegerValues{
     VAS_SUB_VERSION
 };
 
-class AutoBalanceConfig{
+class AutoBalanceConfig
+{
 private:
     static AutoBalanceConfig* InstancePointer;
     std::unordered_map<int, int> _forcedCreatureIds;  // The unordered map values correspond with the VAS.AutoBalance.XX.Name entries in the configuration file.
@@ -235,21 +238,21 @@ class VAS_AutoBalance_WorldScript : public WorldScript
     void SetInitialWorldSettings()
     {
 
-        sLog->outDetail("----------------------------------------------------");
-        sLog->outDetail("  Powered by {VAS} AutoBalance v%4.2f.%u ", AutoBalanceConfig::Instanace()->GetFloatValue(VAS_VERSION), AutoBalanceConfig::Instanace()->GetIntValue(VAS_SUB_VERSION));
-        sLog->outDetail("----------------------------------------------------");
+        sLog->outStaticDebug("----------------------------------------------------");
+        sLog->outStaticDebug("  Powered by {VAS} AutoBalance v%4.2f.%u ", AutoBalanceConfig::Instanace()->GetFloatValue(VAS_VERSION), AutoBalanceConfig::Instanace()->GetIntValue(VAS_SUB_VERSION));
+        sLog->outStaticDebug("----------------------------------------------------");
         AutoBalanceConfig::Instanace()->ValidateScriptHookVersion();
-        sLog->outDetail("  xPlayer = %4.1f ", AutoBalanceConfig::Instanace()->GetFloatValue(CONFIG_XPLAYER));
-        sLog->outDetail("  AutoInstance = %u ", AutoBalanceConfig::Instanace()->GetIntValue(AUTOINSTANCE));
-        sLog->outDetail("  PlayerChangeNotify = %u ", AutoBalanceConfig::Instanace()->GetIntValue(PLAYER_CHANGE_NOTIFY));
-        sLog->outDetail("  Min.D.Mod = %4.2f ", AutoBalanceConfig::Instanace()->GetFloatValue(MIN_D_MOD));
-        sLog->outDetail("  Min.HP.Mod = %4.2f ", AutoBalanceConfig::Instanace()->GetFloatValue(MIN_HP_MOD));
-        sLog->outDetail("  VAS.Group.Modifer = %4.2f ", AutoBalanceConfig::Instanace()->GetFloatValue(VAS_GROUP_MODIFIER));
-        sLog->outDetail("  VAS.Damage.Modifer = %4.2f ", AutoBalanceConfig::Instanace()->GetFloatValue(VAS_DAMAGE_MODIFIER));
-        sLog->outDetail("  VasDebug   =  %u ", AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG));
-        sLog->outDetail("  DebugByID   =  %u", AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG_BY_ID));
-        sLog->outDetail("  Creature_Update_Timer   =  %u", AutoBalanceConfig::Instanace()->GetIntValue(CREATURE_UPDATE_TIMER));
-        sLog->outDetail("----------------------------------------------------\n");
+        sLog->outStaticDebug("  xPlayer = %4.1f ", AutoBalanceConfig::Instanace()->GetFloatValue(CONFIG_XPLAYER));
+        sLog->outStaticDebug("  AutoInstance = %u ", AutoBalanceConfig::Instanace()->GetIntValue(AUTOINSTANCE));
+        sLog->outStaticDebug("  PlayerChangeNotify = %u ", AutoBalanceConfig::Instanace()->GetIntValue(PLAYER_CHANGE_NOTIFY));
+        sLog->outStaticDebug("  Min.D.Mod = %4.2f ", AutoBalanceConfig::Instanace()->GetFloatValue(MIN_D_MOD));
+        sLog->outStaticDebug("  Min.HP.Mod = %4.2f ", AutoBalanceConfig::Instanace()->GetFloatValue(MIN_HP_MOD));
+        sLog->outStaticDebug("  VAS.Group.Modifer = %4.2f ", AutoBalanceConfig::Instanace()->GetFloatValue(VAS_GROUP_MODIFIER));
+        sLog->outStaticDebug("  VAS.Damage.Modifer = %4.2f ", AutoBalanceConfig::Instanace()->GetFloatValue(VAS_DAMAGE_MODIFIER));
+        sLog->outStaticDebug("  VasDebug   =  %u ", AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG));
+        sLog->outStaticDebug("  DebugByID   =  %u", AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG_BY_ID));
+        sLog->outStaticDebug("  Creature_Update_Timer   =  %u", AutoBalanceConfig::Instanace()->GetIntValue(CREATURE_UPDATE_TIMER));
+        sLog->outStaticDebug("----------------------------------------------------\n");
     }
 
 };
@@ -266,7 +269,7 @@ class VAS_AutoBalance_PlayerScript : public PlayerScript
     {
 
         if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-            sLog->outDetail("### VAS_AutoBalance_PlayerScript - OnLogin Player=%s", Player->GetName());
+            sLog->outStaticDebug("### VAS_AutoBalance_PlayerScript - OnLogin Player=%s", Player->GetName());
     }
 };
 
@@ -285,10 +288,10 @@ class VAS_AutoBalance_UnitScript : public UnitScript
             if (AttackerUnit->GetTypeId() != TYPEID_PLAYER)
             {
                 if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-                    sLog->outDetail("### VAS_AutoBalance_UnitScript - VAS_Unit_DealDamage Attacker=%s Victim=%s Start Damage=%u",AttackerUnit->GetName(),playerVictim->GetName(),damage);
+                    sLog->outStaticDebug("### VAS_AutoBalance_UnitScript - VAS_Unit_DealDamage Attacker=%s Victim=%s Start Damage=%u",AttackerUnit->GetName(),playerVictim->GetName(),damage);
                 damage = VAS_Modifer_DealDamage(AttackerUnit,damage);
                 if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-                    sLog->outDetail("### VAS_AutoBalance_UnitScript - VAS_Unit_DealDamage Attacker=%s Victim=%s End Damage=%u",AttackerUnit->GetName(),playerVictim->GetName(),damage);
+                    sLog->outStaticDebug("### VAS_AutoBalance_UnitScript - VAS_Unit_DealDamage Attacker=%s Victim=%s End Damage=%u",AttackerUnit->GetName(),playerVictim->GetName(),damage);
             }
             return damage;
     }
@@ -300,7 +303,7 @@ class VAS_AutoBalance_UnitScript : public UnitScript
             if (damageInfo->attacker->GetTypeId() != TYPEID_PLAYER)
             {
                 if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-                    sLog->outDetail("### VAS_AutoBalance_UnitScript - CalculateSpellDamageTaken Attacker=%s Victim=%s Start Damage=%u",damageInfo->attacker->GetName(),damageInfo->target->GetName(),damageInfo->damage);
+                    sLog->outStaticDebug("### VAS_AutoBalance_UnitScript - CalculateSpellDamageTaken Attacker=%s Victim=%s Start Damage=%u",damageInfo->attacker->GetName(),damageInfo->target->GetName(),damageInfo->damage);
 
                 if (damageInfo->attacker->isHunterPet() || damageInfo->attacker->isPet() || damageInfo->attacker->isSummon() || damageInfo->attacker->IsControlledByPlayer())
                     return;
@@ -310,7 +313,7 @@ class VAS_AutoBalance_UnitScript : public UnitScript
                 damageInfo->damage *= damageMultiplier;
 
                 if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-                    sLog->outDetail("### VAS_AutoBalance_UnitScript - CalculateSpellDamageTaken Attacker=%s Victim=%s End Damage=%u",damageInfo->attacker->GetName(),damageInfo->target->GetName(),damageInfo->damage);
+                    sLog->outStaticDebug("### VAS_AutoBalance_UnitScript - CalculateSpellDamageTaken Attacker=%s Victim=%s End Damage=%u",damageInfo->attacker->GetName(),damageInfo->target->GetName(),damageInfo->damage);
             }
             return;
     }
@@ -323,12 +326,12 @@ class VAS_AutoBalance_UnitScript : public UnitScript
             if (!(damageInfo->attacker->isHunterPet() || damageInfo->attacker->isPet() || damageInfo->attacker->isSummon() || damageInfo->attacker->IsControlledByPlayer())) // Make sure that the attacker is not a Pet of some sort
             {
                 if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-                    sLog->outDetail("### VAS_AutoBalance_UnitScript - CalculateMeleeDamage Attacker=%s Victim=%s Start Damage=%u",damageInfo->attacker->GetName(),damageInfo->target->GetName(),damageInfo->damage);
+                    sLog->outStaticDebug("### VAS_AutoBalance_UnitScript - CalculateMeleeDamage Attacker=%s Victim=%s Start Damage=%u",damageInfo->attacker->GetName(),damageInfo->target->GetName(),damageInfo->damage);
 
                 damageInfo->damage *= CreatureInfo[damageInfo->attacker->GetGUID()].DamageMultiplier;
 
                 if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-                    sLog->outDetail("### VAS_AutoBalance_UnitScript - CalculateMeleeDamage Attacker=%s Victim=%s End Damage=%u",damageInfo->attacker->GetName(),damageInfo->target->GetName(),damageInfo->damage);
+                    sLog->outStaticDebug("### VAS_AutoBalance_UnitScript - CalculateMeleeDamage Attacker=%s Victim=%s End Damage=%u",damageInfo->attacker->GetName(),damageInfo->target->GetName(),damageInfo->damage);
             }
             return;
     }
@@ -360,18 +363,18 @@ class VAS_AutoBalance_AllMapScript : public AllMapScript
     {
         if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 2)
         {
-            sLog->outDetail("----------------------------------------------------");
-            sLog->outDetail("## VAS_AutoBalance_AllMapScript - OnPlayerEnterAll");
-            sLog->outDetail("## For InsatanceID %u",map->GetInstanceId());
-            sLog->outDetail("## IsDungeon= %u",map->GetEntry()->IsDungeon());
-            sLog->outDetail("## For Map %u",player->GetMapId());
-            sLog->outDetail("## PlayersInMap %u",map->GetPlayersCountExceptGMs());
-            sLog->outDetail("## pDifficulty %u",uint32(player->GetDifficulty(player->GetMap()->IsHeroic())));
-            sLog->outDetail("## pGetDungeonDifficulty %u",uint32(player->GetDungeonDifficulty()));
-            sLog->outDetail("## pGetRaidDifficulty %u",uint32(player->GetRaidDifficulty()));
-            sLog->outDetail("## maxPlayers %u",((InstanceMap*)sMapMgr->FindMap(player->GetMapId(), player->GetInstanceId()))->GetMaxPlayers());
-            sLog->outDetail("## IsHeroic=%s IsRaid=%s IsRegularDifficulty=%s IsRaidOrHeroicDungeon=%s IsNonRaidDungeon=%s",BOOL_TO_STRING(player->GetMap()->IsHeroic()),BOOL_TO_STRING(player->GetMap()->IsRaid()),BOOL_TO_STRING(player->GetMap()->IsRegularDifficulty()),BOOL_TO_STRING(player->GetMap()->IsRaidOrHeroicDungeon()),BOOL_TO_STRING(player->GetMap()->IsNonRaidDungeon()));
-            sLog->outDetail("----------------------------------------------------\n");
+            sLog->outStaticDebug("----------------------------------------------------");
+            sLog->outStaticDebug("## VAS_AutoBalance_AllMapScript - OnPlayerEnterAll");
+            sLog->outStaticDebug("## For InsatanceID %u",map->GetInstanceId());
+            sLog->outStaticDebug("## IsDungeon= %u",map->GetEntry()->IsDungeon());
+            sLog->outStaticDebug("## For Map %u",player->GetMapId());
+            sLog->outStaticDebug("## PlayersInMap %u",map->GetPlayersCountExceptGMs());
+            sLog->outStaticDebug("## pDifficulty %u",uint32(player->GetDifficulty(player->GetMap()->IsHeroic())));
+            sLog->outStaticDebug("## pGetDungeonDifficulty %u",uint32(player->GetDungeonDifficulty()));
+            sLog->outStaticDebug("## pGetRaidDifficulty %u",uint32(player->GetRaidDifficulty()));
+            sLog->outStaticDebug("## maxPlayers %u",((InstanceMap*)sMapMgr->FindMap(player->GetMapId(), player->GetInstanceId()))->GetMaxPlayers());
+            sLog->outStaticDebug("## IsHeroic=%s IsRaid=%s IsRegularDifficulty=%s IsRaidOrHeroicDungeon=%s IsNonRaidDungeon=%s",BOOL_TO_STRING(player->GetMap()->IsHeroic()),BOOL_TO_STRING(player->GetMap()->IsRaid()),BOOL_TO_STRING(player->GetMap()->IsRegularDifficulty()),BOOL_TO_STRING(player->GetMap()->IsRaidOrHeroicDungeon()),BOOL_TO_STRING(player->GetMap()->IsNonRaidDungeon()));
+            sLog->outStaticDebug("----------------------------------------------------\n");
         }
 
         if (AutoBalanceConfig::Instanace()->GetIntValue(PLAYER_CHANGE_NOTIFY) >= 1)
@@ -406,13 +409,13 @@ class VAS_AutoBalance_AllMapScript : public AllMapScript
         {
             if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 2)
             {
-                sLog->outDetail("----------------------------------------------------");
-                sLog->outDetail("## VAS_AutoBalance_AllMapScript - OnPlayerLeaveAll");
-                sLog->outDetail("## For InsatanceID %u",map->GetInstanceId());
-                sLog->outDetail("## IsDungeon= %u",map->GetEntry()->IsDungeon());
-                sLog->outDetail("## For Map %u",player->GetMapId());
-                sLog->outDetail("## PlayersInMap %u",instancePlayerCount);
-                sLog->outDetail("----------------------------------------------------\n");
+                sLog->outStaticDebug("----------------------------------------------------");
+                sLog->outStaticDebug("## VAS_AutoBalance_AllMapScript - OnPlayerLeaveAll");
+                sLog->outStaticDebug("## For InsatanceID %u",map->GetInstanceId());
+                sLog->outStaticDebug("## IsDungeon= %u",map->GetEntry()->IsDungeon());
+                sLog->outStaticDebug("## For Map %u",player->GetMapId());
+                sLog->outStaticDebug("## PlayersInMap %u",instancePlayerCount);
+                sLog->outStaticDebug("----------------------------------------------------\n");
             }
 
             if (AutoBalanceConfig::Instanace()->GetIntValue(PLAYER_CHANGE_NOTIFY) >= 1)
@@ -449,14 +452,14 @@ class VAS_AutoBalance_WorldMapScript : public WorldMapScript
     {
 
         if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-            sLog->outDetail("### VAS_AutoBalance_WorldMapScript - OnPlayerEnter Map=%s player=%s",map->GetMapName(),player->GetName());
+            sLog->outStaticDebug("### VAS_AutoBalance_WorldMapScript - OnPlayerEnter Map=%s player=%s",map->GetMapName(),player->GetName());
     }
 
     void OnPlayerLeave(Map* map, Player* player)
     {
 
         if (AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3)
-            sLog->outDetail("### VAS_AutoBalance_WorldMapScript - OnPlayerLeave Map=%s player=%s",map->GetMapName(),player->GetName());
+            sLog->outStaticDebug("### VAS_AutoBalance_WorldMapScript - OnPlayerLeave Map=%s player=%s",map->GetMapName(),player->GetName());
     }
 };
 
@@ -629,11 +632,11 @@ class VAS_AutoBalance_AllCreatureScript : public AllCreatureScript
 
         if((AutoBalanceConfig::Instanace()->GetIntValue(VAS_DEBUG) >= 3))
         {
-            sLog->outDetail("## VAS-AutoBalance MobID=%u MapID=%u creatureName=%s  GUID=%llu  instancePlayerCount=%u", creatureTemplate->Entry, creature->GetMapId(), creatureTemplate->Name.c_str(), creature->GetGUID(), instancePlayerCount);
-            sLog->outDetail("## VAS-AutoBalance MapDifficulty=%u Health=%u / %u healthMultiplier=%4.5f VAS_Group_Modifer=%4.2f", creature->GetMap()->GetDifficulty(), scaledHealth, baseHealth, healthMultiplier, AutoBalanceConfig::Instanace()->GetFloatValue(VAS_GROUP_MODIFIER));
-            sLog->outDetail("## VAS-AutoBalance maxNumberOfPlayers=%u IsRaid=%s", maxNumberOfPlayers, BOOL_TO_STRING(creature->GetMap()->IsRaid()));
-            sLog->outDetail("## VAS-AutoBalance Mana %u / %u", baseMana, scaledMana);
-            sLog->outDetail("## VAS-AutoBalance damageMultiplier=%4.2f", damageMultiplier);
+            sLog->outStaticDebug("## VAS-AutoBalance MobID=%u MapID=%u creatureName=%s  GUID=%llu  instancePlayerCount=%u", creatureTemplate->Entry, creature->GetMapId(), creatureTemplate->Name.c_str(), creature->GetGUID(), instancePlayerCount);
+            sLog->outStaticDebug("## VAS-AutoBalance MapDifficulty=%u Health=%u / %u healthMultiplier=%4.5f VAS_Group_Modifer=%4.2f", creature->GetMap()->GetDifficulty(), scaledHealth, baseHealth, healthMultiplier, AutoBalanceConfig::Instanace()->GetFloatValue(VAS_GROUP_MODIFIER));
+            sLog->outStaticDebug("## VAS-AutoBalance maxNumberOfPlayers=%u IsRaid=%s", maxNumberOfPlayers, BOOL_TO_STRING(creature->GetMap()->IsRaid()));
+            sLog->outStaticDebug("## VAS-AutoBalance Mana %u / %u", baseMana, scaledMana);
+            sLog->outStaticDebug("## VAS-AutoBalance damageMultiplier=%4.2f", damageMultiplier);
         }
 
         creature->SetCreateHealth(scaledHealth);

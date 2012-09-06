@@ -2441,14 +2441,14 @@ AutoBroadcast.Timer = 60000
 #        Example: VAS.AutoBalance.XPlayer = 1 will set everything for a 1 player game.
 #        Default:     1
 
-VAS.AutoBalance.XPlayer = 1
+VAS.AutoBalance.XPlayer = 0
 
 #
 #     VAS.AutoBalance.AutoInstance
 #        Set instances to Auto chance XPlayer depending on players in it.
 #        Default:     1 (1 = ON, 0 = OFF)
 
-VAS.AutoBalance.AutoInstance = 1
+VAS.AutoBalance.AutoInstance = 0
 
 #
 #     VAS.AutoBalance.Debug
@@ -2471,7 +2471,7 @@ VAS.AutoBalance.DebugById = 0
 #        Set Auto Notifications to all players in Instance that player count has changed.
 #        Default:     1 (1 = ON, 0 = OFF)
 
-VAS.AutoBalance.PlayerChangeNotify = 1
+VAS.AutoBalance.PlayerChangeNotify = 0
 
 #
 #     VAS.AutoBalance.Creature.Update.Timer
@@ -3050,6 +3050,13 @@ PlayerDump.DisallowPaths = 1
 #        Default:     1
 
 PlayerDump.DisallowOverwrite = 1
+
+#
+#     Transmogrify.Enable
+#        Description: Enable/Disable Transmogrify
+#        Default:     1
+
+Transmogrify.Enable = 1
 
 #
 ###################################################################################################

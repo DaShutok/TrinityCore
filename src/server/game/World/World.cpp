@@ -1240,6 +1240,8 @@ void World::LoadConfigSettings(bool reload)
     std::string VAS_AutoBalance_2_Name = ConfigMgr::GetStringDefault("VAS.AutoBalance.2.Name", "");
     std::string VAS_color = ConfigMgr::GetStringDefault("VAS.AutoBalance.Color", "cffFF8000");
 
+    m_bool_configs[CONFIG_ENABLE_TRANSMOGRIFY] = ConfigMgr::GetBoolDefault("Transmogrify.Enable", true);
+
     // call ScriptMgr if we're reloading the configuration
     if (reload)
         sScriptMgr->OnConfigLoad(reload);
@@ -1420,8 +1422,11 @@ void World::SetInitialWorldSettings()
     sLog->outString("Loading Equipment templates...");
     sObjectMgr->LoadEquipmentTemplates();
 
-	sLog->outString("Loading fake items...");
-    sObjectMgr->LoadFakeItems();
+    if (m_bool_configs[CONFIG_ENABLE_TRANSMOGRIFY] == true)
+    {
+        sLog->outString("Loading fake items...");
+        sObjectMgr->LoadFakeItems();
+    } else sLog->outError("Transmogrify disabled");
 
     sLog->outString("Loading Creature templates...");
     sObjectMgr->LoadCreatureTemplates();

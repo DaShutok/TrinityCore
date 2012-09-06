@@ -24,9 +24,11 @@ EndScriptData */
 
 #include "ScriptPCH.h"
 
-enum TransmogrifyActions {
+enum TransmogrifyActions 
+{
     ACTION_TRANSMOGRIFY_ADD_DISPLAY,
-    ACTION_TRANSMOGRIFY_REMOVE_DISPLAY
+    ACTION_TRANSMOGRIFY_REMOVE_DISPLAY,
+    ACTION_TRANSMOGRIFY_REMOVE_ALL
 };
 
 class npc_transmogrify : public CreatureScript
@@ -38,9 +40,15 @@ class npc_transmogrify : public CreatureScript
 
         bool OnGossipHello(Player* player, Creature* creature)
         {
-            PriceInGold = 10 * 100 * 100;
+            PriceInGold = 10 * 100 * 100; //10g?
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "Hacer el cambio.", GOSSIP_SENDER_MAIN, ACTION_TRANSMOGRIFY_ADD_DISPLAY);
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "Limpiar el objeto.", GOSSIP_SENDER_MAIN, ACTION_TRANSMOGRIFY_REMOVE_DISPLAY);
+
+            if (player->GetSession()->GetSecurity() > SEC_GAMEMASTER)
+            {
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Remove all fake items", GOSSIP_SENDER_MAIN, ACTION_TRANSMOGRIFY_REMOVE_ALL); //Only for cleanup
+            }
+
             player->SEND_GOSSIP_MENU(51000, creature->GetGUID());
             return true;
         }
@@ -55,6 +63,9 @@ class npc_transmogrify : public CreatureScript
                     break;
                 case ACTION_TRANSMOGRIFY_REMOVE_DISPLAY:
                     ClearItem(player, creature);
+                    break;
+                case ACTION_TRANSMOGRIFY_REMOVE_ALL:
+                    CleanupAllItem(player, creature);
                     break;
             }
             return true;
@@ -126,6 +137,15 @@ class npc_transmogrify : public CreatureScript
             player->GetSession()->HandleAutoEquipItemOpcode(data);
 
             creature->GetAI()->DoCast(63491);
+        }
+
+        void CleanupAllItem(Player* player, Creature* creature)
+        {
+            QueryResult result = CharacterDatabase.Query("SELECT `guid` FROM `fake_items`");
+
+            if (!result)
+                creature->MonsterWhisper("No result", player->GetGUID());
+            else CharacterDatabase.PExecute("DELETE FROM `fake_items`");
         }
 };
 
