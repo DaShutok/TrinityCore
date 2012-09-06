@@ -208,13 +208,6 @@ class npc_wyrmrest_defender : public CreatureScript
         }
 };
 
-void AddSC_dragonblight()
-{
-    new npc_alexstrasza_wr_gate;
-    new spell_q12096_q12092_dummy;
-    new spell_q12096_q12092_bark;
-    new npc_wyrmrest_defender;
-}
 class spell_gen_12457 : public SpellScriptLoader
 {
     public:
@@ -252,4 +245,5 @@ void AddSC_dragonblight()
     new spell_q12096_q12092_dummy;
     new spell_q12096_q12092_bark;
     new spell_gen_12457;
+    new npc_wyrmrest_defender;
 }
