@@ -4,7 +4,6 @@ INSERT INTO `trinity_string` (`entry`, `content_default`, `content_loc1`, `conte
 ('20001','|cffFFFFFF %s kick %s, reason (%s)|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 ('20002','|cffFF0000 You will be kick in 5 seg. by: %s , reason(%s)|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
-
 DELETE FROM `command` WHERE `name` IN ('kick', 'oldkick', 'gobject delete fromdb', 'gobject spawn', 'mailbox', 'npc delete fromdb', 'npc spawn', 'serverannounce');
 
 UPDATE command SET `security` = 3 WHERE `name` IN ('npc add temp', "gobject add temp", "npc delete", "gobject delete");
