@@ -482,18 +482,21 @@ public:
         uint32 uiRenew_timer;
         uint32 uiInquisitor_Penance_timer;
         uint32 uiValroth_Smite_timer;
+        uint32 movetimer;
 
         void Reset()
         {
             uiRenew_timer = 1000;
             uiInquisitor_Penance_timer = 2000;
             uiValroth_Smite_timer = 1000;
+            movetimer = 2000;
         }
 
         void EnterCombat(Unit* who)
         {
             DoScriptText(SAY_VALROTH2, me);
             DoCast(who, SPELL_VALROTH_SMITE);
+            movetimer = 2000;
         }
 
         void UpdateAI(const uint32 diff)
@@ -518,6 +521,12 @@ public:
                 DoCast(me->getVictim(), SPELL_VALROTH_SMITE);
                 uiValroth_Smite_timer = urand(1000, 6000);
             } else uiValroth_Smite_timer -= diff;
+
+            if (movetimer <= diff)
+            {
+                me->Relocate(1645.220093f, -6043.845703f);
+                movetimer = 5000;
+            } else movetimer -= diff;
 
             DoMeleeAttackIfReady();
         }
