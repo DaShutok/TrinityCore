@@ -70,7 +70,7 @@ enum LogFilterType
     LOG_FILTER_VAS_AUTOBALANCE
 };
 
-const uint8 MaxLogFilter = uint8(LOG_FILTER_OPCODES) + 1;
+const uint8 MaxLogFilter = uint8(LOG_FILTER_VAS_AUTOBALANCE) + 1;
 
 // Values assigned have their equivalent in enum ACE_Log_Priority
 enum LogLevel
