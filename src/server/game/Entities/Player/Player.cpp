@@ -964,15 +964,11 @@ bool Player::Create(uint32 guidlow, CharacterCreateInfo* createInfo)
         SetByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_PVP);
         SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
     }
+
     SetFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_REGENERATE_POWER);
-    SetFloatValue(UNIT_MOD_CAST_SPEED, 1.0f);               // fix cast time showed in spell tooltip on client
-    SetFloatValue(UNIT_MOD_CAST_HASTE, 1.0f);
-    SetFloatValue(PLAYER_FIELD_MOD_HASTE, 1.0f);
-    SetFloatValue(PLAYER_FIELD_MOD_RANGED_HASTE, 1.0f);
     SetFloatValue(UNIT_FIELD_HOVERHEIGHT, 1.0f);            // default for players in 3.0.3
 
-                                                            // -1 is default value
-    SetInt32Value(PLAYER_FIELD_WATCHED_FACTION_INDEX, uint32(-1));
+    SetInt32Value(PLAYER_FIELD_WATCHED_FACTION_INDEX, uint32(-1));  // -1 is default value
 
     SetUInt32Value(PLAYER_BYTES, (createInfo->Skin | (createInfo->Face << 8) | (createInfo->HairStyle << 16) | (createInfo->HairColor << 24)));
     SetUInt32Value(PLAYER_BYTES_2, (createInfo->FacialHair |
@@ -984,7 +980,7 @@ bool Player::Create(uint32 guidlow, CharacterCreateInfo* createInfo)
 
     SetUInt64Value(OBJECT_FIELD_DATA, 0);
     SetUInt32Value(PLAYER_GUILDRANK, 0);
-    SetUInt32Value(PLAYER_GUILDLEVEL, 0);
+    SetGuildLevel(0);
     SetUInt32Value(PLAYER_GUILD_TIMESTAMP, 0);
 
     for (int i = 0; i < KNOWN_TITLES_SIZE; ++i)
@@ -3284,12 +3280,16 @@ void Player::InitStatsForLevel(bool reapplyMods)
         SetUInt32Value(index, 0);
 
     SetUInt32Value(PLAYER_FIELD_MOD_HEALING_DONE_POS, 0);
+    SetFloatValue(PLAYER_FIELD_MOD_HEALING_PCT, 1.0f);
+    SetFloatValue(PLAYER_FIELD_MOD_HEALING_DONE_PCT, 1.0f);
     for (uint8 i = 0; i < 7; ++i)
     {
         SetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_NEG+i, 0);
         SetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS+i, 0);
-        SetFloatValue(PLAYER_FIELD_MOD_DAMAGE_DONE_PCT+i, 1.00f);
+        SetFloatValue(PLAYER_FIELD_MOD_DAMAGE_DONE_PCT+i, 1.0f);
     }
+
+    SetFloatValue(PLAYER_FIELD_MOD_SPELL_POWER_PCT, 1.0f);
 
     //reset attack power, damage and attack speed fields
     SetFloatValue(UNIT_FIELD_BASEATTACKTIME, 2000.0f);
@@ -3302,6 +3302,7 @@ void Player::InitStatsForLevel(bool reapplyMods)
     SetFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE, 0.0f);
     SetFloatValue(UNIT_FIELD_MINRANGEDDAMAGE, 0.0f);
     SetFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE, 0.0f);
+    SetFloatValue(PLAYER_FIELD_WEAPON_DMG_MULTIPLIERS, 1.0f);
 
     SetInt32Value(UNIT_FIELD_ATTACK_POWER,            0);
     SetFloatValue(UNIT_FIELD_ATTACK_POWER_MULTIPLIER, 0.0f);
@@ -7580,12 +7581,23 @@ uint32 Player::_GetCurrencyWeekCap(const CurrencyTypesEntry* currency) const
    if (cap != currency->WeekCap && IsInWorld() && !GetSession()->PlayerLoading())
    {
        WorldPacket packet(SMSG_UPDATE_CURRENCY_WEEK_LIMIT, 8);
-       packet << uint32(cap / ((currency->Flags & 0x8) ? 100 : 1));
+       packet << uint32(cap / ((currency->Flags & CURRENCY_FLAG_HIGH_PRECISION) ? 100 : 1));
        packet << uint32(currency->ID);
        GetSession()->SendPacket(&packet);
    }
 
    return cap;
+}
+
+void Player::SetInGuild(uint32 guildId)
+{
+    if (guildId)
+        SetUInt64Value(OBJECT_FIELD_DATA, MAKE_NEW_GUID(guildId, 0, HIGHGUID_GUILD));
+    else
+        SetUInt64Value(OBJECT_FIELD_DATA, 0);
+
+    ApplyModFlag(PLAYER_FLAGS, PLAYER_FLAGS_GUILD_LEVEL_ENABLED, guildId != 0 && sWorld->getBoolConfig(CONFIG_GUILD_LEVELING_ENABLED));
+    SetUInt16Value(OBJECT_FIELD_TYPE, 1, guildId != 0);
 }
 
 uint32 Player::GetGuildIdFromDB(uint64 guid)
@@ -15097,7 +15109,7 @@ void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, 
     bool rewarded = (m_RewardedQuests.find(quest_id) != m_RewardedQuests.end());
 
     // Not give XP in case already completed once repeatable quest
-    uint32 XP = rewarded ? 0 : uint32(quest->XPValue(this)*sWorld->getRate(RATE_XP_QUEST));
+    uint32 XP = rewarded ? 0 : uint32(quest->XPValue(this) * sWorld->getRate(RATE_XP_QUEST));
 
     // handle SPELL_AURA_MOD_XP_QUEST_PCT auras
     Unit::AuraEffectList const& ModXPPctAuras = GetAuraEffectsByType(SPELL_AURA_MOD_XP_QUEST_PCT);
@@ -15109,6 +15121,9 @@ void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, 
         GiveXP(XP, NULL);
     else
         moneyRew = int32(quest->GetRewMoneyMaxLevel() * sWorld->getRate(RATE_DROP_MONEY));
+
+    if (Guild* guild = sGuildMgr->GetGuildById(GetGuildId()))
+        guild->GiveXP(uint32(quest->XPValue(this) * sWorld->getRate(RATE_XP_QUEST) * sWorld->getRate(RATE_XP_GUILD_MODIFIER)), this);
 
     // Give player extra money if GetRewOrReqMoney > 0 and get ReqMoney if negative
     if (quest->GetRewOrReqMoney())
@@ -24873,11 +24888,11 @@ bool Player::canSeeSpellClickOn(Creature const* c) const
 
         ConditionList conds = sConditionMgr->GetConditionsForSpellClickEvent(c->GetEntry(), itr->second.spellId);
         ConditionSourceInfo info = ConditionSourceInfo(const_cast<Player*>(this), const_cast<Creature*>(c));
-        if (!sConditionMgr->IsObjectMeetToConditions(info, conds))
-            return false;
+        if (sConditionMgr->IsObjectMeetToConditions(info, conds))
+            return true;
     }
 
-    return true;
+    return false;
 }
 
 void Player::BuildPlayerTalentsInfoData(WorldPacket* data)
