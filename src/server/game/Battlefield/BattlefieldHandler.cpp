@@ -32,7 +32,6 @@
 //Param3:(time) Time in second that the player have for accept
 void WorldSession::SendBfInvitePlayerToWar(uint32 BattleId, uint32 ZoneId, uint32 p_time)
 {
-    //Send packet 
     WorldPacket data(SMSG_BATTLEFIELD_MGR_ENTRY_INVITE, 12);
     data << uint32(BattleId);
     data << uint32(ZoneId);
@@ -65,13 +64,13 @@ void WorldSession::SendBfQueueInviteResponse(uint32 BattleId,uint32 ZoneId, bool
     WorldPacket data(SMSG_BATTLEFIELD_MGR_QUEUE_REQUEST_RESPONSE, 11);
     data << uint32(BattleId);
     data << uint32(ZoneId);
-    data << uint8((CanQueue ? 1 : 0));  //Accepted          //0 you cannot queue wg     //1 you are queued     
+    data << uint8((CanQueue ? 1 : 0));  //Accepted          //0 you cannot queue wg     //1 you are queued
     data << uint8((Full ? 0 : 1));      //Logging In        //0 wg full                 //1 queue for upcoming
     data << uint8(1); //Warmup
     SendPacket(&data);
 }
 
-//This is call when player accept to join war 
+//This is call when player accept to join war
 //Param1:(BattleId) the BattleId of Bf
 void WorldSession::SendBfEntered(uint32 BattleId)
 {
@@ -101,7 +100,7 @@ void WorldSession::HandleBfQueueInviteResponse(WorldPacket & recv_data)
     uint8 Accepted;
 
     recv_data >> BattleId >> Accepted;
-    sLog->outError("HandleQueueInviteResponse: BattleID:%u Accepted:%u", BattleId, Accepted);
+    sLog->outDebug(LOG_FILTER_BATTLEFIELD, "HandleQueueInviteResponse: BattleID:%u Accepted:%u", BattleId, Accepted);
     Battlefield* Bf = sBattlefieldMgr->GetBattlefieldByBattleId(BattleId);
     if (!Bf)
         return;
@@ -119,7 +118,7 @@ void WorldSession::HandleBfEntryInviteResponse(WorldPacket & recv_data)
     uint8 Accepted;
 
     recv_data >> BattleId >> Accepted;
-    sLog->outError("HandleBattlefieldInviteResponse: BattleID:%u Accepted:%u", BattleId, Accepted);
+    sLog->outDebug(LOG_FILTER_BATTLEFIELD, "HandleBattlefieldInviteResponse: BattleID:%u Accepted:%u", BattleId, Accepted);
     Battlefield* Bf = sBattlefieldMgr->GetBattlefieldByBattleId(BattleId);
     if (!Bf)
         return;
@@ -141,7 +140,7 @@ void WorldSession::HandleBfExitRequest(WorldPacket & recv_data)
     uint32 BattleId;
 
     recv_data >> BattleId;
-    sLog->outError("HandleBfExitRequest: BattleID:%u ", BattleId);
+    sLog->outDebug(LOG_FILTER_BATTLEFIELD, "HandleBfExitRequest: BattleID:%u ", BattleId);
     Battlefield* Bf = sBattlefieldMgr->GetBattlefieldByBattleId(BattleId);
     if (!Bf)
         return;

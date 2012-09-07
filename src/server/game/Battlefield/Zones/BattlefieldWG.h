@@ -26,11 +26,11 @@
 #include "GroupMgr.h"
 #include "Battlefield.h"
 
-const uint32 VehNumWorldState[2] = { 3680, 3490 };
-const uint32 MaxVehNumWorldState[2] = { 3681, 3491 };
-const uint32 ClockWorldState[2] = { 3781, 4354 };
-const uint32 WintergraspFaction[3] = { 1, 2, 35 };
-const float WintergraspStalkerPos[4] = { 0, 0, 0, 0 };
+uint32 const VehNumWorldState[2]        = { 3680, 3490 };
+uint32 const MaxVehNumWorldState[2]     = { 3681, 3491 };
+uint32 const ClockWorldState[2]         = { 3781, 4354 };
+uint32 const WintergraspFaction[3]      = { 1732, 1735, 35 };
+float const WintergraspStalkerPos[4]    = { 0, 0, 0, 0 };
 
 class BattlefieldWG;
 class WintergraspCapturePoint;
@@ -43,6 +43,12 @@ typedef std::set<BfWGGameObjectBuilding*> GameObjectBuilding;
 typedef std::set<WGWorkshop*> Workshop;
 typedef std::set<Group*> GroupSet;
 //typedef std::set<WintergraspCapturePoint *> CapturePointSet; unused ?
+
+enum WintergrastData
+{
+    BATTLEFIELD_WG_ZONEID                        = 4197,             // Wintergrasp
+    BATTLEFIELD_WG_MAPID                         = 571,              // Northrend
+};
 
 enum WintergraspSpells
 {
@@ -81,11 +87,11 @@ enum WintergraspSpells
     SPELL_WINTERGRASP_RESTRICTED_FLIGHT_AREA    = 58730,
 
     // Phasing spells
-    SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT    = 56618,// ADDS PHASE 16
-    SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT = 56617,// ADDS PHASE 32
+    SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT    = 56618, // ADDS PHASE 16
+    SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT = 56617, // ADDS PHASE 32
 
-    SPELL_HORDE_CONTROL_PHASE_SHIFT             = 55773,// ADDS PHASE 64
-    SPELL_ALLIANCE_CONTROL_PHASE_SHIFT          = 55774,// ADDS PHASE 128
+    SPELL_HORDE_CONTROL_PHASE_SHIFT             = 55773, // ADDS PHASE 64
+    SPELL_ALLIANCE_CONTROL_PHASE_SHIFT          = 55774, // ADDS PHASE 128
 };
 
 enum WintergraspData
@@ -151,7 +157,7 @@ enum WintergraspAreaIds
 class BfGraveyardWG : public BfGraveyard
 {
     public:
-        BfGraveyardWG(BattlefieldWG *Bf);
+        BfGraveyardWG(BattlefieldWG* Bf);
 
         void SetTextId(uint32 textid) { m_GossipTextId = textid; }
         uint32 GetTextId() { return m_GossipTextId; }
@@ -171,7 +177,7 @@ enum WGGraveyardId
     BATTLEFIELD_WG_GRAVEYARD_MAX,
 };
 
-enum eWGGossipText
+enum WGGossipText
 {
     BATTLEFIELD_WG_GOSSIPTEXT_GY_NE              = -1850501,
     BATTLEFIELD_WG_GOSSIPTEXT_GY_NW              = -1850502,
@@ -189,9 +195,9 @@ enum WintergraspNpcs
     BATTLEFIELD_WG_NPC_STALKER                      = 15214,
 
     BATTLEFIELD_WG_NPC_VIERON_BLAZEFEATHER          = 31102,
-    BATTLEFIELD_WG_NPC_STONE_GUARD_MUKAR            = 32296,// <WINTERGRASP QUARTERMASTER>
-    BATTLEFIELD_WG_NPC_HOODOO_MASTER_FU_JIN         = 31101,// <MASTER HEXXER>
-    BATTLEFIELD_WG_NPC_CHAMPION_ROS_SLAI            = 39173,// <WINTERGRASP QUARTERMASTER>
+    BATTLEFIELD_WG_NPC_STONE_GUARD_MUKAR            = 32296, // <WINTERGRASP QUARTERMASTER>
+    BATTLEFIELD_WG_NPC_HOODOO_MASTER_FU_JIN         = 31101, // <MASTER HEXXER>
+    BATTLEFIELD_WG_NPC_CHAMPION_ROS_SLAI            = 39173, // <WINTERGRASP QUARTERMASTER>
     BATTLEFIELD_WG_NPC_COMMANDER_DARDOSH            = 31091,
     BATTLEFIELD_WG_NPC_TACTICAL_OFFICER_KILRATH     = 31151,
     BATTLEFIELD_WG_NPC_SIEGESMITH_STRONGHOOF        = 31106,
@@ -199,9 +205,9 @@ enum WintergraspNpcs
     BATTLEFIELD_WG_NPC_LIEUTENANT_MURP              = 31107,
 
     BATTLEFIELD_WG_NPC_BOWYER_RANDOLPH              = 31052,
-    BATTLEFIELD_WG_NPC_KNIGHT_DAMERON               = 32294,// <WINTERGRASP QUARTERMASTER>
-    BATTLEFIELD_WG_NPC_SORCERESS_KAYLANA            = 31051,// <ENCHANTRESS>
-    BATTLEFIELD_WG_NPC_MARSHAL_MAGRUDER             = 39172,// <WINTERGRASP QUARTERMASTER>
+    BATTLEFIELD_WG_NPC_KNIGHT_DAMERON               = 32294, // <WINTERGRASP QUARTERMASTER>
+    BATTLEFIELD_WG_NPC_SORCERESS_KAYLANA            = 31051, // <ENCHANTRESS>
+    BATTLEFIELD_WG_NPC_MARSHAL_MAGRUDER             = 39172, // <WINTERGRASP QUARTERMASTER>
     BATTLEFIELD_WG_NPC_COMMANDER_ZANNETH            = 31036,
     BATTLEFIELD_WG_NPC_TACTICAL_OFFICER_AHBRAMIS    = 31153,
     BATTLEFIELD_WG_NPC_SIEGE_MASTER_STOUTHANDLE     = 31108,
@@ -211,8 +217,8 @@ enum WintergraspNpcs
 	BATTLEFIELD_WG_NPC_GOBLIN_MECHANIC              = 30400,
     BATTLEFIELD_WG_NPC_GNOMISH_ENGINEER             = 30499,
 
-    NPC_TAUNKA_SPIRIT_GUIDE                         = 31841,    // Horde spirit guide for Wintergrasp
-    NPC_DWARVEN_SPIRIT_GUIDE                        = 31842,    // Alliance spirit guide for Wintergrasp
+    NPC_TAUNKA_SPIRIT_GUIDE                         = 31841, // Horde spirit guide for Wintergrasp
+    NPC_DWARVEN_SPIRIT_GUIDE                        = 31842, // Alliance spirit guide for Wintergrasp
     NPC_TOWER_CANNON                                = 28366,
 
     NPC_WINTERGRASP_SIEGE_ENGINE_ALLIANCE           = 28312,
@@ -234,12 +240,14 @@ struct BfWGCoordGY
     TeamId startcontrol;
 };
 
-const uint32 WGQuest[2][6] = {
+uint32 const WGQuest[2][6] =
+{
     { 13186, 13181, 13222, 13538, 13177, 13179 },
     { 13185, 13183, 13223, 13539, 13178, 13180 },
 };
 // 7 in sql, 7 in header
-const BfWGCoordGY WGGraveYard[BATTLEFIELD_WG_GRAVEYARD_MAX] = {
+BfWGCoordGY const WGGraveYard[BATTLEFIELD_WG_GRAVEYARD_MAX] =
+{
     { 5104.750f, 2300.940f, 368.579f, 0.733038f, 1329, BATTLEFIELD_WG_GY_WORKSHOP_NE, BATTLEFIELD_WG_GOSSIPTEXT_GY_NE, TEAM_NEUTRAL },
     { 5099.120f, 3466.036f, 368.484f, 5.317802f, 1330, BATTLEFIELD_WG_GY_WORKSHOP_NW, BATTLEFIELD_WG_GOSSIPTEXT_GY_NW, TEAM_NEUTRAL },
     { 4314.648f, 2408.522f, 392.642f, 6.268125f, 1333, BATTLEFIELD_WG_GY_WORKSHOP_SE, BATTLEFIELD_WG_GOSSIPTEXT_GY_SE, TEAM_NEUTRAL },
@@ -274,6 +282,7 @@ class WintergraspCapturePoint : public BfCapturePoint
 class BattlefieldWG : public Battlefield
 {
     public:
+        ~BattlefieldWG();
         /**
          * \brief Called when the battle start
          * - Spawn relic and turret
@@ -436,15 +445,14 @@ class BattlefieldWG : public Battlefield
         GameObject* m_titansRelic;
 };
 
-const uint32 NORTHREND_WINTERGRASP = 4197;
-const uint8 WG_MAX_OBJ = 32;
-const uint8 WG_KEEPGAMEOBJECT_MAX = 44;
-const uint8 WG_MAX_TURRET = 15;
-const uint8 WG_MAX_KEEP_NPC = 39;
-const uint8 WG_MAX_OUTSIDE_NPC = 14;
-const uint8 WG_OUTSIDE_ALLIANCE_NPC = 7;
-const uint8 WG_MAX_TELEPORTER = 12;
-const uint8 WG_MECHANIC_SPAWN = 6;
+uint8 const WG_MAX_OBJ              = 32;
+uint8 const WG_KEEPGAMEOBJECT_MAX   = 44;
+uint8 const WG_MAX_TURRET           = 15;
+uint8 const WG_MAX_KEEP_NPC         = 39;
+uint8 const WG_MAX_OUTSIDE_NPC      = 14;
+uint8 const WG_OUTSIDE_ALLIANCE_NPC = 7;
+uint8 const WG_MAX_TELEPORTER       = 12;
+uint8 const WG_MECHANIC_SPAWN = 6;
 
 enum WintergraspGameObjectBuildingType
 {
@@ -482,15 +490,15 @@ enum WintergraspWorkshopIds
 
 enum WintergraspWorldstates
 {
-    WORLDSTATE_WORKSHOP_NE = 3701,
-    WORLDSTATE_WORKSHOP_NW = 3700,
-    WORLDSTATE_WORKSHOP_SE = 3703,
-    WORLDSTATE_WORKSHOP_SW = 3702,
-    WORLDSTATE_WORKSHOP_K_W = 3698,
-    WORLDSTATE_WORKSHOP_K_E = 3699
+    WORLDSTATE_WORKSHOP_NE      = 3701,
+    WORLDSTATE_WORKSHOP_NW      = 3700,
+    WORLDSTATE_WORKSHOP_SE      = 3703,
+    WORLDSTATE_WORKSHOP_SW      = 3702,
+    WORLDSTATE_WORKSHOP_K_W     = 3698,
+    WORLDSTATE_WORKSHOP_K_E     = 3699
 };
 
-enum eWGTeamControl
+enum WintergraspTeamControl
 {
     BATTLEFIELD_WG_TEAM_ALLIANCE,
     BATTLEFIELD_WG_TEAM_HORDE,
@@ -498,7 +506,7 @@ enum eWGTeamControl
 };
 
 // TODO: Handle this with creature_text ?
-enum eWGText
+enum WintergraspText
 {
     BATTLEFIELD_WG_TEXT_WORKSHOP_NAME_NE         = 12055,
     BATTLEFIELD_WG_TEXT_WORKSHOP_NAME_NW         = 12052,
@@ -542,6 +550,11 @@ enum WintergraspGameObject
     GO_WINTERGRASP_SHADOWSIGHT_TOWER             = 190356,
     GO_WINTERGRASP_WINTER_S_EDGE_TOWER           = 190357,
     GO_WINTERGRASP_FLAMEWATCH_TOWER              = 190358,
+
+    GO_WINTERGRASP_FORTRESS_GATE                 = 190375,
+    GO_WINTERGRASP_VAULT_GATE                    = 191810,
+
+    GO_WINTERGRASP_KEEP_COLLISION_WALL           = 194323,
 };
 
 struct WintergraspObjectPositionData
@@ -580,7 +593,8 @@ struct WintergraspBuildingSpawnData
     uint32 nameId;
 };
 
-const WintergraspBuildingSpawnData WGGameObjectBuilding[WG_MAX_OBJ] = {
+const WintergraspBuildingSpawnData WGGameObjectBuilding[WG_MAX_OBJ] =
+{
     // Wall (Not spawned in db)
     // Entry  WS    X        Y        Z        O         type                          NameID
     { 190219, 3749, 5371.46f, 3047.47f, 407.571f, 3.14159f, BATTLEFIELD_WG_OBJECTTYPE_WALL, 0 },
@@ -621,10 +635,10 @@ const WintergraspBuildingSpawnData WGGameObjectBuilding[WG_MAX_OBJ] = {
     { 190358, 3706, 4459.1f, 1944.33f, 434.991f, -2.00276f, BATTLEFIELD_WG_OBJECTTYPE_TOWER, BATTLEFIELD_WG_TEXT_TOWER_NAME_E },
 
     // Door of forteress (Not spawned in db)
-    { 190375, 3763, 5162.99f, 2841.23f, 410.162f, -3.13286f, BATTLEFIELD_WG_OBJECTTYPE_DOOR, 0 },
+    { GO_WINTERGRASP_FORTRESS_GATE, 3763, 5162.99f, 2841.23f, 410.162f, -3.13286f, BATTLEFIELD_WG_OBJECTTYPE_DOOR, 0 },
 
     // Last door (Not spawned in db)
-    { 191810, 3773, 5397.11f, 2841.54f, 425.899f, 3.14159f, BATTLEFIELD_WG_OBJECTTYPE_DOOR_LAST, 0 },
+    { GO_WINTERGRASP_VAULT_GATE, 3773, 5397.11f, 2841.54f, 425.899f, 3.14159f, BATTLEFIELD_WG_OBJECTTYPE_DOOR_LAST, 0 },
 };
 
 
@@ -672,7 +686,8 @@ const WintergraspBuildingSpawnData WGGameObjectBuilding[WG_MAX_OBJ] = {
 // 192357 : 1 in sql, 1 in header
 // 192350 : 1 in sql, 1 in header
 // 192351 : 1 in sql, 1 in header
-const WintergraspObjectPositionData WGKeepGameObject[WG_KEEPGAMEOBJECT_MAX] = {
+const WintergraspObjectPositionData WGKeepGameObject[WG_KEEPGAMEOBJECT_MAX] =
+{
     { 5262.540039f, 3047.949951f, 432.054993f, 3.106650f, 192488, 192501 },       // Flag on tower
     { 5272.939941f, 2976.550049f, 444.492004f, 3.124120f, 192374, 192416 },       // Flag on Wall Intersect
     { 5235.189941f, 2941.899902f, 444.278015f, 1.588250f, 192375, 192416 },       // Flag on Wall Intersect
@@ -719,7 +734,8 @@ const WintergraspObjectPositionData WGKeepGameObject[WG_KEEPGAMEOBJECT_MAX] = {
     { 5271.279785f, 2820.159912f, 445.200989f, -3.13286f, 192351, 192416 }        // Flag on wall intersect
 };
 
-const Position WGTurret[WG_MAX_TURRET] = {
+const Position WGTurret[WG_MAX_TURRET] =
+{
     { 5391.19f, 3060.8f,  419.616f, 1.69557f },
     { 5266.75f, 2976.5f,  421.067f, 3.20354f },
     { 5234.86f, 2948.8f,  420.88f,  1.61311f },
@@ -786,7 +802,7 @@ const WintergraspObjectPositionData WGKeepNPC[WG_MAX_KEEP_NPC] =
     { 5269.181152f, 2671.174072f, 409.098999f, 2.457459f, BATTLEFIELD_WG_NPC_GUARD_H, BATTLEFIELD_WG_NPC_GUARD_A },       // Standing Guard
     { 5264.960938f, 2662.332520f, 409.098999f, 2.598828f, BATTLEFIELD_WG_NPC_GUARD_H, BATTLEFIELD_WG_NPC_GUARD_A },       // Standing Guard
     { 5307.111816f, 2616.006836f, 409.095734f, 5.355575f, BATTLEFIELD_WG_NPC_GUARD_H, BATTLEFIELD_WG_NPC_GUARD_A },       // Standing Guard
-    { 5316.770996f, 2619.430176f, 409.027740f, 5.363431f, BATTLEFIELD_WG_NPC_GUARD_H, BATTLEFIELD_WG_NPC_GUARD_A }       // Standing Guard
+    { 5316.770996f, 2619.430176f, 409.027740f, 5.363431f, BATTLEFIELD_WG_NPC_GUARD_H, BATTLEFIELD_WG_NPC_GUARD_A }        // Standing Guard
 };
 
 const WintergraspObjectPositionData WGOutsideNPC[WG_MAX_OUTSIDE_NPC] =
@@ -865,7 +881,8 @@ struct WintergraspTowerData
 uint8 const WG_MAX_ATTACKTOWERS = 3;
 // 192414 : 0 in sql, 1 in header
 // 192278 : 0 in sql, 3 in header
-const WintergraspTowerData AttackTowers[WG_MAX_ATTACKTOWERS] = {
+const WintergraspTowerData AttackTowers[WG_MAX_ATTACKTOWERS] =
+{
     // West tower
     {
         190356,
@@ -1152,7 +1169,7 @@ const WGWorkshopData WorkshopsData[WG_MAX_WORKSHOP] =
 // Structure for different buildings that can be destroyed during battle
 struct BfWGGameObjectBuilding
 {
-    BfWGGameObjectBuilding(BattlefieldWG *WG)
+    BfWGGameObjectBuilding(BattlefieldWG* WG)
     {
         m_WG = WG;
         m_Team = 0;
@@ -1167,7 +1184,7 @@ struct BfWGGameObjectBuilding
     uint8 m_Team;
 
     // WG object
-    BattlefieldWG *m_WG;
+    BattlefieldWG* m_WG;
 
     // Linked gameobject
     GameObject* m_Build;
@@ -1212,11 +1229,17 @@ struct BfWGGameObjectBuilding
         }
 
         // Rebuild gameobject
-        m_Build->SetDestructibleState(GO_DESTRUCTIBLE_REBUILDING, NULL, true);
+        if (m_Build->IsDestructibleBuilding())
+        {
+            m_Build->SetDestructibleState(GO_DESTRUCTIBLE_REBUILDING, NULL, true);
+            if (m_Build->GetEntry() == GO_WINTERGRASP_VAULT_GATE)
+                if (GameObject* go = m_Build->FindNearestGameObject(GO_WINTERGRASP_KEEP_COLLISION_WALL, 10.0f))
+                    go->EnableCollision(true);
 
-        // Update worldstate
-        m_State = BATTLEFIELD_WG_OBJECTSTATE_ALLIANCE_INTACT - (m_Team * 3);
-        m_WG->SendUpdateWorldState(m_WorldState, m_State);
+            // Update worldstate
+            m_State = BATTLEFIELD_WG_OBJECTSTATE_ALLIANCE_INTACT - (m_Team * 3);
+            m_WG->SendUpdateWorldState(m_WorldState, m_State);
+        }
         UpdateCreatureAndGo();
         m_Build->SetUInt32Value(GAMEOBJECT_FACTION, WintergraspFaction[m_Team]);
     }
@@ -1267,18 +1290,20 @@ struct BfWGGameObjectBuilding
                 m_WG->UpdatedDestroyedTowerCount(TeamId(m_Team));
                 break;
             case BATTLEFIELD_WG_OBJECTTYPE_DOOR_LAST:
+                if (GameObject* go = m_Build->FindNearestGameObject(GO_WINTERGRASP_KEEP_COLLISION_WALL, 10.0f))
+                    go->EnableCollision(false);
                 m_WG->SetRelicInteractible(true);
                 if (m_WG->GetRelic())
                     m_WG->GetRelic()->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
                 else
-                    sLog->outError("BattlefieldWG: Relic not found.");
+                    sLog->outError(LOG_FILTER_BATTLEFIELD, "BattlefieldWG: Relic not found.");
                 break;
         }
 
         m_WG->BrokenWallOrTower(TeamId(m_Team));
     }
 
-    void Init(GameObject *go, uint32 type, uint32 worldstate, uint32 nameid)
+    void Init(GameObject* go, uint32 type, uint32 worldstate, uint32 nameid)
     {
         // GameObject associated to object
         m_Build = go;
@@ -1420,7 +1445,7 @@ struct BfWGGameObjectBuilding
             {
                 Position towerCannonPos;
                 TowerCannon[towerid].TurretTop[i].GetPosition(&towerCannonPos);
-                if (Creature *turret = m_WG->SpawnCreature(28366, towerCannonPos, TeamId(0)))
+                if (Creature* turret = m_WG->SpawnCreature(28366, towerCannonPos, TeamId(0)))
                 {
                     m_TurretTopList.insert(turret->GetGUID());
                     switch (go->GetEntry())
@@ -1490,17 +1515,17 @@ struct BfWGGameObjectBuilding
 
                         switch (m_Build->GetEntry())
                         {
-                        case 190221:
-                        case 190373:
-                        case 190377:
-                        case 190378:
+                            case GO_WINTERGRASP_FORTRESS_TOWER_1:
+                            case GO_WINTERGRASP_FORTRESS_TOWER_2:
+                            case GO_WINTERGRASP_FORTRESS_TOWER_3:
+                            case GO_WINTERGRASP_FORTRESS_TOWER_4:
                             {
                                 creature->setFaction(WintergraspFaction[m_WG->GetDefenderTeam()]);
                                 break;
                             }
-                        case 190356:
-                        case 190357:
-                        case 190358:
+                            case GO_WINTERGRASP_SHADOWSIGHT_TOWER:
+                            case GO_WINTERGRASP_WINTER_S_EDGE_TOWER:
+                            case GO_WINTERGRASP_FLAMEWATCH_TOWER:
                             {
                                 creature->setFaction(WintergraspFaction[m_WG->GetAttackerTeam()]);
                                 break;
@@ -1526,17 +1551,17 @@ struct BfWGGameObjectBuilding
 
                         switch (m_Build->GetEntry())
                         {
-                        case 190221:
-                        case 190373:
-                        case 190377:
-                        case 190378:
+                            case GO_WINTERGRASP_FORTRESS_TOWER_1:
+                            case GO_WINTERGRASP_FORTRESS_TOWER_2:
+                            case GO_WINTERGRASP_FORTRESS_TOWER_3:
+                            case GO_WINTERGRASP_FORTRESS_TOWER_4:
                             {
                                 creature->setFaction(WintergraspFaction[m_WG->GetDefenderTeam()]);
                                 break;
                             }
-                        case 190356:
-                        case 190357:
-                        case 190358:
+                            case GO_WINTERGRASP_SHADOWSIGHT_TOWER:
+                            case GO_WINTERGRASP_WINTER_S_EDGE_TOWER:
+                            case GO_WINTERGRASP_FLAMEWATCH_TOWER:
                             {
                                 creature->setFaction(WintergraspFaction[m_WG->GetAttackerTeam()]);
                                 break;
@@ -1636,7 +1661,7 @@ struct WintergraspWorkshopData
     GameObjectSet m_GameObjectOnPoint[2];                   // Contain all Gameobject associate to this point
     uint32 m_NameId;                                        // Id of trinity_string witch contain name of this node, using for alert message
 
-    WintergraspWorkshopData(BattlefieldWG * WG)
+    WintergraspWorkshopData(BattlefieldWG* WG)
     {
         m_WG = WG;
         m_Build = NULL;
@@ -1660,9 +1685,9 @@ struct WintergraspWorkshopData
     // Spawning Associate gameobject and store them
     void AddGameObject(WintergraspObjectPositionData obj)
     {
-        if (GameObject *gameobject = m_WG->SpawnGameObject(obj.entryHorde, obj.x, obj.y, obj.z, obj.o))
+        if (GameObject* gameobject = m_WG->SpawnGameObject(obj.entryHorde, obj.x, obj.y, obj.z, obj.o))
             m_GameObjectOnPoint[TEAM_HORDE].insert(gameobject);
-        if (GameObject *gameobject = m_WG->SpawnGameObject(obj.entryAlliance, obj.x, obj.y, obj.z, obj.o))
+        if (GameObject* gameobject = m_WG->SpawnGameObject(obj.entryAlliance, obj.x, obj.y, obj.z, obj.o))
             m_GameObjectOnPoint[TEAM_ALLIANCE].insert(gameobject);
     }
 

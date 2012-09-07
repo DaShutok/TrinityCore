@@ -159,7 +159,7 @@ public:
                 Council[1] = instance->GetData64(DATA_VERASDARKSHADOW);
                 Council[2] = instance->GetData64(DATA_LADYMALANDE);
                 Council[3] = instance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
-            } else sLog->outError(ERROR_INST_DATA);
+            } else sLog->outError(LOG_FILTER_TSCR, ERROR_INST_DATA);
         }
 
         void EnterCombat(Unit* /*who*/) {}
@@ -299,12 +299,11 @@ public:
 
                 for (uint8 i = 0; i < 4; ++i)
                 {
-                    Unit* Member = NULL;
                     if (Council[i])
                     {
-                        Member = Unit::GetUnit(*me, Council[i]);
-                        if (Member && Member->isAlive())
-                            CAST_CRE(Member)->AI()->AttackStart(target);
+                        Unit* member = Unit::GetUnit(*me, Council[i]);
+                        if (member && member->isAlive())
+                            CAST_CRE(member)->AI()->AttackStart(target);
                     }
                 }
 
@@ -406,7 +405,7 @@ struct boss_illidari_councilAI : public ScriptedAI
         }
         else
         {
-            sLog->outError(ERROR_INST_DATA);
+            sLog->outError(LOG_FILTER_TSCR, ERROR_INST_DATA);
             EnterEvadeMode();
             return;
         }
@@ -454,7 +453,7 @@ struct boss_illidari_councilAI : public ScriptedAI
     {
         if (!instance)
         {
-            sLog->outError(ERROR_INST_DATA);
+            sLog->outError(LOG_FILTER_TSCR, ERROR_INST_DATA);
             return;
         }
 

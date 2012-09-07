@@ -22,13 +22,16 @@
 #include "ObjectMgr.h"
 #include "Vehicle.h"
 #include "GameObjectAI.h"
+#include "ScriptedCreature.h"
+#include "ScriptedGossip.h"
+#include "SpellScript.h"
 
 #define GOSSIP_HELLO_DEMO1  "Build catapult."
 #define GOSSIP_HELLO_DEMO2  "Build demolisher."
 #define GOSSIP_HELLO_DEMO3  "Build siege engine."
 #define GOSSIP_HELLO_DEMO4  "I cannot build more!"
 
-enum eWGqueuenpctext
+enum WGqueuenpctext
 {
     WG_NPCQUEUE_TEXT_H_NOWAR            = 14775,
     WG_NPCQUEUE_TEXT_H_QUEUE            = 14790,
@@ -98,7 +101,8 @@ enum QuestIds
 
 uint8 const MAX_WINTERGRASP_VEHICLES = 4;
 
-uint32 const vehiclesList[MAX_WINTERGRASP_VEHICLES] = {
+uint32 const vehiclesList[MAX_WINTERGRASP_VEHICLES] =
+{
     NPC_WINTERGRASP_CATAPULT,
     NPC_WINTERGRASP_DEMOLISHER,
     NPC_WINTERGRASP_SIEGE_ENGINE_ALLIANCE,
@@ -110,7 +114,7 @@ class npc_wg_demolisher_engineer : public CreatureScript
     public:
         npc_wg_demolisher_engineer() : CreatureScript("npc_wg_demolisher_engineer") { }
 
-	uint32 vehiclecountali;
+	/*uint32 vehiclecountali;
 	uint32 vehiclecounthorde;
 
         bool OnGossipHello(Player* player, Creature* creature)
@@ -119,6 +123,9 @@ class npc_wg_demolisher_engineer : public CreatureScript
 			vehiclecountali = wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_A);
 			vehiclecounthorde = wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H);
 
+*/
+        bool OnGossipHello(Player* player, Creature* creature)
+        {
             if (creature->isQuestGiver())
                 player->PrepareQuestMenu(creature->GetGUID());
 
@@ -151,14 +158,14 @@ class npc_wg_demolisher_engineer : public CreatureScript
                 switch (action - GOSSIP_ACTION_INFO_DEF)
                 {
                     case 0:
-						if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
+						/*if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
 						{
 							creature->CastSpell(player, SPELL_BUILD_CATAPULT_FORCE, true);
 							break;
-						}
+						}*/
 
                             creature->CastSpell(player, SPELL_BUILD_CATAPULT_FORCE, true);
-							if (player->GetTeamId() == TEAM_ALLIANCE)
+							/*if (player->GetTeamId() == TEAM_ALLIANCE)
 							  {
 								 vehiclecountali++;
 						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_A, vehiclecountali);
@@ -169,17 +176,17 @@ class npc_wg_demolisher_engineer : public CreatureScript
 								 vehiclecounthorde++;
 						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_H, vehiclecounthorde);
 								 wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_H, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H) + 1);
-							  }
+							  }*/
                         break;
                     case 1:
-						if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
+						/*if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
 						{
 							creature->CastSpell(player, SPELL_BUILD_DEMOLISHER_FORCE, true);
 							break;
-						}
+						}*/
 
                               creature->CastSpell(player, SPELL_BUILD_DEMOLISHER_FORCE, true);
-							  if (player->GetTeamId() == TEAM_ALLIANCE)
+							  /*if (player->GetTeamId() == TEAM_ALLIANCE)
 							  {
 								 vehiclecountali++;
 						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_A, vehiclecountali);
@@ -190,17 +197,17 @@ class npc_wg_demolisher_engineer : public CreatureScript
 								 vehiclecounthorde++;
 						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_H, vehiclecounthorde);
 								 wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_H, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H) + 1);
-							  }
+							  }*/
                         break;
                     case 2:
-						if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
+						/*if (player->HasSpellCooldown(56663) && player->HasSpellCooldown(56575) && player->HasSpellCooldown(56661) && player->HasSpellCooldown(61408))
 						{
 							break;
 							creature->CastSpell(player, player->GetTeamId() == TEAM_ALLIANCE ? SPELL_BUILD_SIEGE_VEHICLE_FORCE_ALLIANCE : SPELL_BUILD_SIEGE_VEHICLE_FORCE_HORDE, true);
-						}
+						}*/
 
                               creature->CastSpell(player, player->GetTeamId() == TEAM_ALLIANCE ? SPELL_BUILD_SIEGE_VEHICLE_FORCE_ALLIANCE : SPELL_BUILD_SIEGE_VEHICLE_FORCE_HORDE, true);
-							  if (player->GetTeamId() == TEAM_ALLIANCE)
+							  /*if (player->GetTeamId() == TEAM_ALLIANCE)
 							  {
 								 vehiclecountali++;
 						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_A, vehiclecountali);
@@ -211,7 +218,7 @@ class npc_wg_demolisher_engineer : public CreatureScript
 								 vehiclecounthorde++;
 						         wintergrasp->SendUpdateWorldState(BATTLEFIELD_WG_WORLD_STATE_VEHICLE_H, vehiclecounthorde);
 								 wintergrasp->SetData(BATTLEFIELD_WG_DATA_VEHICLE_H, wintergrasp->GetData(BATTLEFIELD_WG_DATA_VEHICLE_H) + 1);
-							  }
+							  }*/
                         break;
                 }
                 if (Creature* controlArms = creature->FindNearestCreature(NPC_WINTERGRASP_CONTROL_ARMS, 30.0f, true))
@@ -264,7 +271,7 @@ class npc_wg_spirit_guide : public CreatureScript
             return true;
         }
 
-        bool OnGossipSelect(Player* player, Creature* /*creature */ , uint32 /*sender */ , uint32 action)
+        bool OnGossipSelect(Player* player, Creature* /*creature*/, uint32 /*sender*/, uint32 action)
         {
             player->CLOSE_GOSSIP_MENU();
 
@@ -282,17 +289,16 @@ class npc_wg_spirit_guide : public CreatureScript
 
         struct npc_wg_spirit_guideAI : public ScriptedAI
         {
-            npc_wg_spirit_guideAI(Creature* creature) : ScriptedAI(creature)
-            { }
+            npc_wg_spirit_guideAI(Creature* creature) : ScriptedAI(creature) { }
 
-            void UpdateAI(const uint32 /* diff */)
+            void UpdateAI(uint32 const /*diff*/)
             {
                 if (!me->HasUnitState(UNIT_STATE_CASTING))
                     DoCast(me, SPELL_CHANNEL_SPIRIT_HEAL);
             }
         };
 
-        CreatureAI *GetAI(Creature* creature) const
+        CreatureAI* GetAI(Creature* creature) const
         {
             return new npc_wg_spirit_guideAI(creature);
         }
@@ -315,7 +321,7 @@ class npc_wg_queue : public CreatureScript
             if (wintergrasp->IsWarTime())
             {
                 player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(WG_NPCQUEUE_TEXTOPTION_JOIN), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-                player->SEND_GOSSIP_MENU(wintergrasp->GetDefenderTeam()? WG_NPCQUEUE_TEXT_H_WAR : WG_NPCQUEUE_TEXT_A_WAR, creature->GetGUID());
+                player->SEND_GOSSIP_MENU(wintergrasp->GetDefenderTeam() ? WG_NPCQUEUE_TEXT_H_WAR : WG_NPCQUEUE_TEXT_A_WAR, creature->GetGUID());
             }
             else
             {
@@ -332,7 +338,7 @@ class npc_wg_queue : public CreatureScript
             return true;
         }
 
-        bool OnGossipSelect(Player* player, Creature* /*creature */ , uint32 /*sender */ , uint32 /*action*/)
+        bool OnGossipSelect(Player* player, Creature* /*creature*/ , uint32 /*sender*/ , uint32 /*action*/)
         {
             player->CLOSE_GOSSIP_MENU();
 
@@ -359,28 +365,25 @@ class npc_wg_queue : public CreatureScript
 
         struct go_wg_vehicle_teleporterAI : public GameObjectAI
         {
-            go_wg_vehicle_teleporterAI(GameObject* gameObject) : GameObjectAI(gameObject),
-                _checkTimer(1000)
-            { }
+            go_wg_vehicle_teleporterAI(GameObject* gameObject) : GameObjectAI(gameObject), _checkTimer(1000) { }
 
             void UpdateAI(uint32 diff)
             {
                 if (_checkTimer <= diff)
                 {
-                    // Tabulation madness in the hole!
-                    for (uint8 i = 0; i < MAX_WINTERGRASP_VEHICLES; i++)
-                        if (Creature* vehicleCreature = go->FindNearestCreature(vehiclesList[i], 3.0f, true))
-                            if (!vehicleCreature->HasAura(SPELL_VEHICLE_TELEPORT))
-                                if (Vehicle* vehicle = vehicleCreature->GetVehicle())
-                                    if (Unit* passenger = vehicle->GetPassenger(0))
-                                        if (go->GetUInt32Value(GAMEOBJECT_FACTION) == passenger->getFaction())
-                                            if (Creature* teleportTrigger = vehicleCreature->FindNearestCreature(NPC_WORLD_TRIGGER_LARGE_AOI_NOT_IMMUNE_PC_NPC, 100.0f, true))
-                                                teleportTrigger->CastSpell(vehicleCreature, SPELL_VEHICLE_TELEPORT, true);
+                    if (Battlefield* wg = sBattlefieldMgr->GetBattlefieldByBattleId(BATTLEFIELD_BATTLEID_WG))
+                        // Tabulation madness in the hole!
+                        for (uint8 i = 0; i < MAX_WINTERGRASP_VEHICLES; i++)
+                            if (Creature* vehicleCreature = go->FindNearestCreature(vehiclesList[i], 3.0f, true))
+                                if (!vehicleCreature->HasAura(SPELL_VEHICLE_TELEPORT) && vehicleCreature->getFaction() == WintergraspFaction[wg->GetDefenderTeam()])
+                                    if (Creature* teleportTrigger = vehicleCreature->FindNearestCreature(NPC_WORLD_TRIGGER_LARGE_AOI_NOT_IMMUNE_PC_NPC, 100.0f, true))
+                                        teleportTrigger->CastSpell(vehicleCreature, SPELL_VEHICLE_TELEPORT, true);
 
                     _checkTimer = 1000;
                 }
                 else _checkTimer -= diff;
             }
+
           private:
               uint32 _checkTimer;
         };
@@ -415,12 +418,12 @@ class npc_wg_quest_giver : public CreatureScript
 
                 for (QuestRelations::const_iterator i = objectQIR.first; i != objectQIR.second; ++i)
                 {
-                    uint32 quest_id = i->second;
-                    QuestStatus status = player->GetQuestStatus(quest_id);
+                    uint32 questId = i->second;
+                    QuestStatus status = player->GetQuestStatus(questId);
                     if (status == QUEST_STATUS_COMPLETE)
-                        qm.AddMenuItem(quest_id, 4);
+                        qm.AddMenuItem(questId, 4);
                     else if (status == QUEST_STATUS_INCOMPLETE)
-                        qm.AddMenuItem(quest_id, 4);
+                        qm.AddMenuItem(questId, 4);
                     //else if (status == QUEST_STATUS_AVAILABLE)
                     //    qm.AddMenuItem(quest_id, 2);
                 }
@@ -518,7 +521,7 @@ class npc_wg_quest_giver : public CreatureScript
         }
 };
 
-class npc_wg_vehicle : public CreatureScript  	
+/*class npc_wg_vehicle : public CreatureScript  	
 {	  	
     public:
 
@@ -531,7 +534,7 @@ class npc_wg_vehicle : public CreatureScript
 	  	  	
 		   npc_wg_vehicleAI(Creature* creature) : ScriptedAI(creature){}
 	  		  	
-           void JustDied(Unit* /*killer*/)  	
+           void JustDied(Unit* killer)  	
            { 	
               Battlefield* wintergrasp = sBattlefieldMgr->GetBattlefieldByBattleId(BATTLEFIELD_BATTLEID_WG);
 	  		  	
@@ -559,7 +562,7 @@ class npc_wg_vehicle : public CreatureScript
            return new npc_wg_vehicleAI(creature);	  	
         }	  
 
-};
+};*/
 
 class spell_wintergrasp_force_building : public SpellScriptLoader
 {
@@ -610,7 +613,7 @@ class spell_wintergrasp_grab_passenger : public SpellScriptLoader
             void HandleScript(SpellEffIndex /*effIndex*/)
             {
                 if (Player* target = GetHitPlayer())
-                    target->CastSpell(GetCaster(), SPELL_RIDE_WG_VEHICLE, true);
+                    target->CastSpell(GetCaster(), SPELL_RIDE_WG_VEHICLE, false);
             }
 
             void Register()
@@ -662,17 +665,70 @@ class spell_wintergrasp_teleporter : public SpellScriptLoader
         }
 };
 
+class achievement_wg_didnt_stand_a_chance : public AchievementCriteriaScript
+{
+public:
+    achievement_wg_didnt_stand_a_chance() : AchievementCriteriaScript("achievement_wg_didnt_stand_a_chance") { }
+
+    bool OnCheck(Player* source, Unit* target)
+    {
+        if (!target)
+            return false;
+
+        if (Player* victim = target->ToPlayer())
+        {
+            if (!victim->IsMounted())
+                return false;
+
+            if (Vehicle* vehicle = source->GetVehicle())
+                if (vehicle->GetVehicleInfo()->m_ID == 244) // Wintergrasp Tower Cannon
+                    return true;
+        }
+
+        return false;
+    }
+};
+
+class spell_wintergrasp_defender_teleport : public SpellScriptLoader
+{
+public:
+    spell_wintergrasp_defender_teleport() : SpellScriptLoader("spell_wintergrasp_defender_teleport") { }
+
+    class spell_wintergrasp_defender_teleport_SpellScript : public SpellScript
+    {
+        PrepareSpellScript(spell_wintergrasp_defender_teleport_SpellScript);
+
+        SpellCastResult CheckCast()
+        {
+            if (Battlefield* wg = sBattlefieldMgr->GetBattlefieldByBattleId(BATTLEFIELD_BATTLEID_WG))
+                if (Player* target = GetExplTargetUnit()->ToPlayer())
+                    if (target->GetTeamId() != wg->GetDefenderTeam())
+                        return SPELL_FAILED_BAD_TARGETS;
+            return SPELL_CAST_OK;
+        }
+
+        void Register()
+        {
+            OnCheckCast += SpellCheckCastFn(spell_wintergrasp_defender_teleport_SpellScript::CheckCast);
+        }
+    };
+
+    SpellScript* GetSpellScript() const
+    {
+        return new spell_wintergrasp_defender_teleport_SpellScript();
+    }
+};
+
 void AddSC_wintergrasp()
 {
     new npc_wg_queue();
     new npc_wg_spirit_guide();
     new npc_wg_demolisher_engineer();
     new npc_wg_quest_giver();
-	new npc_wg_vehicle();
-
+	//new npc_wg_vehicle();
     new spell_wintergrasp_force_building();
     new spell_wintergrasp_grab_passenger();
     new spell_wintergrasp_teleporter();
-
+    new achievement_wg_didnt_stand_a_chance();
     //new go_wg_vehicle_teleporter();
 }

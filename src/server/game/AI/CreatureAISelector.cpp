@@ -125,7 +125,6 @@ namespace FactorySelector
         }*/
 
         return (mv_factory == NULL ? NULL : mv_factory->Create(creature));
-
     }
 
     GameObjectAI* SelectGameObjectAI(GameObject* go)
@@ -138,9 +137,9 @@ namespace FactorySelector
 
         ai_factory = ai_registry.GetRegistryItem(go->GetAIName());
 
-		//scriptname in db	
-        if (!ai_factory)	
-            if (GameObjectAI* scriptedAI = sScriptMgr->GetGameObjectAI(go))	
+        // scriptname in db
+        if (!ai_factory)
+            if (GameObjectAI* scriptedAI = sScriptMgr->GetGameObjectAI(go))
                 return scriptedAI;
 
         //future goAI types go here

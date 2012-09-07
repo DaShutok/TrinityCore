@@ -18,6 +18,7 @@
 
 #include "PathCommon.h"
 #include "MapBuilder.h"
+#include "Timer.h"
 
 using namespace MMAP;
 
@@ -25,14 +26,14 @@ bool checkDirectories(bool debugOutput)
 {
     vector<string> dirFiles;
 
-    if (getDirContents(dirFiles, "maps") == LISTFILE_DIRECTORY_NOT_FOUND || !dirFiles.size())
+    if (getDirContents(dirFiles, "maps") == LISTFILE_DIRECTORY_NOT_FOUND || dirFiles.empty())
     {
         printf("'maps' directory is empty or does not exist\n");
         return false;
     }
 
     dirFiles.clear();
-    if (getDirContents(dirFiles, "vmaps", "*.vmtree") == LISTFILE_DIRECTORY_NOT_FOUND || !dirFiles.size())
+    if (getDirContents(dirFiles, "vmaps", "*.vmtree") == LISTFILE_DIRECTORY_NOT_FOUND || dirFiles.empty())
     {
         printf("'vmaps' directory is empty or does not exist\n");
         return false;
@@ -70,7 +71,9 @@ bool handleArgs(int argc, char** argv,
                bool &debugOutput,
                bool &silent,
                bool &bigBaseUnit,
-               char* &offMeshInputPath)
+               char* &offMeshInputPath,
+               char* &file,
+               int& threads)
 {
     char* param = NULL;
     for (int i = 1; i < argc; ++i)
@@ -86,6 +89,21 @@ bool handleArgs(int argc, char** argv,
                 maxAngle = maxangle;
             else
                 printf("invalid option for '--maxAngle', using default\n");
+        }
+        else if (strcmp(argv[i], "--threads") == 0)
+        {
+            param = argv[++i];
+            if (!param)
+                return false;
+            threads = atoi(param);
+            printf("Using %i threads to extract mmaps\n", threads);
+        }
+        else if (strcmp(argv[i], "--file") == 0)
+        {
+            param = argv[++i];
+            if (!param)
+                return false;
+            file = param;
         }
         else if (strcmp(argv[i], "--tile") == 0)
         {
@@ -224,7 +242,7 @@ int finish(const char* message, int returnValue)
 
 int main(int argc, char** argv)
 {
-    int mapnum = -1;
+    int threads = 3, mapnum = -1;
     float maxAngle = 60.0f;
     int tileX = -1, tileY = -1;
     bool skipLiquid = false,
@@ -235,11 +253,12 @@ int main(int argc, char** argv)
          silent = false,
          bigBaseUnit = false;
     char* offMeshInputPath = NULL;
+    char* file = NULL;
 
     bool validParam = handleArgs(argc, argv, mapnum,
                                  tileX, tileY, maxAngle,
                                  skipLiquid, skipContinents, skipJunkMaps, skipBattlegrounds,
-                                 debugOutput, silent, bigBaseUnit, offMeshInputPath);
+                                 debugOutput, silent, bigBaseUnit, offMeshInputPath, file, threads);
 
     if (!validParam)
         return silent ? -1 : finish("You have specified invalid parameters", -1);
@@ -262,12 +281,17 @@ int main(int argc, char** argv)
     MapBuilder builder(maxAngle, skipLiquid, skipContinents, skipJunkMaps,
                        skipBattlegrounds, debugOutput, bigBaseUnit, offMeshInputPath);
 
-    if (tileX > -1 && tileY > -1 && mapnum >= 0)
+    uint32 start = getMSTime();
+    if (file)
+        builder.buildMeshFromFile(file);
+    else if (tileX > -1 && tileY > -1 && mapnum >= 0)
         builder.buildSingleTile(mapnum, tileX, tileY);
     else if (mapnum >= 0)
         builder.buildMap(uint32(mapnum));
     else
-        builder.buildAllMaps();
+        builder.buildAllMaps(threads);
 
-    return silent ? 1 : finish("Movemap build is complete!", 1);
+    if (!silent)
+        printf("Finished. MMAPS were built in %u ms!\n", GetMSTimeDiffToNow(start));
+    return 1;
 }

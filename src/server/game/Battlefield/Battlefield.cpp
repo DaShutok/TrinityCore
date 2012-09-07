@@ -60,12 +60,19 @@ Battlefield::Battlefield()
 
 Battlefield::~Battlefield()
 {
+    for (BfCapturePointMap::iterator itr = m_capturePoints.begin(); itr != m_capturePoints.end(); ++itr)
+        delete itr->second;
+
+    for (GraveyardVect::const_iterator itr = m_GraveyardList.begin(); itr != m_GraveyardList.end(); ++itr)
+        delete *itr;
+
+    m_capturePoints.clear();
 }
 
 // Called when a player enters the zone
 void Battlefield::HandlePlayerEnterZone(Player* player, uint32 /*zone*/)
 {
-    // If battle is started, 
+    // If battle is started,
     // If not full of players > invite player to join the war
     // If full of players > announce to player that BF is full and kick him after a few second if he desn't leave
     if (IsWarTime())
@@ -134,7 +141,7 @@ bool Battlefield::Update(uint32 diff)
         m_Timer -= diff;
 
     // Invite players a few minutes before the battle's beginning
-    if (!m_StartGrouping && m_Timer <= m_StartGroupingTimer)
+    if (!IsWarTime() && !m_StartGrouping && m_Timer <= m_StartGroupingTimer)
     {
         m_StartGrouping = true;
         InvitePlayersInZoneToQueue();
@@ -156,13 +163,13 @@ bool Battlefield::Update(uint32 diff)
         if (m_uiKickDontAcceptTimer <= diff)
         {
             for (int team = 0; team < 2; team++)
-                for (PlayerTimerMap::iterator itr = m_InvitedPlayers[team].begin(); itr != m_InvitedPlayers[team].end(); itr++)
+                for (PlayerTimerMap::iterator itr = m_InvitedPlayers[team].begin(); itr != m_InvitedPlayers[team].end(); ++itr)
                     if ((*itr).second <= time(NULL))
                         KickPlayerFromBattlefield((*itr).first);
 
             InvitePlayersInZoneToWar();
             for (int team = 0; team < 2; team++)
-                for (PlayerTimerMap::iterator itr = m_PlayersWillBeKick[team].begin(); itr != m_PlayersWillBeKick[team].end(); itr++)
+                for (PlayerTimerMap::iterator itr = m_PlayersWillBeKick[team].begin(); itr != m_PlayersWillBeKick[team].end(); ++itr)
                     if ((*itr).second <= time(NULL))
                         KickPlayerFromBattlefield((*itr).first);
 
@@ -281,7 +288,7 @@ void Battlefield::InitStalker(uint32 entry, float x, float y, float z, float o)
     if (Creature* creature = SpawnCreature(entry, x, y, z, o, TEAM_NEUTRAL))
         StalkerGuid = creature->GetGUID();
     else
-        sLog->outError("Battlefield::InitStalker: could not spawn Stalker (Creature entry %u), zone messeges will be un-available", entry);
+        sLog->outError(LOG_FILTER_BATTLEFIELD, "Battlefield::InitStalker: could not spawn Stalker (Creature entry %u), zone messeges will be un-available", entry);
 }
 
 void Battlefield::KickAfkPlayers()
@@ -448,8 +455,8 @@ WorldPacket Battlefield::BuildWarningAnnPacket(std::string msg)
     data << uint32(1);
     data << uint8(0);
     data << uint64(0);
-    data << uint32(strlen(msg.c_str()) + 1);
-    data << msg.c_str();
+    data << uint32(msg.length() + 1);
+    data << msg;
     data << uint8(0);
 
     return data;
@@ -591,10 +598,10 @@ BfGraveyard* Battlefield::GetGraveyardById(uint32 id)
         if (m_GraveyardList[id])
             return m_GraveyardList[id];
         else
-            sLog->outError("Battlefield::GetGraveyardById Id:%u not existed", id);
+            sLog->outError(LOG_FILTER_BATTLEFIELD, "Battlefield::GetGraveyardById Id:%u not existed", id);
     }
     else
-        sLog->outError("Battlefield::GetGraveyardById Id:%u cant be found", id);
+        sLog->outError(LOG_FILTER_BATTLEFIELD, "Battlefield::GetGraveyardById Id:%u cant be found", id);
 
     return NULL;
 }
@@ -688,7 +695,7 @@ void BfGraveyard::SetSpirit(Creature* spirit, TeamId team)
 {
     if (!spirit)
     {
-        sLog->outError("BfGraveyard::SetSpirit: Invalid Spirit.");
+        sLog->outError(LOG_FILTER_BATTLEFIELD, "BfGraveyard::SetSpirit: Invalid Spirit.");
         return;
     }
 
@@ -802,14 +809,14 @@ Creature* Battlefield::SpawnCreature(uint32 entry, float x, float y, float z, fl
     Map* map = const_cast < Map * >(sMapMgr->CreateBaseMap(m_MapId));
     if (!map)
     {
-        sLog->outError("Battlefield::SpawnCreature: Can't create creature entry: %u map not found", entry);
+        sLog->outError(LOG_FILTER_BATTLEFIELD, "Battlefield::SpawnCreature: Can't create creature entry: %u map not found", entry);
         return 0;
     }
 
     Creature* creature = new Creature;
     if (!creature->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_UNIT), map, PHASEMASK_NORMAL, entry, 0, team, x, y, z, o))
     {
-        sLog->outError("Battlefield::SpawnCreature: Can't create creature entry: %u", entry);
+        sLog->outError(LOG_FILTER_BATTLEFIELD, "Battlefield::SpawnCreature: Can't create creature entry: %u", entry);
         delete creature;
         return NULL;
     }
@@ -819,7 +826,7 @@ Creature* Battlefield::SpawnCreature(uint32 entry, float x, float y, float z, fl
     CreatureTemplate const* cinfo = sObjectMgr->GetCreatureTemplate(entry);
     if (!cinfo)
     {
-        sLog->outErrorDb("Battlefield::SpawnCreature: entry %u does not exist.", entry);
+        sLog->outError(LOG_FILTER_BATTLEFIELD, "Battlefield::SpawnCreature: entry %u does not exist.", entry);
         return NULL;
     }
     // force using DB speeds -- do we really need this?
@@ -845,8 +852,8 @@ GameObject* Battlefield::SpawnGameObject(uint32 entry, float x, float y, float z
     GameObject* go = new GameObject;
     if (!go->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_GAMEOBJECT), entry, map, PHASEMASK_NORMAL, x, y, z, o, 0, 0, 0, 0, 100, GO_STATE_READY))
     {
-        sLog->outErrorDb("Battlefield::SpawnGameObject: Gameobject template %u not found in database! Battlefield not created!", entry);
-        sLog->outError("Battlefield::SpawnGameObject: Cannot create gameobject template %u! Battlefield not created!", entry);
+        sLog->outError(LOG_FILTER_BATTLEFIELD, "Battlefield::SpawnGameObject: Gameobject template %u not found in database! Battlefield not created!", entry);
+        sLog->outError(LOG_FILTER_BATTLEFIELD, "Battlefield::SpawnGameObject: Cannot create gameobject template %u! Battlefield not created!", entry);
         delete go;
         return NULL;
     }
@@ -866,7 +873,8 @@ BfCapturePoint::BfCapturePoint(Battlefield* battlefield) : m_Bf(battlefield), m_
 {
     m_team = TEAM_NEUTRAL;
     m_value = 0;
-    m_maxValue = 0;
+    m_minValue = 0.0f;
+    m_maxValue = 0.0f;
     m_State = BF_CAPTUREPOINT_OBJECTIVESTATE_NEUTRAL;
     m_OldState = BF_CAPTUREPOINT_OBJECTIVESTATE_NEUTRAL;
     m_capturePointEntry = 0;
@@ -889,9 +897,9 @@ GuidSet::iterator BfCapturePoint::HandlePlayerLeave(Player* player)
 {
     if (m_capturePoint)
         player->SendUpdateWorldState(m_capturePoint->GetGOInfo()->capturePoint.worldState1, 0);
-    
+
     GuidSet::iterator current = m_activePlayers[player->GetTeamId()].find(player->GetGUID());
-    
+
     if (current == m_activePlayers[player->GetTeamId()].end())
         return current; // return end()
 
@@ -924,7 +932,7 @@ bool BfCapturePoint::SetCapturePointData(GameObject* capturePoint)
     GameObjectTemplate const* goinfo = capturePoint->GetGOInfo();
     if (goinfo->type != GAMEOBJECT_TYPE_CAPTURE_POINT)
     {
-        sLog->outError("OutdoorPvP: GO %u is not capture point!", capturePoint->GetEntry());
+        sLog->outError(LOG_FILTER_GENERAL, "OutdoorPvP: GO %u is not capture point!", capturePoint->GetEntry());
         return false;
     }
 
@@ -1070,7 +1078,7 @@ bool BfCapturePoint::Update(uint32 diff)
 
     if (m_OldState != m_State)
     {
-        //sLog->outError("%u->%u", m_OldState, m_State);
+        //sLog->outError(LOG_FILTER_BATTLEFIELD, "%u->%u", m_OldState, m_State);
         if (oldTeam != m_team)
             ChangeTeam(oldTeam);
         return true;

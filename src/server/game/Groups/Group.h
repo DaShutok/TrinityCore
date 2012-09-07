@@ -26,7 +26,8 @@
 #include "QueryResult.h"
 #include "SharedDefines.h"
 #include "Player.h"
-#include "../../Battlefield/BattlefieldMgr.h"  //FIXME
+#include "Battlefield.h"
+#include "BattlefieldMgr.h"
 
 class Creature;
 class GroupReference;
@@ -205,8 +206,8 @@ class Group
         bool IsFull() const;
         bool isLFGGroup()  const;
         bool isRaidGroup() const;
-		bool isBFGroup()   const;
         bool isBGGroup()   const;
+        bool isBFGroup()   const;
         bool IsCreated()   const;
         uint64 GetLeaderGUID() const;
         uint64 GetGUID() const;
@@ -243,7 +244,7 @@ class Group
         void ConvertToRaid();
 
         void SetBattlegroundGroup(Battleground* bg);
-		void SetBattlefieldGroup(Battlefield *bf);
+        void SetBattlefieldGroup(Battlefield* bf);
         GroupJoinBattlegroundResult CanJoinBattlegroundQueue(Battleground const* bgOrTemplate, BattlegroundQueueTypeId bgQueueTypeId, uint32 MinPlayerCount, uint32 MaxPlayerCount, bool isRated, uint32 arenaSlot);
 
         void ChangeMembersGroup(uint64 guid, uint8 group);
@@ -326,8 +327,8 @@ class Group
         GroupType           m_groupType;
         Difficulty          m_dungeonDifficulty;
         Difficulty          m_raidDifficulty;
-		Battlefield*        m_bfGroup;
         Battleground*       m_bgGroup;
+        Battlefield*        m_bfGroup;
         uint64              m_targetIcons[TARGETICONCOUNT];
         LootMethod          m_lootMethod;
         ItemQualities       m_lootThreshold;

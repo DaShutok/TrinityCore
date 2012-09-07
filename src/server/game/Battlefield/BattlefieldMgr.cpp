@@ -42,17 +42,15 @@ void BattlefieldMgr::InitBattlefield()
         // respawn, init variables
         if (!pBf->SetupBattlefield())
         {
-            sLog->outString();
-            sLog->outString("Battlefield : Wintergrasp init failed.");
+            sLog->outError(LOG_FILTER_BATTLEFIELD, "Battlefield : Wintergrasp init failed.");
             delete pBf;
         }
         else
         {
             m_BattlefieldSet.push_back(pBf);
-            sLog->outString();
-            sLog->outString("Battlefield : Wintergrasp successfully initiated.");
+            sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Battlefield : Wintergrasp successfully initiated.");
         }
-    } else sLog->outError("Battlefield : Wintergrasp disabled");
+    } else sLog->outError(LOG_FILTER_BATTLEFIELD, "Battlefield : Wintergrasp disabled");
 
     /* For Cataclysm: Tol Barad
        pBf = new BattlefieldTB;

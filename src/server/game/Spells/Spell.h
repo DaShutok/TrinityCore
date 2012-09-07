@@ -23,6 +23,7 @@
 #include "SharedDefines.h"
 #include "ObjectMgr.h"
 #include "SpellInfo.h"
+#include "PathGenerator.h"
 
 class Unit;
 class Player;
@@ -616,7 +617,6 @@ class Spell
 
         // spell execution log
         void InitEffectExecuteData(uint8 effIndex);
-        void CleanupEffectExecuteData();
         void CheckEffectExecuteData();
 
         // Scripting system
@@ -666,6 +666,7 @@ class Spell
 
         bool m_skipCheck;
         uint8 m_auraScaleMask;
+        PathGenerator m_preGeneratedPath;
 
         ByteBuffer * m_effectExecuteData[MAX_SPELL_EFFECTS];
 
