@@ -1791,7 +1791,7 @@ void World::SetInitialWorldSettings()
     sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading Transport NPCs...");
     sMapMgr->LoadTransportNPCs();
 
-	sLog->outInfo(LOG_FILTER_WORLDSERVER, "\n");
+    sLog->outInfo(LOG_FILTER_WORLDSERVER, "\n");
     ///- Initialize Warden
     sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading Warden Checks...");
     sWardenCheckMgr->LoadWardenChecks();
