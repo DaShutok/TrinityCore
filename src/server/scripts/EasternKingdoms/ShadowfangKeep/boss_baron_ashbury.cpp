@@ -96,7 +96,7 @@ public:
                 }
 
                 DoMeleeAttackIfReady();
-		}
+        }
     private:
         EventMap events;
     };
