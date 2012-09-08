@@ -52,11 +52,11 @@ public:
     struct boss_baron_ashburyAI : public ScriptedAI
     {
         boss_baron_ashburyAI(Creature* creature) : ScriptedAI(creature) 
-		{
-			instance = creature->GetInstanceScript();
-		}
+        {
+            instance = creature->GetInstanceScript();
+        }
 
-		InstanceScript* instance;
+        InstanceScript* instance;
 
         void EnterCombat(Unit* /*who*/)
         {
