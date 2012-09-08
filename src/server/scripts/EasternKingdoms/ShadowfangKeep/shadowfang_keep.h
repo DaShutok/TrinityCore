@@ -28,5 +28,21 @@ enum ShadowfangKeepBosses
     BOSS_LORD_GODFREY                = 5,
 };
 
-#endif
+enum ShadowfangKeepCreatures
+{
+    BARON_ASHBURY                    = 46962,
+    BARON_SILVERLINE                 = 3887,
+    COMMANDER_SPRINGVALE             = 4278,
+    LORD_WALDEN                      = 46963,
+    LORD_GODFREY                     = 46964,
 
+    FORSAKEN_TROOPER                 = 47865,
+    VETERAN_FORSAKEN_TROOPER         = 47030,
+    FORSAKEN_BLIGHTSPREADER          = 47031,
+    DEATHSTALKER_COMMANDER_BELMONT   = 47293,
+
+    BLOODFANG_BERSERKER              = 47027,
+    PACKLEADER_IVAR_BLOODFANG        = 47006,
+};
+
+#endif
