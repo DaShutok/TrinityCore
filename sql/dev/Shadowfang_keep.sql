@@ -15,3 +15,9 @@ INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`pr
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES (46962,5,0,'HA! Let''s at least keep it interesting.',14,0,100,0,0,0,'Baron Ashbury - SAY_STAY_OF_EXECUTION');
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES (46962,6,0,'I grow tired of this hunt... Time to die!',14,0,100,0,0,0,'Baron Ashbury - SAY_ARCHANGEL');
 UPDATE creature_template SET ScriptName = 'boss_baron_silverlaine' WHERE entry = 3887;
+DELETE FROM `creature_text` WHERE `entry`=3887;
+INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES (3887,0,0,'Leave this accursed place at once!',14,0,100,0,0,0,'Baron Silverlaine - SAY_AGGRO');
+INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES (3887,1,0,'This death is only a temporary respite from my curse.',14,0,100,0,0,0,'Baron Silverlaine - SAY_DEATH');
+INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES (3887,2,0,'I hope your spirit finds solace.',14,0,100,0,0,0,'Baron Silverlaine - SAY_KILL');
+INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES (3887,3,0,'May you rest in peace.',14,0,100,0,0,0,'Baron Silverlaine - SAY_KILL_1');
+

@@ -17,7 +17,7 @@
 
 /* ScriptData
 SDName: Baron_Ashbury
-SD%Complete: 0 //Implement heroic mode //Finish normal
+SD%Complete: 10 //Implement heroic mode //Finish normal
 SDComment: Place Holder
 SDCategory: Shadowfang Keep
 EndScriptData */
