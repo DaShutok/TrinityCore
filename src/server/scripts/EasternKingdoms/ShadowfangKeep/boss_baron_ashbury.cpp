@@ -26,7 +26,7 @@ EndScriptData */
 #include "ScriptedCreature.h"
 #include "shadowfang_keep.h"
 
-enum AsburySpell
+enum AshburySpells
 {
     SPELL_ASPHYXIATE              = 93423, //25 sec
     SPELL_STAY_OF_EXECUTION       = 93468, //31 sec
@@ -35,7 +35,18 @@ enum AsburySpell
     SPELL_MEAND_ROTTING_FLESH     = 93713, //Heal himself 10%
 };
 
-enum Event
+enum AshburyTexts
+{
+	SAY_AGGRO              = 0,
+	SAY_DEATH              = 1,
+	SAY_KILL               = 2,
+	SAY_KILL_1             = 3,
+	SAY_ASPHYXIATE         = 4,
+	SAY_STAY_OF_EXECUTION  = 5,
+	SAY_ARCHANGEL          = 6,
+};
+
+enum AshburyEvents
 {
     EVENT_ASPHYXIATE = 1,
     EVENT_STAY_OF_EXECUTION,
@@ -65,13 +76,24 @@ public:
         {
             events.ScheduleEvent(EVENT_ASPHYXIATE, 25000);
             events.ScheduleEvent(EVENT_PAIN_AND_SUFFERING, 5000);
+            if (IsHeroic())
+                Talk(SAY_AGGRO);
         }
 
         void JustDied(Unit* /*killer*/)
         {
             if (instance)
                 if (IsHeroic())
+                {
                     instance->SetData(BOSS_BARON_ASHBURY, DONE);
+                    Talk(SAY_DEATH);
+                }
+        }
+
+        void KilledUnit(Unit* /*victim*/)
+        {
+            if (IsHeroic())
+                Talk(RAND(SAY_KILL, SAY_KILL_1));
         }
 
         void UpdateAI(const uint32 diff)
@@ -90,10 +112,14 @@ public:
                     {
                         case EVENT_ASPHYXIATE:
                             DoCastToAllHostilePlayers(SPELL_ASPHYXIATE);
+                            if (IsHeroic())
+                                Talk(SAY_ASPHYXIATE);
                             events.ScheduleEvent(EVENT_STAY_OF_EXECUTION, 6000);
                             break;
                         case EVENT_STAY_OF_EXECUTION:
                             DoCastToAllHostilePlayers(SPELL_STAY_OF_EXECUTION);
+                            if (IsHeroic())
+                                Talk(SAY_STAY_OF_EXECUTION);
                             events.ScheduleEvent(EVENT_ASPHYXIATE, 28000);
                             break;
                         case EVENT_PAIN_AND_SUFFERING:
