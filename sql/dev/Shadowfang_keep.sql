@@ -14,4 +14,4 @@ INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`pr
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES (46962,4,0,'This is just too easy...',14,0,100,0,0,0,'Baron Ashbury - SAY_ASPHYXIATE');
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES (46962,5,0,'HA! Let''s at least keep it interesting.',14,0,100,0,0,0,'Baron Ashbury - SAY_STAY_OF_EXECUTION');
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES (46962,6,0,'I grow tired of this hunt... Time to die!',14,0,100,0,0,0,'Baron Ashbury - SAY_ARCHANGEL');
-
+UPDATE creature_template SET ScriptName = 'boss_baron_silverlaine' WHERE entry = 3887;
