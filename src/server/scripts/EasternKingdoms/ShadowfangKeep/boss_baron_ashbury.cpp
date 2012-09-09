@@ -28,15 +28,18 @@ EndScriptData */
 
 enum AsburySpell
 {
-    SPELL_ASPHYXIATE = 93423, //25 sec
-    SPELL_STAY_OF_EXECUTION = 93468, //31 sec
-    SPELL_PAIN_AND_SUFFERING = 93581, //unk timer, do later
+    SPELL_ASPHYXIATE              = 93423, //25 sec
+    SPELL_STAY_OF_EXECUTION       = 93468, //31 sec
+    SPELL_PAIN_AND_SUFFERING      = 93581, //First 5 sec, then repeat 15/25?
+    SPELL_PAIN_AND_SUFFERING_H    = 93712, //Same as normal
+    SPELL_MEAND_ROTTING_FLESH     = 93713, //Heal himself 10%
 };
 
 enum Event
 {
     EVENT_ASPHYXIATE = 1,
     EVENT_STAY_OF_EXECUTION,
+    EVENT_PAIN_AND_SUFFERING,
 };
 
 class boss_baron_ashbury : public CreatureScript
@@ -61,6 +64,7 @@ public:
         void EnterCombat(Unit* /*who*/)
         {
             events.ScheduleEvent(EVENT_ASPHYXIATE, 25000);
+            events.ScheduleEvent(EVENT_PAIN_AND_SUFFERING, 5000);
         }
 
         void JustDied(Unit* /*killer*/)
@@ -91,6 +95,11 @@ public:
                         case EVENT_STAY_OF_EXECUTION:
                             DoCastToAllHostilePlayers(SPELL_STAY_OF_EXECUTION);
                             events.ScheduleEvent(EVENT_ASPHYXIATE, 28000);
+                            break;
+                        case EVENT_PAIN_AND_SUFFERING:
+                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1))
+                                DoCast(target, DUNGEON_MODE(SPELL_PAIN_AND_SUFFERING, SPELL_PAIN_AND_SUFFERING_H));
+                            events.ScheduleEvent(EVENT_PAIN_AND_SUFFERING, urand(15000, 25000));
                             break;
                     }
                 }
