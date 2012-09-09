@@ -3,6 +3,7 @@ UPDATE `creature_template` SET `flags_extra` = 128 WHERE `entry` = 50604;
 UPDATE `creature_template` SET `minlevel` = 21, `maxlevel` = 21, `exp` = 3, `faction_A` = 14, `faction_H` = 14, `rank` = 3, `unit_class` = 2, `mingold` = 12683, `maxgold` = 12683, `flags_extra` = 0, `ScriptName` = 'boss_baron_ashbury' 
 ,`Health_mod` = 11600, `Mana_mod` = 5100 ,`mindmg` = 180, `maxdmg` = 200, `attackpower` = 100, `baseattacktime` = 2000, `unit_flags2` = 2048 WHERE `entry` = 46962;
 DELETE FROM smart_scripts WHERE entryorguid IN (46962, 3887, 4278, 46964, 46963) AND source_type = 0;
+DELETE FROM creature_ai_scripts WHERE creature_id IN (46962, 3887, 4278, 46964, 46963);
 DELETE FROM creature_text WHERE entry IN (46962, 3887, 4278, 46964, 46963);
 UPDATE creature_template SET AIName = "" WHERE entry IN (46962, 3887, 4278, 46964, 46963);
 DELETE FROM `creature_text` WHERE `entry`=46962;
