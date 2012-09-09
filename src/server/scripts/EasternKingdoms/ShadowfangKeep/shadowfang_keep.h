@@ -22,7 +22,7 @@
 enum ShadowfangKeepBosses
 {
     BOSS_BARON_ASHBURY               = 1,
-    BOSS_BARON_SILVERLINE            = 2,
+    BOSS_BARON_SILVERLAINE           = 2,
     BOSS_COMMANDER_SPRINGVALE        = 3,
     BOSS_LORD_WALDEN                 = 4,
     BOSS_LORD_GODFREY                = 5,

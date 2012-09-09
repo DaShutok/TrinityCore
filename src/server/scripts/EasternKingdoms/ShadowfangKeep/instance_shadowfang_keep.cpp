@@ -124,7 +124,7 @@ public:
                 case BOSS_BARON_ASHBURY:
                     m_auiEncounter[0] = data;
                     break;
-                case BOSS_BARON_SILVERLINE:
+                case BOSS_BARON_SILVERLAINE:
                     m_auiEncounter[1] = data;
                     break;
                 case BOSS_COMMANDER_SPRINGVALE:
@@ -158,7 +158,7 @@ public:
             switch (uiIdentifier)
             {
                 case BOSS_BARON_ASHBURY:            return BaronAshbury;
-                case BOSS_BARON_SILVERLINE:         return BaronSilverline;
+                case BOSS_BARON_SILVERLAINE:        return BaronSilverline;
                 case BOSS_COMMANDER_SPRINGVALE:     return CommanderSpringvale;
                 case BOSS_LORD_WALDEN:              return LordWalden;
                 case BOSS_LORD_GODFREY:             return LordGodfrey;
