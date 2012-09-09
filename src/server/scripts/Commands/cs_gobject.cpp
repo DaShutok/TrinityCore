@@ -39,7 +39,7 @@ public:
         static ChatCommand gobjectAddCommandTable[] =
         {
             { "temp",           SEC_ADMINISTRATOR,  false, &HandleGameObjectAddTempCommand,   "", NULL },
-            { "",               SEC_GAMEMASTER,     false, &HandleGameObjectAddCommand,       "", NULL },
+            { "",               SEC_ADMINISTRATOR,  false, &HandleGameObjectAddCommand,       "", NULL },
             { NULL,             0,                  false, NULL,                              "", NULL }
         };
         static ChatCommand gobjectDelCommandTable[] =
