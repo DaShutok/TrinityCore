@@ -17,8 +17,8 @@
 
 /* ScriptData
 SDName: Baron_Ashbury
-SD%Complete: 10 //Implement heroic mode //Finish normal
-SDComment: Place Holder
+SD%Complete: 10%
+SDComment: ToDo: Implement heroic mode //SpellScript for spells
 SDCategory: Shadowfang Keep
 EndScriptData */
 

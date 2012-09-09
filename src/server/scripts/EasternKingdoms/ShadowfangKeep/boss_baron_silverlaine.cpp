@@ -17,8 +17,8 @@
 
 /* ScriptData
 SDName: Baron_Silverlaine
-SD%Complete: 80 //spellscript for summon
-SDComment: Place Holder
+SD%Complete: 80%
+SDComment: ToDo: SpellScript for summon.
 SDCategory: Shadowfang Keep
 EndScriptData */
 
@@ -150,7 +150,7 @@ public:
                     {
                         case EVENT_VEIL_OF_SHADOW:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                                DoCast(target, DUNGEON_MODE(SPELL_VEIL_OF_SHADOW , SPELL_CURSED_VEIL));
+                                DoCast(target, SPELL_VEIL_OF_SHADOW);
                             events.ScheduleEvent(EVENT_VEIL_OF_SHADOW, urand(15000, 25000));
                             break;
                         case EVENT_CURSED_VEIL:
