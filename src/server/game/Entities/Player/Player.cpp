@@ -1793,6 +1793,14 @@ void Player::Update(uint32 p_time)
     //because we don't want player's ghost teleported from graveyard
     if (IsHasDelayedTeleport() && isAlive())
         TeleportTo(m_teleport_dest, m_teleport_options);
+
+    //This part for kick with time
+    if (boolkick)
+        if (_kicktimer <= 0)
+        {
+            GetSession()->KickPlayer();
+            boolkick = false;
+        } else _kicktimer -= 1000;
 }
 
 void Player::setDeathState(DeathState s)
@@ -26265,4 +26273,18 @@ void Player::SendMovementSetCollisionHeight(float height)
     data << float(height);
 
     SendDirectMessage(&data);
+}
+
+void Player::KickWithTime(uint32 timer)
+{
+    if (timer > 0)
+    {
+        _kicktimer = timer;
+        boolkick = true;
+    }
+    else
+    {
+        GetSession()->KickPlayer();
+        boolkick = false;
+    }
 }

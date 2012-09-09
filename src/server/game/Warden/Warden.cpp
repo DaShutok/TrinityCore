@@ -29,6 +29,7 @@
 #include "Util.h"
 #include "Warden.h"
 #include "AccountMgr.h"
+#include "Chat.h"
 
 Warden::Warden() : _inputCrypto(16), _outputCrypto(16), _checkTimer(10000/*10 sec*/), _clientResponseTimer(0), _dataSent(false), _initialized(false)
 {
@@ -171,17 +172,30 @@ std::string Warden::Penalty(WardenCheck* check /*= NULL*/)
     else
         action = WardenActions(sWorld->getIntConfig(CONFIG_WARDEN_CLIENT_FAIL_ACTION));
 
+    std::string accountNamelog("unknown");
+    std::string reason("unknown");
+    AccountMgr::GetName(_session->GetAccountId(), accountNamelog);
+
     switch (action)
     {
     case WARDEN_ACTION_LOG:
+        reason = "Only log";
+        sWorld->SendGMText(LANG_WARDEN_LOG, MSG_COLOR_GOLD2, MSG_END_COLOR, MSG_COLOR_LIGHTBLUE, 
+            _session->GetPlayerName(), accountNamelog, reason, check->Comment, check->CheckId, MSG_END_COLOR);
         return "None";
         break;
     case WARDEN_ACTION_KICK:
+        reason = "Kicked";
+        sWorld->SendGMText(LANG_WARDEN_LOG, MSG_COLOR_GOLD2, MSG_END_COLOR, MSG_COLOR_LIGHTBLUE, 
+            _session->GetPlayerName(), accountNamelog, reason, check->Comment, check->CheckId, MSG_END_COLOR);
         _session->KickPlayer();
         return "Kick";
         break;
     case WARDEN_ACTION_BAN:
         {
+            reason = "banned";
+            sWorld->SendGMText(LANG_WARDEN_LOG, MSG_COLOR_GOLD2, MSG_END_COLOR, MSG_COLOR_LIGHTBLUE, 
+                _session->GetPlayerName(), accountNamelog, reason, check->Comment, check->CheckId, MSG_END_COLOR);
             std::stringstream duration;
             duration << sWorld->getIntConfig(CONFIG_WARDEN_CLIENT_BAN_DURATION) << "s";
             std::string accountName;

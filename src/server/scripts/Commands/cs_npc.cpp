@@ -42,17 +42,18 @@ public:
             { "formation",      SEC_MODERATOR,      false, &HandleNpcAddFormationCommand,      "", NULL },
             { "item",           SEC_GAMEMASTER,     false, &HandleNpcAddVendorItemCommand,     "", NULL },
             { "move",           SEC_GAMEMASTER,     false, &HandleNpcAddMoveCommand,           "", NULL },
-            { "temp",           SEC_GAMEMASTER,     false, &HandleNpcAddTempSpawnCommand,      "", NULL },
+            { "temp",           SEC_ADMINISTRATOR,  false, &HandleNpcAddTempSpawnCommand,      "", NULL },
             //{ TODO: fix or remove this command
             { "weapon",         SEC_ADMINISTRATOR,  false, &HandleNpcAddWeaponCommand,         "", NULL },
             //}
-            { "",               SEC_GAMEMASTER,     false, &HandleNpcAddCommand,               "", NULL },
+            { "",               SEC_ADMINISTRATOR,  false, &HandleNpcAddCommand,               "", NULL },
             { NULL,             0,                  false, NULL,                               "", NULL }
         };
         static ChatCommand npcDeleteCommandTable[] =
         {
             { "item",           SEC_GAMEMASTER,     false, &HandleNpcDeleteVendorItemCommand,  "", NULL },
-            { "",               SEC_GAMEMASTER,     false, &HandleNpcDeleteCommand,            "", NULL },
+            { "fromdb",         SEC_ADMINISTRATOR,  false, &HandleNpcDeleteCommand,            "", NULL },
+            { "",               SEC_GAMEMASTER,     false, &HandleNpcDeleteTempCommand,        "", NULL },
             { NULL,             0,                  false, NULL,                               "", NULL }
         };
         static ChatCommand npcFollowCommandTable[] =
@@ -95,6 +96,7 @@ public:
             { "delete",         SEC_GAMEMASTER,     false, NULL,              "", npcDeleteCommandTable },
             { "follow",         SEC_GAMEMASTER,     false, NULL,              "", npcFollowCommandTable },
             { "set",            SEC_GAMEMASTER,     false, NULL,                 "", npcSetCommandTable },
+            { "spawn",          SEC_GAMEMASTER,     false, &HandleNpcSpawnCommand,             "", NULL },
             { NULL,             0,                  false, NULL,                               "", NULL }
         };
         static ChatCommand commandTable[] =
@@ -407,6 +409,45 @@ public:
         // Delete the creature
         unit->CombatStop();
         unit->DeleteFromDB();
+        unit->AddObjectToRemoveList();
+
+        handler->SendSysMessage(LANG_COMMAND_DELCREATMESSAGE);
+
+        return true;
+    }
+
+    // Only delete the creature temporary
+    static bool HandleNpcDeleteTempCommand(ChatHandler* handler, const char* args)
+    {
+        Creature* unit = NULL;
+
+        if (*args)
+        {
+            // number or [name] Shift-click form |color|Hcreature:creature_guid|h[name]|h|r
+            char* cId = handler->extractKeyFromLink((char*)args, "Hcreature");
+            if (!cId)
+                return false;
+
+            uint32 lowguid = atoi(cId);
+            if (!lowguid)
+                return false;
+
+            if (CreatureData const* cr_data = sObjectMgr->GetCreatureData(lowguid))
+                unit = handler->GetSession()->GetPlayer()->GetMap()->GetCreature(MAKE_NEW_GUID(lowguid, cr_data->id, HIGHGUID_UNIT));
+        }
+        else
+            unit = handler->getSelectedCreature();
+
+        if (!unit || unit->isPet() || unit->isTotem())
+        {
+            handler->SendSysMessage(LANG_SELECT_CREATURE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        // Delete the creature
+        unit->CombatStop();
+        //unit->DeleteFromDB();
         unit->AddObjectToRemoveList();
 
         handler->SendSysMessage(LANG_COMMAND_DELCREATMESSAGE);
@@ -1183,6 +1224,26 @@ public:
             return false;
 
         chr->SummonCreature(id, *chr, TEMPSUMMON_CORPSE_DESPAWN, 120);
+
+        return true;
+    }
+
+    // add creature, temp only // Diferent from .npc add temp, this command is .npc spawn
+    static bool HandleNpcSpawnCommand(ChatHandler* handler, const char* args)
+    {
+        if (!*args)
+            return false;
+        char* charID = strtok((char*)args, " ");
+        if (!charID)
+            return false;
+
+        Player* chr = handler->GetSession()->GetPlayer();
+
+        uint32 id = atoi(charID);
+        if (!id)
+            return false;
+
+        chr->SummonCreature(id, *chr, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000);
 
         return true;
     }

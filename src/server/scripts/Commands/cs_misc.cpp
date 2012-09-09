@@ -80,7 +80,8 @@ public:
             { "recall",             SEC_MODERATOR,          false, &HandleRecallCommand,                "", NULL },
             { "save",               SEC_PLAYER,             false, &HandleSaveCommand,                  "", NULL },
             { "saveall",            SEC_MODERATOR,          true,  &HandleSaveAllCommand,               "", NULL },
-            { "kick",               SEC_GAMEMASTER,         true,  &HandleKickPlayerCommand,            "", NULL },
+            { "oldkick",            SEC_GAMEMASTER,         true,  &HandleKickPlayerCommand,            "", NULL },
+            { "kick",               SEC_GAMEMASTER,         true,  &HandleShowKickCommand,              "", NULL },
             { "unstuck",            SEC_PLAYER,             true,  &HandleUnstuckCommand,               "", NULL },
             { "linkgrave",          SEC_ADMINISTRATOR,      false, &HandleLinkGraveCommand,             "", NULL },
             { "neargrave",          SEC_ADMINISTRATOR,      false, &HandleNearGraveCommand,             "", NULL },
@@ -89,6 +90,7 @@ public:
             { "additem",            SEC_ADMINISTRATOR,      false, &HandleAddItemCommand,               "", NULL },
             { "additemset",         SEC_ADMINISTRATOR,      false, &HandleAddItemSetCommand,            "", NULL },
             { "bank",               SEC_ADMINISTRATOR,      false, &HandleBankCommand,                  "", NULL },
+            { "mailbox",            SEC_GAMEMASTER,         false, &HandleMailBoxCommand,               "", NULL },
             { "wchange",            SEC_ADMINISTRATOR,      false, &HandleChangeWeather,                "", NULL },
             { "maxskill",           SEC_ADMINISTRATOR,      false, &HandleMaxSkillCommand,              "", NULL },
             { "setskill",           SEC_ADMINISTRATOR,      false, &HandleSetSkillCommand,              "", NULL },
@@ -928,6 +930,41 @@ public:
         return true;
     }
 
+	    // kick player
+    static bool HandleShowKickCommand(ChatHandler* handler, char const* args)
+    {
+        Player* target = NULL;
+        std::string playerName;
+        if (!handler->extractPlayerTarget((char*)args, &target, NULL, &playerName))
+            return false;
+
+        char* kickreason = strtok(NULL, "\r");
+        std::string kickreasonstr("No reason");
+        if (kickreason != NULL)
+            kickreasonstr = kickreason;
+
+        if (handler->GetSession() && target == handler->GetSession()->GetPlayer())
+        {
+            handler->SendSysMessage(LANG_COMMAND_KICKSELF);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        // check online security
+        if (handler->HasLowerSecurity(target, 0))
+            return false;
+
+        if (sWorld->getBoolConfig(CONFIG_SHOW_KICK_IN_WORLD))
+            sWorld->SendWorldText(LANG_COMMAND_NEW_KICKMESSAGE, handler->GetSession()->GetPlayerName(), playerName.c_str(), kickreasonstr.c_str());
+        else
+            handler->PSendSysMessage(LANG_COMMAND_NEW_KICKMESSAGE, handler->GetSession()->GetPlayerName(), playerName.c_str(), kickreasonstr.c_str());
+
+        ChatHandler(target).PSendSysMessage(LANG_COMMAND_KICK_PLAYER_MESSAGE, handler->GetSession()->GetPlayerName(), kickreasonstr.c_str());
+        target->KickWithTime(50000); //5 seg
+
+        return true;
+    }
+
     static bool HandleUnstuckCommand(ChatHandler* handler, char const* args)
     {
         //No args required for players
@@ -1350,6 +1387,12 @@ public:
     static bool HandleBankCommand(ChatHandler* handler, char const* /*args*/)
     {
         handler->GetSession()->SendShowBank(handler->GetSession()->GetPlayer()->GetGUID());
+        return true;
+    }
+
+    static bool HandleMailBoxCommand(ChatHandler* handler, char const* args)
+    {
+        //handler->GetSession()->SendShowMailBox(handler->GetSession()->GetPlayer()->GetGUID());
         return true;
     }
 

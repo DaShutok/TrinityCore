@@ -38,8 +38,14 @@ public:
     {
         static ChatCommand gobjectAddCommandTable[] =
         {
-            { "temp",           SEC_GAMEMASTER,     false, &HandleGameObjectAddTempCommand,   "", NULL },
-            { "",               SEC_GAMEMASTER,     false, &HandleGameObjectAddCommand,       "", NULL },
+            { "temp",           SEC_ADMINISTRATOR,  false, &HandleGameObjectAddTempCommand,   "", NULL },
+            { "",               SEC_ADMINISTRATOR,  false, &HandleGameObjectAddCommand,       "", NULL },
+            { NULL,             0,                  false, NULL,                              "", NULL }
+        };
+        static ChatCommand gobjectDelCommandTable[] =
+        {
+            {"",                SEC_GAMEMASTER,     false, &HandleGameObjectDeleteTempCommand,"", NULL },
+            {"fromdb",          SEC_ADMINISTRATOR,  false, &HandleGameObjectDeleteCommand,    "", NULL },
             { NULL,             0,                  false, NULL,                              "", NULL }
         };
         static ChatCommand gobjectSetCommandTable[] =
@@ -51,7 +57,7 @@ public:
         static ChatCommand gobjectCommandTable[] =
         {
             { "activate",       SEC_GAMEMASTER,     false, &HandleGameObjectActivateCommand,  "", NULL },
-            { "delete",         SEC_GAMEMASTER,     false, &HandleGameObjectDeleteCommand,    "", NULL },
+            { "delete",         SEC_GAMEMASTER,     false, NULL,            "", gobjectDelCommandTable },
             { "info",           SEC_GAMEMASTER,     false, &HandleGameObjectInfoCommand,      "", NULL },
             { "move",           SEC_GAMEMASTER,     false, &HandleGameObjectMoveCommand,      "", NULL },
             { "near",           SEC_GAMEMASTER,     false, &HandleGameObjectNearCommand,      "", NULL },
@@ -59,6 +65,7 @@ public:
             { "turn",           SEC_GAMEMASTER,     false, &HandleGameObjectTurnCommand,      "", NULL },
             { "add",            SEC_GAMEMASTER,     false, NULL,            "", gobjectAddCommandTable },
             { "set",            SEC_GAMEMASTER,     false, NULL,            "", gobjectSetCommandTable },
+            { "spawn",          SEC_GAMEMASTER,     false, &HandleGameObjectSpawnCommand,     "", NULL },
             { NULL,             0,                  false, NULL,                              "", NULL }
         };
         static ChatCommand commandTable[] =
@@ -211,6 +218,38 @@ public:
         return true;
     }
 
+    static bool HandleGameObjectSpawnCommand(ChatHandler* handler, char const* args)
+    {
+        if (!*args)
+            return false;
+
+        char* id = strtok((char*)args, " ");
+        if (!id)
+            return false;
+
+        Player* player = handler->GetSession()->GetPlayer();
+
+        char* spawntime = strtok(NULL, " ");
+        uint32 spawntm = 300;
+
+        if (spawntime)
+            spawntm = atoi((char*)spawntime);
+
+        float x = player->GetPositionX();
+        float y = player->GetPositionY();
+        float z = player->GetPositionZ();
+        float ang = player->GetOrientation();
+
+        float rot2 = sin(ang/2);
+        float rot3 = cos(ang/2);
+
+        uint32 objectId = atoi(id);
+
+        player->SummonGameObject(objectId, x, y, z, ang, 0, 0, rot2, rot3, RESPAWN_ONE_DAY);
+
+        return true;
+    }
+
     static bool HandleGameObjectTargetCommand(ChatHandler* handler, char const* args)
     {
         Player* player = handler->GetSession()->GetPlayer();
@@ -328,7 +367,55 @@ public:
         return true;
     }
 
-    //delete object by selection or guid
+    //delete object by selection or guid //temp
+    static bool HandleGameObjectDeleteTempCommand(ChatHandler* handler, char const* args)
+    {
+        // number or [name] Shift-click form |color|Hgameobject:go_guid|h[name]|h|r
+        char* id = handler->extractKeyFromLink((char*)args, "Hgameobject");
+        if (!id)
+            return false;
+
+        uint32 guidLow = atoi(id);
+        if (!guidLow)
+            return false;
+
+        GameObject* object = NULL;
+
+        // by DB guid
+        if (GameObjectData const* gameObjectData = sObjectMgr->GetGOData(guidLow))
+            object = handler->GetObjectGlobalyWithGuidOrNearWithDbGuid(guidLow, gameObjectData->id);
+
+        if (!object)
+        {
+            handler->PSendSysMessage(LANG_COMMAND_OBJNOTFOUND, guidLow);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        uint64 ownerGuid = object->GetOwnerGUID();
+        if (ownerGuid)
+        {
+            Unit* owner = ObjectAccessor::GetUnit(*handler->GetSession()->GetPlayer(), ownerGuid);
+            if (!owner || !IS_PLAYER_GUID(ownerGuid))
+            {
+                handler->PSendSysMessage(LANG_COMMAND_DELOBJREFERCREATURE, GUID_LOPART(ownerGuid), object->GetGUIDLow());
+                handler->SetSentErrorMessage(true);
+                return false;
+            }
+
+            owner->RemoveGameObject(object, false);
+        }
+
+        object->SetRespawnTime(0);                                 // not save respawn time
+        object->Delete();
+        //object->DeleteFromDB();
+
+        handler->PSendSysMessage(LANG_COMMAND_DELOBJMESSAGE, object->GetGUIDLow());
+
+        return true;
+    }
+
+    //delete object by selection or guid //FromDB
     static bool HandleGameObjectDeleteCommand(ChatHandler* handler, char const* args)
     {
         // number or [name] Shift-click form |color|Hgameobject:go_guid|h[name]|h|r

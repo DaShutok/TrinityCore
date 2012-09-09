@@ -48,11 +48,12 @@ public:
             { "channel",        SEC_ADMINISTRATOR,  true,   NULL,                               "", channelCommandTable  },
             { "nameannounce",   SEC_MODERATOR,      true,   &HandleNameAnnounceCommand,         "", NULL },
             { "gmnameannounce", SEC_MODERATOR,      true,   &HandleGMNameAnnounceCommand,       "", NULL },
-            { "announce",       SEC_MODERATOR,      true,   &HandleAnnounceCommand,             "", NULL },
+            { "serverannounce", SEC_MODERATOR,      true,   &HandleServerAnnounceCommand,       "", NULL },
             { "gmannounce",     SEC_MODERATOR,      true,   &HandleGMAnnounceCommand,           "", NULL },
             { "notify",         SEC_MODERATOR,      true,   &HandleNotifyCommand,               "", NULL },
             { "gmnotify",       SEC_MODERATOR,      true,   &HandleGMNotifyCommand,             "", NULL },
             { "whispers",       SEC_MODERATOR,      false,  &HandleWhispersCommand,             "", NULL },
+            { "announce",       SEC_GAMEMASTER,     false,  &HandleAnnounceCommand,             "", NULL },
             { NULL,             0,                  false,  NULL,                               "", NULL }
         };
         return commandTable;
@@ -126,7 +127,7 @@ public:
         return true;
     }
     // global announce
-    static bool HandleAnnounceCommand(ChatHandler* handler, char const* args)
+    static bool HandleServerAnnounceCommand(ChatHandler* handler, char const* args)
     {
         if (!*args)
             return false;
@@ -134,6 +135,21 @@ public:
         char buff[2048];
         sprintf(buff, handler->GetTrinityString(LANG_SYSTEMMESSAGE), args);
         sWorld->SendServerMessage(SERVER_MSG_STRING, buff);
+        return true;
+    }
+    // global announce by gms
+    static bool HandleAnnounceCommand(ChatHandler* handler, char const* args)
+    {
+        if (!*args)
+            return false;
+
+        std::string name("[SERVER]");
+        if (WorldSession* session = handler->GetSession())
+            name = session->GetPlayer()->GetName();
+
+        char buff[2048];
+        sprintf(buff, handler->GetTrinityString(LANG_SYSTEMMESSAGE), args);
+        sWorld->SendWorldText(LANG_GMNAME_SERVER_ANNOUNCE, name.c_str(), args);
         return true;
     }
     // announce to logged in GMs
