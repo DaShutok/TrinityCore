@@ -71,7 +71,7 @@ public:
         {
             if (instance)
                 if (IsHeroic())
-                    instance->SetData(BOSS_BARON_SIVERLAINE, DONE);
+                    instance->SetData(BOSS_BARON_SILVERLAINE, DONE);
         }
 
         void UpdateAI(const uint32 diff)
@@ -88,9 +88,9 @@ public:
                 {
                     switch (eventId)
                     {
-					case EVENT_VEIL_OF_SHADOW
+					case EVENT_VEIL_OF_SHADOW:
 						if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
-							DoCast(target, target, DUNGEON_MODE(SPELL_VEIL_OF_SHADOW , SPELL_CURSED_VEIL));
+							DoCast(target, DUNGEON_MODE(SPELL_VEIL_OF_SHADOW , SPELL_CURSED_VEIL));
                             events.ScheduleEvent(EVENT_VEIL_OF_SHADOW, urand(15000, 25000));
                             break;
                     }
