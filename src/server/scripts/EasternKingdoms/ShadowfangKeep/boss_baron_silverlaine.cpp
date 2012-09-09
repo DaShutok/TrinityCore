@@ -82,7 +82,7 @@ public:
             events.ScheduleEvent(EVENT_VEIL_OF_SHADOW, 1000);
             if (IsHeroic())
             {
-				events.ScheduleEvent(EVENT_CURSED_VEIL, 5000);
+                events.ScheduleEvent(EVENT_CURSED_VEIL, 5000);
                 Talk(SAY_AGGRO);
             }
         }
