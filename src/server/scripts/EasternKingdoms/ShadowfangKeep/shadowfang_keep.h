@@ -31,7 +31,7 @@ enum ShadowfangKeepBosses
 enum ShadowfangKeepCreatures
 {
     BARON_ASHBURY                    = 46962,
-    BARON_SILVERLINE                 = 3887,
+    BARON_SILVERLAINE                = 3887,
     COMMANDER_SPRINGVALE             = 4278,
     LORD_WALDEN                      = 46963,
     LORD_GODFREY                     = 46964,
