@@ -153,9 +153,9 @@ public:
                                 DoCast(target, DUNGEON_MODE(SPELL_VEIL_OF_SHADOW , SPELL_CURSED_VEIL));
                             events.ScheduleEvent(EVENT_VEIL_OF_SHADOW, urand(15000, 25000));
                             break;
-						case EVENT_CURSED_VEIL:
+                        case EVENT_CURSED_VEIL:
                             DoCastToAllHostilePlayers(SPELL_CURSED_VEIL);
-							events.ScheduleEvent(EVENT_CURSED_VEIL, 20000);
+                            events.ScheduleEvent(EVENT_CURSED_VEIL, 20000);
                             break;
                     }
                 }
