@@ -1293,7 +1293,7 @@ public:
                         if (Creature* blackKinght = me->GetCreature(*me, instance->GetData64(DATA_BLACK_KNIGHT)))
                         {
                             blackKinght->AI()->Talk(SAY_BK_INTRO_1);
-                            blackKinght->AI()->DoCast(SPELL_DEATH_RESPITE_INTRO);
+                            DoCast(me, SPELL_DEATH_RESPITE_INTRO);
                         }
                         events.ScheduleEvent(5, 4000);
                         break;
@@ -1345,7 +1345,7 @@ public:
                             blackKinght->SetHomePosition(blackKinght->GetPositionX(), blackKinght->GetPositionY(), blackKinght->GetPositionZ(), blackKinght->GetOrientation());
                             blackKinght->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                             blackKinght->SetReactState(REACT_AGGRESSIVE);
-                            blackKinght->Kill(me);
+							blackKinght->Kill(me);
                         }
                         break;
                 }
@@ -1417,7 +1417,7 @@ public:
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
             gossipTextId = GOSSIP_TEXT_FACTION_CHAMPIONS_DEFEATED;
         }
-        else
+		else if (instance->GetData(BOSS_BLACK_KNIGHT) != DONE)
         {
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
             gossipTextId = GOSSIP_TEXT_ARGENT_CHAMPIONS_DEFEATED;
@@ -1460,6 +1460,7 @@ public:
                 {
                     creature->AI()->SetData(EVENT_BLACK_KNIGHT_INTRO, IN_PROGRESS);
                     creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                    creature->SummonCreature(VEHICLE_BLACK_KNIGHT, 799.806f, 639.236f, 475.88f, 2.18738f, TEMPSUMMON_MANUAL_DESPAWN, 3000);
                     player->CLOSE_GOSSIP_MENU();
                 }
                 break;

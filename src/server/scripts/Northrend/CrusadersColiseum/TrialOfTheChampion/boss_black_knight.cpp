@@ -420,6 +420,7 @@ public:
         {
             instance = creature->GetInstanceScript();
             me->SetSpeed(MOVE_FLIGHT, 2.8f);
+            me->SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
         }
 
         Vehicle* _vehicleKit;
@@ -440,8 +441,8 @@ public:
                         me->SetFacingToObject(announcer);
 
                     if (Unit* blackKnight = _vehicleKit->GetPassenger(0))
-                        blackKnight->ExitVehicle();
-
+                        blackKnight->ToCreature()->DespawnOrUnsummon(1000);
+                    me->SummonCreature(NPC_BLACK_KNIGHT, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 3000);
                     break;
             }
         }

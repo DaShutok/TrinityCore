@@ -1,4 +1,7 @@
 UPDATE `creature_template` SET `VehicleId` = 486 WHERE `entry` = 35644;
+UPDATE `creature_template` SET `InhabitType` = 7 WHERE `entry` = 35491;
+UPDATE `vehicle_template_accessory` SET `summontype`='8' WHERE `entry`='35491' AND `seat_id`='0';
+DELETE FROM `creature` WHERE `id`=35491;
 
 DELETE FROM `spell_script_names` WHERE spell_id IN (66515, 66867, 67534, 67830, 66482);
 INSERT INTO `spell_script_names` VALUES

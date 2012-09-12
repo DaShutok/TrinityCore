@@ -261,6 +261,8 @@ enum IntroSpells
     SPELL_DEATH_PUSH_INTRO    = 66797,
 };
 
+const Position CrashSpawn = {746.675f, 619.318f, 411.091f, 4.79268f};
+
 static void BindPlayersToInstance(Creature* creature)
 {
     Map* map = creature->GetMap();

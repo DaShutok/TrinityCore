@@ -37,7 +37,7 @@ public:
 
     struct instance_trial_of_the_champion_InstanceMapScript : public InstanceScript
     {
-        instance_trial_of_the_champion_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {}
+        instance_trial_of_the_champion_InstanceMapScript(Map* pMap) : InstanceScript(pMap){ }
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         uint32 grandChampionEntry[3];
@@ -55,9 +55,9 @@ public:
         uint64 uiMainGateGUID;
         uint64 uiPortcullisGUID;
         uint64 uiChampionLootGUID;
+        uint64 teamininstance;
 
         std::list<uint64> VehicleList;
-        uint32 TeamInInstance;
 
         bool achievementHadWorse;
 
@@ -73,11 +73,11 @@ public:
             uiChampionLootGUID     = 0;
             memoryEntry            = 0;
             uiBlackKnightGUID      = 0;
+            teamininstance         = 0;
 
             achievementHadWorse = true;
 
             VehicleList.clear();
-            TeamInInstance = 0;
             memset(&grandChampionEntry, 0, sizeof(grandChampionEntry));
             memset(&grandChampionEntry, 0, sizeof(grandChampionGUID));
             memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
@@ -95,14 +95,22 @@ public:
         }
 
         void OnPlayerEnter(Player* player)
-        {
-            if (!TeamInInstance)
-                TeamInInstance = player->GetTeam();
+		{
+             if(!teamininstance)
+                teamininstance = player->GetTeam();
         }
 
         void OnCreatureCreate(Creature* creature)
         {
-            switch(creature->GetEntry())
+            Map::PlayerList const &players = instance->GetPlayers();
+            uint32 TeamInInstance = 0;
+
+            if (!players.isEmpty())
+            {
+                if (Player* player = players.begin()->getSource())
+                    TeamInInstance = player->GetTeam();
+            }
+            switch (creature->GetEntry())
             {
                 // Coliseum Announcer || Only NPC_JAEREN must be spawned.
                 case NPC_JAEREN:
@@ -143,7 +151,7 @@ public:
 
         void OnGameObjectCreate(GameObject* go)
         {
-            switch(go->GetEntry())
+            switch (go->GetEntry())
             {
                 case GO_MAIN_GATE:
                     uiMainGateGUID = go->GetGUID();
@@ -159,12 +167,15 @@ public:
                 case GO_PALETRESS_LOOT_H:
                     uiChampionLootGUID = go->GetGUID();
                     break;
+                case 195649:
+                case 195648:
+                    go->SetGoState(GO_STATE_READY);
             }
         }
 
         void SetData(uint32 type, uint32 data)
         {
-            switch(type)
+            switch (type)
             {
                 case BOSS_GRAND_CHAMPIONS:
                     m_auiEncounter[0] = data;
@@ -260,7 +271,7 @@ public:
                 case BOSS_ARGENT_CHALLENGE_P: return m_auiEncounter[2];
                 case BOSS_BLACK_KNIGHT: return m_auiEncounter[3];
 
-                case DATA_TEAM: return TeamInInstance;
+                case DATA_TEAM: return teamininstance;
             }
 
             return 0;
@@ -468,9 +479,14 @@ public:
                     if (m_auiEncounter[i] == IN_PROGRESS)
                         m_auiEncounter[i] = NOT_STARTED;
 
-                if (m_auiEncounter[1] != DONE && (m_auiEncounter[1] == DONE || m_auiEncounter[2] == DONE))
+                if (m_auiEncounter[3] != DONE && (m_auiEncounter[1] == DONE || m_auiEncounter[2] == DONE))
                 {
-                    // TODO: Respawn announcer OR Spawn Black Knight on the arena
+                    if (Creature* blackKinght = instance->SummonCreature(NPC_BLACK_KNIGHT, CrashSpawn))
+                    {
+                        blackKinght->SetHomePosition(blackKinght->GetPositionX(), blackKinght->GetPositionY(), blackKinght->GetPositionZ(), blackKinght->GetOrientation());
+                        blackKinght->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        blackKinght->SetReactState(REACT_AGGRESSIVE);
+                    }
                 }
 
             } else OUT_LOAD_INST_DATA_FAIL;
