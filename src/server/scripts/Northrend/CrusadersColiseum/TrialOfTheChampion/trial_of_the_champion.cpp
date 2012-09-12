@@ -1345,7 +1345,7 @@ public:
                             blackKinght->SetHomePosition(blackKinght->GetPositionX(), blackKinght->GetPositionY(), blackKinght->GetPositionZ(), blackKinght->GetOrientation());
                             blackKinght->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                             blackKinght->SetReactState(REACT_AGGRESSIVE);
-							blackKinght->Kill(me);
+                            blackKinght->Kill(me);
                         }
                         break;
                 }
