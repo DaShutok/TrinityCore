@@ -1964,12 +1964,12 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                 break;
             me->SetHealth(e.action.setHealth.health);
             break;
-		}
+        }
         case SMART_ACTION_SET_HEALTH_PCT:
         {
-			if (e.action.setHealthPct.healthPct <= 0 || e.action.setHealthPct.healthPct > 100)
+            if (e.action.setHealthPct.healthPct <= 0 || e.action.setHealthPct.healthPct > 100)
                 break;
-			me->SetHealthPct(e.action.setHealthPct.healthPct);
+            me->SetHealthPct(e.action.setHealthPct.healthPct);
             break;
         }
         case SMART_ACTION_SET_HOME_POS:
