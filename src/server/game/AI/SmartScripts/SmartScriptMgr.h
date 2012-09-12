@@ -486,7 +486,8 @@ enum SMART_ACTION
     SMART_ACTION_SEND_TARGET_TO_TARGET              = 100,    // id
     SMART_ACTION_SET_HOME_POS                       = 101,    // none
     SMART_ACTION_SET_HEALTH                         = 110,    // Health value not pct
-    SMART_ACTION_END                                = 111
+    SMART_ACTION_SET_HEALTH_PCT                     = 111,    // Health pct
+    SMART_ACTION_END                                = 112
 };
 
 struct SmartAction
@@ -917,6 +918,11 @@ struct SmartAction
         {
             uint32 health;
         } setHealth;
+
+        struct
+        {
+            uint32 healthPct;
+        } setHealthPct;
 
         //! Note for any new future actions
         //! All parameters must have type uint32

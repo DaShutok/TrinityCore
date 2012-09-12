@@ -1356,6 +1356,7 @@ class Unit : public WorldObject
         uint32 CountPctFromCurHealth(int32 pct) const { return CalculatePctN(GetHealth(), pct); }
 
         void SetHealth(uint32 val);
+        void SetHealthPct(uint32 pct);
         void SetMaxHealth(uint32 val);
         inline void SetFullHealth() { SetHealth(GetMaxHealth()); }
         int32 ModifyHealth(int32 val);

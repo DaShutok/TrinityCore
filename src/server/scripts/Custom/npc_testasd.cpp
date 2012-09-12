@@ -36,6 +36,7 @@ enum eEnums
 #define  GOSSIP_ITEM_2          "Adios"
 #define  GOSSIP_ITEM_3          "Que tal un combate?"
 #define  GOSSIP_ITEM_4          "Duelo"
+#define  GOSSIP_ITEM_5          "Prueba SetHealthPct"
 
 class npc_testasd : public CreatureScript
 {
@@ -141,6 +142,7 @@ class npc_testasd : public CreatureScript
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 	        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
 	        player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
             return true;
         }
@@ -172,7 +174,12 @@ class npc_testasd : public CreatureScript
 			{
 				creature->setFaction(16);
 				creature->SetDisplayId(24623);
-			} 
+			}
+
+            if (action == GOSSIP_ACTION_INFO_DEF+5)
+            {
+                creature->SetHealthPct(10);
+            }
 
 			return true;
         }			

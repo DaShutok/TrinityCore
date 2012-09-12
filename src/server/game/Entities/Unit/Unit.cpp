@@ -13695,6 +13695,39 @@ void Unit::SetHealth(uint32 val)
     }
 }
 
+void Unit::SetHealthPct(uint32 pct)
+{
+    if (getDeathState() == JUST_DIED)
+        pct = 0;
+    else if (GetTypeId() == TYPEID_PLAYER && getDeathState() == DEAD)
+        pct = 1;
+    else
+    {
+        if (100 < pct)
+            pct = 100;
+    }
+	uint32 maxHealth = GetMaxHealth();
+    pct = (maxHealth * float(pct) / 100.0f);
+
+    SetUInt32Value(UNIT_FIELD_HEALTH, pct);
+
+    // group update
+    if (Player* player = ToPlayer())
+    {
+        if (player->GetGroup())
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_HP);
+    }
+    else if (Pet* pet = ToCreature()->ToPet())
+    {
+        if (pet->isControlled())
+        {
+            Unit* owner = GetOwner();
+            if (owner && (owner->GetTypeId() == TYPEID_PLAYER) && owner->ToPlayer()->GetGroup())
+                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_CUR_HP);
+        }
+    }
+}
+
 void Unit::SetMaxHealth(uint32 val)
 {
     if (!val)

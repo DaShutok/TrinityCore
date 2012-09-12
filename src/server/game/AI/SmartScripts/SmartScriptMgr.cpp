@@ -848,6 +848,15 @@ bool SmartAIMgr::IsEventValid(SmartScriptHolder& e)
             }
             break;
         }
+        case SMART_ACTION_SET_HEALTH_PCT:
+        {
+            if (e.action.setHealthPct.healthPct <= 0 || e.action.setHealthPct.healthPct > 100)
+            {
+                sLog->outError(LOG_FILTER_SQL, "SmartAIMgr: Entry %d Event %u Action %u uses param1 equal or below than 0 or higher than 100, skipped.", e.entryOrGuid, e.event_id, e.GetActionType());
+                return false;
+            }
+            break;
+        }
         case SMART_ACTION_FOLLOW:
         case SMART_ACTION_SET_ORIENTATION:
         case SMART_ACTION_STORE_TARGET_LIST:
